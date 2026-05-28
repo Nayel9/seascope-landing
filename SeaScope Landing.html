@@ -1,0 +1,1794 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SeaScope — Décidez quand sortir en mer en toute confiance.</title>
+  <meta name="description" content="SeaScope est un copilote décisionnel pour navigation côtière. Fenêtres météo, heure de retour, recommandations adaptées à votre façon de naviguer. Beta fermée — Été 2026."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"/>
+  <style>
+/* ──────────────────────────────────────────────
+   DESIGN TOKENS
+────────────────────────────────────────────── */
+:root {
+  --ss-bg:              #061425;
+  --ss-bg-2:            #081A2D;
+  --ss-surface:         #0E2236;
+  --ss-surface-2:       #14293F;
+  --ss-surface-hi:      #1B334C;
+  --ss-stroke:          rgba(255,255,255,0.07);
+  --ss-stroke-2:        rgba(255,255,255,0.14);
+  --ss-fg:              #E6EEF6;
+  --ss-fg-soft:         rgba(230,238,246,0.72);
+  --ss-fg-mute:         rgba(230,238,246,0.50);
+  --ss-fg-faint:        rgba(230,238,246,0.32);
+  --ss-fg-ghost:        rgba(230,238,246,0.18);
+  --ss-bon:             #34D399;
+  --ss-bon-ink:         #6EE7B7;
+  --ss-bon-bg:          rgba(52,211,153,0.10);
+  --ss-variable:        #FBBF24;
+  --ss-variable-bg:     rgba(251,191,36,0.10);
+  --ss-delicat:         #F59E0B;
+  --ss-delicat-bg:      rgba(245,158,11,0.10);
+  --ss-deconseille:     #EF4444;
+  --ss-deconseille-bg:  rgba(239,68,68,0.10);
+  --ss-rentrer:         #FF6B6B;
+  --ss-teal:            #5EEAD4;
+  --ss-teal-ink:        #2DD4BF;
+  --ss-teal-deep:       #0E4D49;
+  --ss-font:            "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --ss-mono:            "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --ss-maxw:            1240px;
+  --ss-gutter:          32px;
+  --ss-radius-sm:       8px;
+  --ss-radius:          12px;
+  --ss-radius-lg:       20px;
+  --ss-radius-xl:       28px;
+}
+
+/* ──────────────────────────────────────────────
+   RESET
+────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { background: var(--ss-bg); }
+body {
+  font-family: var(--ss-font);
+  font-feature-settings: "ss01","ss02","cv11";
+  color: var(--ss-fg);
+  background:
+    radial-gradient(1200px 700px at 80% -10%, rgba(94,234,212,0.06), transparent 60%),
+    radial-gradient(900px 600px at 10% 5%,   rgba(59,130,246,0.05),  transparent 60%),
+    var(--ss-bg);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+button { font: inherit; color: inherit; border: none; cursor: pointer; background: none; }
+a      { color: inherit; text-decoration: none; }
+img    { display: block; max-width: 100%; }
+input, textarea, select { font: inherit; color: inherit; }
+::selection { background: var(--ss-teal); color: #061425; }
+
+/* ──────────────────────────────────────────────
+   LAYOUT UTILITIES
+────────────────────────────────────────────── */
+.ss-container { max-width: var(--ss-maxw); margin: 0 auto; padding: 0 var(--ss-gutter); }
+.ss-section { padding: 120px 0; position: relative; }
+.ss-section--tight { padding: 80px 0; }
+.ss-section--band {
+  background: var(--ss-bg-2);
+  border-top: 1px solid var(--ss-stroke);
+  border-bottom: 1px solid var(--ss-stroke);
+}
+
+/* ──────────────────────────────────────────────
+   TYPE
+────────────────────────────────────────────── */
+.ss-kicker {
+  font-family: var(--ss-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ss-teal);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.ss-kicker::before {
+  content: "";
+  width: 6px; height: 6px; border-radius: 999px;
+  background: var(--ss-teal);
+  box-shadow: 0 0 0 4px rgba(94,234,212,0.15);
+  flex: none;
+}
+.ss-h1 {
+  font-size: clamp(38px, 5.4vw, 74px);
+  line-height: 1.03;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+  margin: 0;
+  color: var(--ss-fg);
+  text-wrap: balance;
+}
+.ss-h2 {
+  font-size: clamp(30px, 3.4vw, 50px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  margin: 0 0 18px;
+  text-wrap: balance;
+}
+.ss-h3 {
+  font-size: clamp(20px, 1.6vw, 24px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  margin: 0;
+}
+.ss-lead {
+  font-size: clamp(16px, 1.25vw, 19px);
+  line-height: 1.6;
+  color: var(--ss-fg-soft);
+  max-width: 60ch;
+  text-wrap: pretty;
+  margin: 0;
+}
+.ss-eyebrow-row { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.ss-section-head {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 80px;
+  align-items: end;
+  margin-bottom: 60px;
+}
+.ss-section-head .ss-h2 { margin: 0; }
+
+/* ──────────────────────────────────────────────
+   BUTTONS
+────────────────────────────────────────────── */
+.ss-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--ss-teal);
+  color: #052a26;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: transform 120ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
+  white-space: nowrap;
+}
+.ss-btn:hover  { background: #79f0db; transform: translateY(-1px); }
+.ss-btn:active { transform: translateY(0); }
+.ss-btn--ghost { background: transparent; color: var(--ss-fg); border-color: var(--ss-stroke-2); }
+.ss-btn--ghost:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.24); }
+.ss-btn--lg { height: 56px; padding: 0 28px; font-size: 16px; }
+.ss-btn--sm { height: 36px; padding: 0 14px; font-size: 13px; }
+.ss-btn .arr { transition: transform 200ms ease; }
+.ss-btn:hover .arr { transform: translateX(3px); }
+
+/* ──────────────────────────────────────────────
+   PILLS
+────────────────────────────────────────────── */
+.ss-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 24px; padding: 0 10px;
+  border-radius: 999px;
+  font-family: var(--ss-mono);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ss-pill::before { content:""; width:6px; height:6px; border-radius:999px; background:currentColor; }
+.ss-pill--bon         { color: var(--ss-bon);         background: var(--ss-bon-bg); }
+.ss-pill--variable    { color: var(--ss-variable);    background: var(--ss-variable-bg); }
+.ss-pill--delicat     { color: var(--ss-delicat);     background: var(--ss-delicat-bg); }
+.ss-pill--deconseille { color: var(--ss-deconseille); background: var(--ss-deconseille-bg); }
+
+/* ──────────────────────────────────────────────
+   NAV
+────────────────────────────────────────────── */
+.ss-nav {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(6,20,37,0.72);
+  border-bottom: 1px solid var(--ss-stroke);
+}
+.ss-nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+.ss-wordmark {
+  font-family: var(--ss-font);
+  font-size: 20px; font-weight: 600;
+  letter-spacing: -0.02em;
+  display: inline-flex; align-items: baseline;
+}
+.ss-wordmark .sea   { color: var(--ss-teal); }
+.ss-wordmark .scope { color: var(--ss-fg); opacity: 0.92; }
+.ss-nav-links { display: flex; gap: 28px; align-items: center; }
+.ss-nav-links a { font-size: 14px; color: var(--ss-fg-soft); transition: color 140ms ease; }
+.ss-nav-links a:hover { color: var(--ss-fg); }
+.ss-nav-tag {
+  font-family: var(--ss-mono); font-size: 10px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ss-fg-mute);
+  padding: 5px 10px;
+  border: 1px solid var(--ss-stroke); border-radius: 999px;
+}
+
+/* ──────────────────────────────────────────────
+   HERO
+────────────────────────────────────────────── */
+.ss-hero { padding: 80px 0 100px; position: relative; overflow: hidden; }
+.ss-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0,1.05fr) minmax(0,1fr);
+  gap: 80px; align-items: center;
+}
+.ss-hero-copy { position: relative; z-index: 2; }
+.ss-hero-ctas { display: flex; gap: 14px; margin-top: 36px; flex-wrap: wrap; }
+.ss-hero-trust {
+  margin-top: 36px; display: flex; gap: 28px; align-items: center; flex-wrap: wrap;
+  color: var(--ss-fg-mute); font-size: 13px;
+}
+.ss-hero-trust span { display: inline-flex; align-items: center; gap: 8px; }
+.ss-hero-trust .dot { width: 5px; height: 5px; border-radius: 999px; background: var(--ss-teal); }
+
+/* Device frame */
+.ss-hero-stage {
+  position: relative;
+  display: flex; justify-content: center; align-items: center;
+  min-height: 720px;
+}
+.ss-hero-stage::before {
+  content:""; position:absolute; inset:-10% -20%;
+  background: radial-gradient(closest-side, rgba(94,234,212,0.10), transparent 70%);
+  pointer-events: none;
+}
+.ss-hero-stage::after {
+  content:""; position:absolute; left:50%; bottom:-1px; transform:translateX(-50%);
+  width:130%; height:1px;
+  background: linear-gradient(to right, transparent, var(--ss-stroke-2), transparent);
+}
+.ss-device {
+  width: 340px; border-radius: 44px; padding: 10px;
+  background: linear-gradient(180deg, #1a2c44 0%, #0a1726 100%);
+  box-shadow:
+    0 30px 60px -20px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  position: relative; flex: none;
+}
+.ss-device--lg { width: 380px; }
+.ss-device-screen {
+  border-radius: 36px; overflow: hidden;
+  background: #050E1A; position: relative;
+  aspect-ratio: 388 / 862;
+}
+.ss-device-screen img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* Callouts */
+.ss-callout {
+  position: absolute;
+  background: rgba(14,34,54,0.92);
+  border: 1px solid var(--ss-stroke-2);
+  border-radius: 14px; padding: 12px 14px;
+  display: flex; gap: 12px; align-items: flex-start;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+  max-width: 240px; z-index: 3;
+}
+.ss-callout-num {
+  width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px; background: var(--ss-teal); color: #052a26;
+  font-family: var(--ss-mono); font-size: 11px; font-weight: 600; flex: none;
+}
+.ss-callout-label {
+  font-family: var(--ss-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ss-fg-mute);
+}
+.ss-callout-text { font-size: 13px; color: var(--ss-fg); line-height: 1.35; margin-top: 2px; }
+
+/* ──────────────────────────────────────────────
+   PROBLEM
+────────────────────────────────────────────── */
+.ss-problems {
+  display: grid; grid-template-columns: repeat(12,1fr);
+  gap: 1px; background: var(--ss-stroke);
+  border: 1px solid var(--ss-stroke); border-radius: var(--ss-radius-lg); overflow: hidden;
+}
+.ss-problem {
+  background: var(--ss-bg); padding: 32px 28px;
+  grid-column: span 4;
+  display: flex; flex-direction: column; gap: 14px; min-height: 220px;
+}
+.ss-problem--wide { grid-column: span 6; }
+.ss-problem-idx { font-family: var(--ss-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ss-fg-mute); }
+.ss-problem-title { font-size: 20px; line-height: 1.25; font-weight: 500; color: var(--ss-fg); letter-spacing: -0.01em; }
+.ss-problem-desc  { font-size: 14px; color: var(--ss-fg-mute); line-height: 1.5; margin-top: auto; }
+.ss-mini-chart {
+  height: 56px; border-radius: 8px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0, transparent 11px, var(--ss-stroke) 11px, var(--ss-stroke) 12px),
+    linear-gradient(180deg, rgba(94,234,212,0.04), transparent);
+  overflow: hidden;
+}
+.ss-mini-chart svg { width:100%; height:100%; display:block; }
+
+/* ──────────────────────────────────────────────
+   HOW IT WORKS
+────────────────────────────────────────────── */
+.ss-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.ss-step {
+  background: var(--ss-surface); border: 1px solid var(--ss-stroke);
+  border-radius: var(--ss-radius-lg); padding: 28px;
+  display: flex; flex-direction: column; gap: 18px; min-height: 360px;
+}
+.ss-step-head { display: flex; align-items: center; justify-content: space-between; }
+.ss-step-num { font-family: var(--ss-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--ss-teal); }
+.ss-step-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(94,234,212,0.08);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ss-teal);
+}
+.ss-step h3 { font-size: 20px; line-height: 1.25; font-weight: 500; margin: 0; }
+.ss-step p  { color: var(--ss-fg-mute); font-size: 14px; line-height: 1.5; margin: 0; }
+.ss-step-vis {
+  margin-top: auto; border-radius: 12px;
+  background: var(--ss-bg-2); border: 1px solid var(--ss-stroke);
+  padding: 16px; min-height: 132px; position: relative;
+}
+
+/* Step visualizations */
+.fusion-row { display: grid; grid-template-columns: 70px 1fr 30px; align-items: center; gap: 8px; margin-bottom: 6px; }
+.fusion-label { font-family: var(--ss-mono); font-size: 10px; color: var(--ss-fg-mute); letter-spacing: 0.08em; }
+.fusion-bar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; position: relative; overflow: hidden; }
+.fusion-bar span { position: absolute; inset: 0; border-radius: 2px; }
+.fusion-val { font-family: var(--ss-mono); font-size: 10px; text-align: right; }
+.signal-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.signal-mono { font-family: var(--ss-mono); }
+
+/* ──────────────────────────────────────────────
+   PERSONALIZATION
+────────────────────────────────────────────── */
+.ss-perso-label { font-family: var(--ss-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ss-fg-mute); text-transform: uppercase; margin-bottom: 12px; }
+.ss-perso-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; margin: 0 0 14px; }
+.ss-persona {
+  background: var(--ss-surface); border: 1px solid var(--ss-stroke); border-radius: var(--ss-radius);
+  padding: 18px; cursor: pointer;
+  transition: border-color 160ms, background 160ms, transform 160ms;
+  display: flex; flex-direction: column; gap: 12px; min-height: 140px; text-align: left;
+}
+.ss-persona:hover { border-color: var(--ss-stroke-2); transform: translateY(-2px); }
+.ss-persona.is-active {
+  border-color: var(--ss-teal);
+  background: linear-gradient(180deg, rgba(94,234,212,0.06), rgba(94,234,212,0));
+  box-shadow: 0 0 0 4px rgba(94,234,212,0.06);
+}
+.ss-persona-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--ss-stroke);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ss-fg-soft); flex: none;
+}
+.ss-persona.is-active .ss-persona-icon { background: var(--ss-teal); color: #052a26; border-color: transparent; }
+.ss-persona-name { font-size: 14px; font-weight: 500; color: var(--ss-fg); }
+.ss-persona-desc { font-size: 12px; color: var(--ss-fg-mute); line-height: 1.45; }
+
+.ss-tol-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 14px; }
+.ss-tol {
+  border: 1px solid var(--ss-stroke); border-radius: var(--ss-radius);
+  padding: 16px 18px; background: var(--ss-surface); cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  transition: border-color 160ms, background 160ms; text-align: left;
+}
+.ss-tol:hover { border-color: var(--ss-stroke-2); }
+.ss-tol.is-active { border-color: var(--ss-teal); background: linear-gradient(180deg, rgba(94,234,212,0.06), transparent); }
+.ss-tol-bar { width: 36px; height: 18px; display: flex; align-items: center; gap: 3px; flex: none; }
+.ss-tol-bar i { flex: 1; height: 100%; background: var(--ss-fg-ghost); border-radius: 2px; }
+.ss-tol-bar i.on { background: var(--ss-teal); }
+.ss-tol-name { font-weight: 500; font-size: 14px; }
+.ss-tol-sub  { color: var(--ss-fg-mute); font-size: 12px; }
+.ss-tol-check { color: var(--ss-teal); flex: none; opacity: 0; transition: opacity 140ms; }
+.ss-tol.is-active .ss-tol-check { opacity: 1; }
+
+/* Compose block */
+.ss-perso-compose {
+  margin-top: 80px;
+  display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,1fr);
+  gap: 60px; align-items: center;
+}
+.ss-perso-stage {
+  position: relative; min-height: 720px;
+  display: flex; justify-content: center; align-items: center;
+}
+.ss-perso-stage .ss-device { transform: rotate(-2deg); }
+
+/* Scenario */
+.ss-scenario { margin-top: 80px; border-top: 1px solid var(--ss-stroke); padding-top: 64px; }
+.ss-scenario-head {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 36px;
+}
+.ss-scenario-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; align-items: stretch; }
+.ss-rec {
+  border: 1px solid var(--ss-stroke); border-radius: var(--ss-radius-lg);
+  background: var(--ss-surface); padding: 22px;
+  display: flex; flex-direction: column; gap: 14px; position: relative; overflow: hidden;
+  transition: opacity 200ms ease;
+}
+.ss-rec--bon         { border-color: rgba(52,211,153,0.30); }
+.ss-rec--delicat     { border-color: rgba(245,158,11,0.30); }
+.ss-rec--deconseille { border-color: rgba(239,68,68,0.30); }
+.ss-rec-profile { font-family: var(--ss-mono); font-size: 11px; letter-spacing: 0.16em; color: var(--ss-fg-mute); text-transform: uppercase; }
+.ss-rec-title { font-size: 18px; font-weight: 500; line-height: 1.3; letter-spacing: -0.01em; }
+.ss-rec-meta { display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; }
+.ss-rec-meta .label { font-family: var(--ss-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--ss-fg-mute); text-transform: uppercase; }
+.ss-rec-meta .value { font-family: var(--ss-mono); font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+.ss-rec--bon .value         { color: var(--ss-fg); }
+.ss-rec--delicat .value     { color: var(--ss-delicat); }
+.ss-rec--deconseille .value { color: var(--ss-deconseille); }
+.ss-rec-return { color: var(--ss-rentrer); font-family: var(--ss-mono); font-size: 14px; font-weight: 500; }
+.ss-rec-reasons { margin-top: 10px; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.ss-rec-reason { display: flex; align-items: center; gap: 10px; color: var(--ss-fg-soft); }
+.ss-rec-reason .ico { width: 14px; flex: none; }
+.ss-rec-reason.good .ico { color: var(--ss-bon); }
+.ss-rec-reason.warn .ico  { color: var(--ss-delicat); }
+.ss-rec-reason.bad  .ico  { color: var(--ss-deconseille); }
+.ss-rec-divider { height: 1px; background: var(--ss-stroke); margin: 8px -4px; }
+.ss-rec-foot {
+  display: flex; gap: 8px; align-items: center; margin-top: auto;
+  font-family: var(--ss-mono); font-size: 11px; color: var(--ss-fg-mute); letter-spacing: 0.06em;
+}
+.ss-rec-foot .swatch { width: 8px; height: 8px; border-radius: 2px; }
+
+/* ──────────────────────────────────────────────
+   TRUST
+────────────────────────────────────────────── */
+.ss-trust-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1px;
+  border: 1px solid var(--ss-stroke); background: var(--ss-stroke);
+  border-radius: var(--ss-radius-lg); overflow: hidden;
+}
+.ss-trust {
+  background: var(--ss-bg); padding: 32px 28px;
+  display: flex; flex-direction: column; gap: 14px; min-height: 220px;
+}
+.ss-trust-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: rgba(94,234,212,0.08); color: var(--ss-teal);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.ss-trust h3 { font-size: 18px; font-weight: 500; margin: 0; letter-spacing: -0.005em; }
+.ss-trust p  { color: var(--ss-fg-mute); font-size: 14px; line-height: 1.5; margin: 0; }
+
+/* ──────────────────────────────────────────────
+   FORM (shared)
+────────────────────────────────────────────── */
+.ss-form-wrap {
+  display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr);
+  gap: 60px; align-items: start;
+}
+.ss-form {
+  background: var(--ss-surface); border: 1px solid var(--ss-stroke);
+  border-radius: var(--ss-radius-xl); padding: 40px;
+}
+.ss-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
+.ss-field label {
+  font-family: var(--ss-mono); font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ss-fg-mute);
+}
+.ss-input, .ss-select, .ss-textarea {
+  background: rgba(0,0,0,0.18); border: 1px solid var(--ss-stroke); border-radius: 10px;
+  padding: 14px; font-size: 15px; color: var(--ss-fg); outline: none;
+  transition: border-color 140ms, background 140ms; width: 100%;
+}
+.ss-input:hover, .ss-select:hover, .ss-textarea:hover { border-color: var(--ss-stroke-2); }
+.ss-input:focus, .ss-select:focus, .ss-textarea:focus { border-color: var(--ss-teal); background: rgba(94,234,212,0.04); }
+.ss-input::placeholder, .ss-textarea::placeholder { color: var(--ss-fg-faint); }
+.ss-input.error  { border-color: var(--ss-deconseille); }
+.ss-textarea { resize: vertical; min-height: 96px; line-height: 1.45; }
+.ss-select { appearance: none; -webkit-appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(230,238,246,0.5)' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  padding-right: 36px;
+}
+.ss-select option { background: #0E2236; }
+.ss-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ss-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.ss-chip {
+  padding: 8px 14px; border-radius: 999px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--ss-stroke);
+  color: var(--ss-fg-soft); cursor: pointer; font-size: 13px;
+  transition: border-color 140ms, background 140ms, color 140ms;
+}
+.ss-chip:hover { border-color: var(--ss-stroke-2); color: var(--ss-fg); }
+.ss-chip.is-active { border-color: var(--ss-teal); background: rgba(94,234,212,0.10); color: var(--ss-teal); }
+.ss-consent {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px; border-radius: 10px;
+  background: rgba(0,0,0,0.18); border: 1px solid var(--ss-stroke);
+  font-size: 13px; color: var(--ss-fg-soft); line-height: 1.5; margin-bottom: 22px;
+  cursor: pointer;
+}
+.ss-consent input[type="checkbox"] {
+  appearance: none; -webkit-appearance: none;
+  width: 18px; height: 18px; border-radius: 5px;
+  border: 1px solid var(--ss-stroke-2); background: transparent;
+  cursor: pointer; margin-top: 2px; flex: none;
+  display: grid; place-items: center; transition: background 140ms, border-color 140ms;
+}
+.ss-consent input[type="checkbox"]:checked { background: var(--ss-teal); border-color: var(--ss-teal); }
+.ss-consent input[type="checkbox"]:checked::after {
+  content: ""; width: 5px; height: 9px;
+  border: solid #052a26; border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+.ss-form-cta { display: flex; gap: 14px; align-items: center; margin-top: 8px; }
+.ss-form-aside { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 20px; }
+.ss-aside-card {
+  border: 1px solid var(--ss-stroke); border-radius: var(--ss-radius-lg);
+  padding: 22px; background: rgba(14,34,54,0.5);
+}
+.ss-aside-card h4 { margin: 0 0 8px; font-size: 14px; font-weight: 500; }
+.ss-aside-card p  { margin: 0; font-size: 13px; line-height: 1.55; color: var(--ss-fg-mute); }
+.ss-aside-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.ss-aside-list li { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; color: var(--ss-fg-soft); }
+.ss-aside-list .num { font-family: var(--ss-mono); color: var(--ss-teal); font-size: 11px; letter-spacing: 0.14em; margin-top: 2px; }
+
+/* File upload */
+.ss-file-label {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px; border-radius: 10px;
+  background: rgba(0,0,0,0.18); border: 1px dashed var(--ss-stroke-2);
+  cursor: pointer; font-size: 13px; color: var(--ss-fg-mute);
+  transition: border-color 140ms, background 140ms;
+}
+.ss-file-label:hover { border-color: var(--ss-teal); background: rgba(94,234,212,0.04); color: var(--ss-fg-soft); }
+.ss-file-label input[type="file"] { display: none; }
+.ss-file-name { font-family: var(--ss-mono); font-size: 12px; color: var(--ss-teal); }
+
+/* Success state */
+.ss-success {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 48px 24px; gap: 16px;
+}
+.ss-success-icon {
+  width: 56px; height: 56px; border-radius: 999px;
+  background: rgba(52,211,153,0.10); border: 1px solid rgba(52,211,153,0.30);
+  color: var(--ss-bon); display: grid; place-items: center;
+}
+
+/* ──────────────────────────────────────────────
+   FEEDBACK LOOP
+────────────────────────────────────────────── */
+.ss-feedback-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.1fr); gap: 60px; align-items: center; }
+.ss-loop {
+  border: 1px solid var(--ss-stroke); border-radius: var(--ss-radius-xl);
+  padding: 32px; background: var(--ss-surface);
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;
+}
+.ss-loop-step {
+  border: 1px solid var(--ss-stroke); border-radius: var(--ss-radius);
+  padding: 18px; background: rgba(0,0,0,0.15);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ss-loop-step .step-n { font-family: var(--ss-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--ss-teal); }
+.ss-loop-step .step-t { font-size: 14px; font-weight: 500; }
+.ss-loop-step .step-d { font-size: 12px; color: var(--ss-fg-mute); line-height: 1.5; }
+.ss-loop-foot {
+  grid-column: 1 / -1; margin-top: 12px; padding-top: 16px; border-top: 1px solid var(--ss-stroke);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ss-loop-foot span:first-child { font-family: var(--ss-mono); font-size: 11px; letter-spacing: 0.14em; color: var(--ss-fg-mute); }
+.ss-loop-foot span:last-child  { font-family: var(--ss-mono); font-size: 14px; color: var(--ss-teal); }
+
+/* ──────────────────────────────────────────────
+   FEEDBACK FORM (new section)
+────────────────────────────────────────────── */
+.ss-fb-form-wrap {
+  display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.5fr);
+  gap: 60px; align-items: start;
+}
+
+/* ──────────────────────────────────────────────
+   FOOTER
+────────────────────────────────────────────── */
+.ss-footer { border-top: 1px solid var(--ss-stroke); padding: 56px 0 40px; }
+.ss-footer-grid {
+  display: grid; grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 40px; align-items: start;
+}
+.ss-footer p  { margin: 12px 0 0; font-size: 13px; color: var(--ss-fg-mute); max-width: 36ch; line-height: 1.55; }
+.ss-footer h5 {
+  font-family: var(--ss-mono); font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ss-fg-mute); margin: 0 0 14px; font-weight: 500;
+}
+.ss-footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.ss-footer ul a { font-size: 14px; color: var(--ss-fg-soft); }
+.ss-footer ul a:hover { color: var(--ss-fg); }
+.ss-footer-base {
+  margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--ss-stroke);
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--ss-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--ss-fg-mute);
+}
+
+/* ──────────────────────────────────────────────
+   REVEAL ANIMATION
+────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 640ms ease, transform 640ms ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ──────────────────────────────────────────────
+   RESPONSIVE
+────────────────────────────────────────────── */
+@media (max-width: 1080px) {
+  .ss-hero-grid, .ss-section-head, .ss-form-wrap, .ss-fb-form-wrap, .ss-feedback-grid, .ss-perso-compose { grid-template-columns: 1fr; gap: 40px; }
+  .ss-hero-stage  { min-height: 600px; }
+  .ss-perso-stage { min-height: 600px; }
+  .ss-perso-grid  { grid-template-columns: repeat(2,1fr); }
+  .ss-trust-grid, .ss-steps, .ss-scenario-grid, .ss-loop { grid-template-columns: 1fr; }
+  .ss-trust-grid  { background: transparent; border: none; gap: 14px; }
+  .ss-trust       { border: 1px solid var(--ss-stroke); border-radius: var(--ss-radius-lg); }
+  .ss-problems    { grid-template-columns: 1fr; }
+  .ss-problem, .ss-problem--wide { grid-column: span 1; }
+  .ss-footer-grid { grid-template-columns: 1fr; }
+  .ss-loop-foot   { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .ss-callout     { display: none; }
+}
+@media (max-width: 720px) {
+  :root { --ss-gutter: 20px; }
+  .ss-section { padding: 80px 0; }
+  .ss-nav-links { display: none; }
+  .ss-perso-grid { grid-template-columns: 1fr; }
+  .ss-tol-row    { grid-template-columns: 1fr; }
+  .ss-row        { grid-template-columns: 1fr; }
+  .ss-form       { padding: 24px; }
+  .ss-device, .ss-device--lg { width: 280px; }
+  .ss-scenario-head { flex-direction: column; gap: 16px; }
+}
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     NAV
+══════════════════════════════════════════ -->
+<header class="ss-nav">
+  <div class="ss-container ss-nav-inner">
+    <span class="ss-wordmark"><span class="sea">Sea</span><span class="scope">Scope</span></span>
+    <nav class="ss-nav-links">
+      <a href="#problem">Problème</a>
+      <a href="#how">Fonctionnement</a>
+      <a href="#perso">Personnalisation</a>
+      <a href="#trust">Confiance</a>
+      <a href="#beta">Beta</a>
+    </nav>
+    <div style="display:flex;gap:12px;align-items:center">
+      <span class="ss-nav-tag">Beta · 2026</span>
+      <a href="#beta" class="ss-btn ss-btn--sm">Rejoindre</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section class="ss-hero">
+  <div class="ss-container">
+    <div class="ss-hero-grid">
+
+      <div class="ss-hero-copy">
+        <div class="reveal ss-eyebrow-row">
+          <span class="ss-kicker">Beta fermée · Été 2026</span>
+        </div>
+        <h1 class="ss-h1 reveal" style="transition-delay:80ms">
+          Décidez quand sortir en mer<br>
+          <span style="color:var(--ss-teal)">en toute confiance.</span>
+        </h1>
+        <p class="ss-lead reveal" style="margin-top:22px;transition-delay:160ms">
+          SeaScope transforme les conditions météo en recommandations
+          concrètes, adaptées à votre façon de naviguer. Quand sortir,
+          quand rentrer, et avec quel niveau de confiance.
+        </p>
+        <div class="ss-hero-ctas reveal" style="transition-delay:240ms">
+          <a href="#beta" class="ss-btn ss-btn--lg">
+            Rejoindre la beta fermée
+            <span class="arr"><!-- arrow --><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a href="#how" class="ss-btn ss-btn--ghost ss-btn--lg">Voir comment ça marche</a>
+        </div>
+        <div class="ss-hero-trust reveal" style="transition-delay:320ms">
+          <span><span class="dot"></span>Fusion multi-sources météo</span>
+          <span><span class="dot"></span>Recommandations explicables</span>
+          <span><span class="dot"></span>Stockage local uniquement</span>
+        </div>
+      </div>
+
+      <div class="ss-hero-stage">
+        <div class="reveal" style="display:contents;transition-delay:120ms">
+          <div class="ss-device ss-device--lg">
+            <div class="ss-device-screen">
+              <img src="assets/screen-bon.png" alt="Tableau de bord SeaScope — conditions BON"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="ss-callout" style="left:-24px;top:60px">
+          <div class="ss-callout-num">1</div>
+          <div>
+            <div class="ss-callout-label">Statut décisionnel</div>
+            <div class="ss-callout-text">BON · conditions idéales pour une sortie familiale</div>
+          </div>
+        </div>
+        <div class="ss-callout" style="right:-32px;top:32%">
+          <div class="ss-callout-num">2</div>
+          <div>
+            <div class="ss-callout-label">Fenêtre optimale</div>
+            <div class="ss-callout-text">Départ entre 08:00 et 11:00, retour avant 10:15.</div>
+          </div>
+        </div>
+        <div class="ss-callout" style="left:-40px;bottom:120px">
+          <div class="ss-callout-num">3</div>
+          <div>
+            <div class="ss-callout-label">Pourquoi</div>
+            <div class="ss-callout-text">Mer croisée préoccupante — vent et vagues favorables.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PROBLEM
+══════════════════════════════════════════ -->
+<section class="ss-section ss-section--band" id="problem">
+  <div class="ss-container">
+    <div class="reveal ss-section-head">
+      <div>
+        <div class="ss-eyebrow-row"><span class="ss-kicker">Le problème</span></div>
+        <h2 class="ss-h2">Trop de données.<br>Pas assez de décision.</h2>
+      </div>
+      <p class="ss-lead">
+        Avant chaque sortie, on jongle entre trois applis météo, des
+        modèles qui ne s'accordent pas, et l'intuition. La décision
+        finale repose sur la fatigue d'un dimanche matin.
+      </p>
+    </div>
+
+    <div class="reveal ss-problems">
+      <div class="ss-problem">
+        <div class="ss-problem-idx">01 — Météo dispersée</div>
+        <div class="ss-problem-title">Trois applis, trois modèles, trois verdicts différents.</div>
+        <div class="ss-mini-chart">
+          <svg viewBox="0 0 100 56" preserveAspectRatio="none">
+            <path d="M0 30 C 12 18, 22 38, 34 28 S 56 12, 68 24 S 86 38, 100 22" fill="none" stroke="#2DD4BF" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M0 30 C 12 18, 22 38, 34 28 S 56 12, 68 24 S 86 38, 100 22 L 100 56 L 0 56 Z" fill="#2DD4BF" opacity="0.08"/>
+          </svg>
+        </div>
+        <div class="ss-problem-desc">Vent ici, houle là-bas, rafales nulle part. Les sources se contredisent.</div>
+      </div>
+
+      <div class="ss-problem">
+        <div class="ss-problem-idx">02 — Surcharge cognitive</div>
+        <div class="ss-problem-title">Lire la météo devient un travail à temps plein.</div>
+        <div class="ss-mini-chart">
+          <svg viewBox="0 0 100 56" preserveAspectRatio="none">
+            <path d="M0 18 L10 32 L20 22 L30 40 L40 24 L50 36 L60 20 L70 30 L80 16 L90 38 L100 26" fill="none" stroke="#FBBF24" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M0 18 L10 32 L20 22 L30 40 L40 24 L50 36 L60 20 L70 30 L80 16 L90 38 L100 26 L 100 56 L 0 56 Z" fill="#FBBF24" opacity="0.08"/>
+          </svg>
+        </div>
+        <div class="ss-problem-desc">Vagues, vent, rafales, coefficient, période… on cumule sans savoir quoi en faire.</div>
+      </div>
+
+      <div class="ss-problem">
+        <div class="ss-problem-idx">03 — Décision sous stress</div>
+        <div class="ss-problem-title">Sortir ou pas ? On tranche dans l'incertitude.</div>
+        <div class="ss-mini-chart">
+          <svg viewBox="0 0 100 56" preserveAspectRatio="none">
+            <path d="M0 22 C 18 30, 28 14, 42 26 S 64 38, 78 22 S 92 40, 100 28" fill="none" stroke="#FF6B6B" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M0 22 C 18 30, 28 14, 42 26 S 64 38, 78 22 S 92 40, 100 28 L 100 56 L 0 56 Z" fill="#FF6B6B" opacity="0.08"/>
+          </svg>
+        </div>
+        <div class="ss-problem-desc">On choisit par intuition, en croisant les doigts pour que la mer suive.</div>
+      </div>
+
+      <div class="ss-problem ss-problem--wide">
+        <div class="ss-problem-idx">04 — Peur de rater la fenêtre</div>
+        <div class="ss-problem-title">"Et si j'avais pu sortir ce matin&nbsp;?"</div>
+        <div class="ss-mini-chart">
+          <svg viewBox="0 0 100 56" preserveAspectRatio="none">
+            <path d="M0 36 L18 30 L34 14 L48 12 L62 20 L78 34 L100 40" fill="none" stroke="#6EE7B7" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M0 36 L18 30 L34 14 L48 12 L62 20 L78 34 L100 40 L 100 56 L 0 56 Z" fill="#6EE7B7" opacity="0.08"/>
+          </svg>
+        </div>
+        <div class="ss-problem-desc">Les meilleures fenêtres sont courtes. Sans signal clair, elles passent à côté.</div>
+      </div>
+
+      <div class="ss-problem ss-problem--wide">
+        <div class="ss-problem-idx">05 — Peur de mal sortir</div>
+        <div class="ss-problem-title">"Et si les conditions tournent une fois au large&nbsp;?"</div>
+        <div class="ss-mini-chart">
+          <svg viewBox="0 0 100 56" preserveAspectRatio="none">
+            <path d="M0 32 L14 30 L28 26 L42 22 L56 24 L72 18 L86 10 L100 6" fill="none" stroke="#EF4444" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M0 32 L14 30 L28 26 L42 22 L56 24 L72 18 L86 10 L100 6 L 100 56 L 0 56 Z" fill="#EF4444" opacity="0.08"/>
+          </svg>
+        </div>
+        <div class="ss-problem-desc">La vraie peur, ce n'est pas la mauvaise météo&nbsp;: c'est ne pas l'avoir vue venir.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════════ -->
+<section class="ss-section" id="how">
+  <div class="ss-container">
+    <div class="reveal ss-section-head">
+      <div>
+        <div class="ss-eyebrow-row"><span class="ss-kicker">Comment ça marche</span></div>
+        <h2 class="ss-h2">Trois gestes.<br>Une décision claire.</h2>
+      </div>
+      <p class="ss-lead">
+        SeaScope vous demande l'essentiel — votre spot, votre pratique —
+        puis renvoie un signal décisionnel, pas un dump de données.
+      </p>
+    </div>
+
+    <div class="ss-steps">
+      <div class="reveal ss-step">
+        <div class="ss-step-head">
+          <span class="ss-step-num">01</span>
+          <span class="ss-step-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.5 7-13a7 7 0 1 0-14 0c0 5.5 7 13 7 13Z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </span>
+        </div>
+        <h3>Choisissez votre spot.</h3>
+        <p>Trévignon, Quiberon, Glénan, ou n'importe quel point GPS. Vos spots préférés sont mémorisés.</p>
+        <div class="ss-step-vis">
+          <div style="position:relative;height:100px">
+            <svg viewBox="0 0 280 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">
+              <defs><pattern id="grid" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M 14 0 L 0 0 0 14" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs>
+              <rect width="280" height="100" fill="url(#grid)"/>
+              <path d="M0 70 C 50 60, 80 78, 130 62 S 220 50, 280 58 L280 100 L0 100 Z" fill="rgba(94,234,212,0.05)" stroke="rgba(94,234,212,0.4)" stroke-width="1"/>
+              <circle cx="140" cy="55" r="5" fill="var(--ss-teal)"/>
+              <circle cx="140" cy="55" r="11" fill="none" stroke="var(--ss-teal)" stroke-width="1" opacity="0.4"/>
+            </svg>
+            <div style="position:absolute;left:120px;top:24px;font-family:var(--ss-mono);font-size:10px;color:var(--ss-teal);letter-spacing:0.1em">TRÉVIGNON</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal ss-step" style="transition-delay:120ms">
+        <div class="ss-step-head">
+          <span class="ss-step-num">02</span>
+          <span class="ss-step-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5z"/><path d="M2 13l10 5 10-5"/><path d="M2 18l10 5 10-5"/></svg>
+          </span>
+        </div>
+        <h3>SeaScope analyse les conditions.</h3>
+        <p>Fusion de plusieurs modèles météo marins, croisée avec les seuils de votre profil de navigation.</p>
+        <div class="ss-step-vis" style="display:flex;flex-direction:column;gap:6px">
+          <div class="fusion-row"><span class="fusion-label">ARPEGE</span><div class="fusion-bar"><span style="width:72%;background:var(--ss-bon)"></span></div><span class="fusion-val" style="color:var(--ss-bon)">72</span></div>
+          <div class="fusion-row"><span class="fusion-label">ICON-EU</span><div class="fusion-bar"><span style="width:65%;background:var(--ss-bon)"></span></div><span class="fusion-val" style="color:var(--ss-bon)">65</span></div>
+          <div class="fusion-row"><span class="fusion-label">GFS</span><div class="fusion-bar"><span style="width:58%;background:var(--ss-variable)"></span></div><span class="fusion-val" style="color:var(--ss-variable)">58</span></div>
+          <div class="fusion-row"><span class="fusion-label">WAVEWATCH</span><div class="fusion-bar"><span style="width:70%;background:var(--ss-bon)"></span></div><span class="fusion-val" style="color:var(--ss-bon)">70</span></div>
+          <div class="fusion-row"><span class="fusion-label" style="color:var(--ss-teal)">SEASCOPE</span><div class="fusion-bar"><span style="width:88%;background:var(--ss-teal)"></span></div><span class="fusion-val" style="color:var(--ss-teal)">88</span></div>
+        </div>
+      </div>
+
+      <div class="reveal ss-step" style="transition-delay:240ms">
+        <div class="ss-step-head">
+          <span class="ss-step-num">03</span>
+          <span class="ss-step-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 5-5 2 2-5z"/></svg>
+          </span>
+        </div>
+        <h3>Obtenez votre signal.</h3>
+        <p>Une recommandation tranchée — meilleure fenêtre, heure de retour, niveau adapté à votre pratique.</p>
+        <div class="ss-step-vis" style="display:flex;flex-direction:column;gap:10px">
+          <div class="signal-row">
+            <span class="ss-pill ss-pill--bon">BON</span>
+            <span class="signal-mono" style="font-size:11px;color:var(--ss-fg-mute);letter-spacing:0.1em">88 / 100</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <div>
+              <div style="font-family:var(--ss-mono);font-size:9px;color:var(--ss-fg-mute);letter-spacing:0.14em">DÉPART OPTIMAL</div>
+              <div style="font-family:var(--ss-mono);font-size:18px;font-weight:500;margin-top:4px">08:00 — 11:00</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-family:var(--ss-mono);font-size:9px;color:var(--ss-rentrer);letter-spacing:0.14em">RENTRER AVANT</div>
+              <div style="font-family:var(--ss-mono);font-size:18px;font-weight:500;color:var(--ss-rentrer);margin-top:4px">10:15</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PERSONALIZATION
+══════════════════════════════════════════ -->
+<section class="ss-section" id="perso">
+  <div class="ss-container">
+    <div class="reveal ss-section-head">
+      <div>
+        <div class="ss-eyebrow-row"><span class="ss-kicker">Personnalisation</span></div>
+        <h2 class="ss-h2">SeaScope s'adapte à votre<br>façon de naviguer.</h2>
+      </div>
+      <p class="ss-lead">
+        Mêmes conditions, recommandations différentes. Vos seuils,
+        votre pratique et votre tolérance définissent ce qui vous est
+        confortable — et ce qui ne l'est pas.
+      </p>
+    </div>
+
+    <!-- Persona picker -->
+    <div class="reveal">
+      <div class="ss-perso-label">01 — Vous naviguez plutôt comment&nbsp;?</div>
+      <div class="ss-perso-grid" id="persona-grid">
+
+        <button type="button" class="ss-persona" data-persona="balade">
+          <span class="ss-persona-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v14"/><path d="M5 13a7 7 0 0 0 14 0"/><path d="M8 11H5M16 11h3"/></svg></span>
+          <span class="ss-persona-name">Balade côtière</span>
+          <span class="ss-persona-desc">Sortie tranquille, plaisir de naviguer.</span>
+        </button>
+
+        <button type="button" class="ss-persona is-active" data-persona="famille">
+          <span class="ss-persona-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2.5"/><circle cx="16" cy="9" r="2"/><path d="M3 19c0-3 2.5-5 5-5s5 2 5 5"/><path d="M13 18c.5-2 2-3.5 3-3.5s2.5 1 3 3"/></svg></span>
+          <span class="ss-persona-name">Sortie familiale</span>
+          <span class="ss-persona-desc">Équipage varié, confort et sécurité.</span>
+        </button>
+
+        <button type="button" class="ss-persona" data-persona="courte">
+          <span class="ss-persona-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <span class="ss-persona-name">Session courte</span>
+          <span class="ss-persona-desc">Peu de temps, fenêtre optimisée.</span>
+        </button>
+
+        <button type="button" class="ss-persona" data-persona="peche">
+          <span class="ss-persona-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12c3-5 8-6 12-6 3 0 6 2 6 6s-3 6-6 6c-4 0-9-1-12-6Z"/><path d="m3 12 4-3v6z"/><circle cx="16" cy="11" r=".6" fill="currentColor"/></svg></span>
+          <span class="ss-persona-name">Pêche côtière</span>
+          <span class="ss-persona-desc">Stabilité, mouillage, mer calme.</span>
+        </button>
+
+        <button type="button" class="ss-persona" data-persona="sport">
+          <span class="ss-persona-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v15"/><path d="M12 5c4 2 7 7 7 12H5c0-5 3-10 7-12Z"/><path d="M3 21h18"/></svg></span>
+          <span class="ss-persona-name">Navigation sportive</span>
+          <span class="ss-persona-desc">Vent, vitesse, conditions engagées.</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Tolerance picker -->
+    <div class="reveal" style="margin-top:32px;transition-delay:80ms">
+      <div class="ss-perso-label">02 — Votre sortie idéale, c'est quoi&nbsp;?</div>
+      <div class="ss-tol-row" id="tol-grid">
+
+        <button type="button" class="ss-tol" data-tol="tranquille">
+          <span class="ss-tol-bar"><i class="on"></i><i></i><i></i></span>
+          <span style="flex:1">
+            <span class="ss-tol-name">Tranquille</span><br>
+            <span class="ss-tol-sub">Mer clémente, sortie sereine.</span>
+          </span>
+          <span class="ss-tol-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+        </button>
+
+        <button type="button" class="ss-tol is-active" data-tol="vivante">
+          <span class="ss-tol-bar"><i class="on"></i><i class="on"></i><i></i></span>
+          <span style="flex:1">
+            <span class="ss-tol-name">Vivante</span><br>
+            <span class="ss-tol-sub">Du relief, ni sage ni chargé.</span>
+          </span>
+          <span class="ss-tol-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+        </button>
+
+        <button type="button" class="ss-tol" data-tol="engagee">
+          <span class="ss-tol-bar"><i class="on"></i><i class="on"></i><i class="on"></i></span>
+          <span style="flex:1">
+            <span class="ss-tol-name">Engagée</span><br>
+            <span class="ss-tol-sub">Sportif, vent et mer formée.</span>
+          </span>
+          <span class="ss-tol-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Compose: device + copy -->
+    <div class="ss-perso-compose">
+      <div class="ss-perso-stage">
+        <div class="reveal" style="display:contents">
+          <div class="ss-device">
+            <div class="ss-device-screen">
+              <img src="assets/screen-delicat.png" alt="SeaScope — simulation sortie délicate"/>
+            </div>
+          </div>
+        </div>
+        <div class="ss-callout" style="left:-40px;top:44px">
+          <div class="ss-callout-num">A</div>
+          <div>
+            <div class="ss-callout-label">Score personnalisé</div>
+            <div class="ss-callout-text">38 / 100 — recalculé pour votre profil et vos seuils.</div>
+          </div>
+        </div>
+        <div class="ss-callout" style="right:-40px;top:44%">
+          <div class="ss-callout-num">B</div>
+          <div>
+            <div class="ss-callout-label">Dépassements</div>
+            <div class="ss-callout-text">Rafales 13 nd, soit 11 nd au-dessus de votre confort.</div>
+          </div>
+        </div>
+        <div class="ss-callout" style="left:-32px;bottom:120px">
+          <div class="ss-callout-num">C</div>
+          <div>
+            <div class="ss-callout-label">Trois moments</div>
+            <div class="ss-callout-text">Départ, pire moment, retour — chaque étape évaluée.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="ss-eyebrow-row"><span class="ss-kicker">Cas réel · simulation</span></div>
+        <h3 class="ss-h2" style="font-size:clamp(28px,2.4vw,40px)">
+          Sur cette sortie, vos seuils disent <em style="color:var(--ss-delicat);font-style:normal">DÉLICAT</em>.
+        </h3>
+        <p class="ss-lead" style="margin-top:16px">
+          SeaScope a comparé le départ, le pire moment et le retour à vos
+          limites personnelles. Vent trop fort par rafales, mer dans le
+          profil mais à la limite. Le score traduit ce que vous savez
+          déjà — sans avoir à le calculer.
+        </p>
+        <ul style="list-style:none;margin:24px 0 0;padding:0;display:flex;flex-direction:column;gap:12px">
+          <li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ss-fg-soft)">
+            <span style="color:var(--ss-teal);margin-top:2px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+            <span>Vos limites personnelles, pas des moyennes anonymes.</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ss-fg-soft)">
+            <span style="color:var(--ss-teal);margin-top:2px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+            <span>Chaque dépassement nommé, chiffré, expliqué.</span>
+          </li>
+          <li style="display:flex;gap:12px;align-items:flex-start;font-size:14px;color:var(--ss-fg-soft)">
+            <span style="color:var(--ss-teal);margin-top:2px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+            <span>Un score qui change avec votre profil — pas avec le marketing.</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Scenario: three cards -->
+    <div class="ss-scenario">
+      <div class="ss-scenario-head">
+        <div>
+          <div class="ss-eyebrow-row"><span class="ss-kicker">Comparaison live</span></div>
+          <h3 class="ss-h2" style="font-size:clamp(24px,2.2vw,34px);margin:0">Mêmes conditions. Trois verdicts.</h3>
+        </div>
+        <p style="color:var(--ss-fg-mute);font-size:14px;max-width:360px;margin:0">
+          Trévignon · 14 août · 09h — Vent 14 nd ESE, vagues 1.0 m, rafales 15 nd.
+          Vos réglages ci-dessus changent la recommandation.
+        </p>
+      </div>
+
+      <div class="ss-scenario-grid" id="scenario-grid">
+
+        <div class="ss-rec ss-rec--deconseille" data-tol-card="tranquille" style="opacity:0.62">
+          <div class="ss-rec-profile">Tranquille · <span class="scenario-persona">Sortie familiale</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="ss-pill ss-pill--deconseille">DÉCONSEILLÉ</span>
+            <span style="font-family:var(--ss-mono);font-size:11px;color:var(--ss-fg-mute);letter-spacing:0.1em">22 / 100</span>
+          </div>
+          <div class="ss-rec-title">Conditions au-dessus de votre confort</div>
+          <div class="ss-rec-meta">
+            <div><div class="label">Fenêtre</div><div class="value">Aucune</div></div>
+            <div style="text-align:right"><div class="label">Rentrer avant</div><div class="value ss-rec-return">—</div></div>
+          </div>
+          <div class="ss-rec-divider"></div>
+          <div class="ss-rec-reasons">
+            <div class="ss-rec-reason bad"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8"/></svg></span><span>Rafales 18 nd — dépasse limite 12 nd</span></div>
+            <div class="ss-rec-reason bad"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/><path d="M2 15c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/></svg></span><span>Vagues 1.4 m — dépasse limite 0.8 m</span></div>
+            <div class="ss-rec-reason warn"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 4 14h7l-1 7 9-11h-7z"/></svg></span><span>Mer croisée préoccupante</span></div>
+          </div>
+          <div class="ss-rec-foot"><span class="swatch" style="background:var(--ss-deconseille)"></span>Profil tranquille</div>
+        </div>
+
+        <div class="ss-rec ss-rec--delicat" data-tol-card="vivante" style="opacity:1">
+          <div class="ss-rec-profile">Vivante · <span class="scenario-persona">Sortie familiale</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="ss-pill ss-pill--delicat">DÉLICAT</span>
+            <span style="font-family:var(--ss-mono);font-size:11px;color:var(--ss-fg-mute);letter-spacing:0.1em">58 / 100</span>
+          </div>
+          <div class="ss-rec-title">Sortie possible — à surveiller</div>
+          <div class="ss-rec-meta">
+            <div><div class="label">Fenêtre</div><div class="value">10:30 — 13:00</div></div>
+            <div style="text-align:right"><div class="label">Rentrer avant</div><div class="value ss-rec-return">13:30</div></div>
+          </div>
+          <div class="ss-rec-divider"></div>
+          <div class="ss-rec-reasons">
+            <div class="ss-rec-reason warn"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8"/></svg></span><span>Rafales 15 nd — proche limite 16 nd</span></div>
+            <div class="ss-rec-reason good"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/><path d="M2 15c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/></svg></span><span>Vagues 0.9 m — dans le profil</span></div>
+            <div class="ss-rec-reason warn"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span>Renforcement attendu après 13h</span></div>
+          </div>
+          <div class="ss-rec-foot"><span class="swatch" style="background:var(--ss-delicat)"></span>Profil vivante</div>
+        </div>
+
+        <div class="ss-rec ss-rec--bon" data-tol-card="engagee" style="opacity:0.62">
+          <div class="ss-rec-profile">Engagée · <span class="scenario-persona">Sortie familiale</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <span class="ss-pill ss-pill--bon">BON</span>
+            <span style="font-family:var(--ss-mono);font-size:11px;color:var(--ss-fg-mute);letter-spacing:0.1em">84 / 100</span>
+          </div>
+          <div class="ss-rec-title">Conditions idéales pour vous</div>
+          <div class="ss-rec-meta">
+            <div><div class="label">Fenêtre</div><div class="value">09:00 — 15:00</div></div>
+            <div style="text-align:right"><div class="label">Rentrer avant</div><div class="value ss-rec-return">16:00</div></div>
+          </div>
+          <div class="ss-rec-divider"></div>
+          <div class="ss-rec-reasons">
+            <div class="ss-rec-reason good"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8"/></svg></span><span>Rafales 14 nd — terrain de jeu confortable</span></div>
+            <div class="ss-rec-reason good"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/><path d="M2 15c2 0 2 2 4 2s2-2 4-2 2 2 4 2 2-2 4-2 2 2 4 2"/></svg></span><span>Mer formée — 1.0 m, période 8s</span></div>
+            <div class="ss-rec-reason good"><span class="ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 5-5 2 2-5z"/></svg></span><span>Vent stable orienté ESE</span></div>
+          </div>
+          <div class="ss-rec-foot"><span class="swatch" style="background:var(--ss-bon)"></span>Profil engagée</div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     TRUST
+══════════════════════════════════════════ -->
+<section class="ss-section ss-section--band" id="trust">
+  <div class="ss-container">
+    <div class="reveal ss-section-head">
+      <div>
+        <div class="ss-eyebrow-row"><span class="ss-kicker">Confiance</span></div>
+        <h2 class="ss-h2">Une décision n'a de valeur<br>que si on peut la défendre.</h2>
+      </div>
+      <p class="ss-lead">
+        Pas de boîte noire, pas de cloud personnel, pas de score
+        marketing. Chaque recommandation est traçable jusqu'aux
+        chiffres qui l'ont produite.
+      </p>
+    </div>
+
+    <div class="reveal ss-trust-grid">
+      <div class="ss-trust">
+        <span class="ss-trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5z"/><path d="M2 13l10 5 10-5"/><path d="M2 18l10 5 10-5"/></svg></span>
+        <h3>Fusion multi-sources</h3>
+        <p>Plusieurs modèles météo marins — ARPEGE, ICON-EU, GFS, WaveWatch — agrégés et pondérés selon leur fiabilité locale.</p>
+      </div>
+      <div class="ss-trust">
+        <span class="ss-trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg></span>
+        <h3>Recommandations explicables</h3>
+        <p>Chaque score affiche les seuils dépassés, les modèles utilisés et le niveau d'incertitude. Vous voyez ce qu'on vous dit.</p>
+      </div>
+      <div class="ss-trust">
+        <span class="ss-trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 5-5 2 2-5z"/></svg></span>
+        <h3>Personnalisation réelle</h3>
+        <p>Vos limites de vent, vagues et rafales définissent le BON. Pas un seuil moyen pour navigateur moyen.</p>
+      </div>
+      <div class="ss-trust">
+        <span class="ss-trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg></span>
+        <h3>Logique transparente</h3>
+        <p>Un score, trois moments (départ, pire, retour), des raisons nommées. Aucune magie, aucun algorithme secret.</p>
+      </div>
+      <div class="ss-trust">
+        <span class="ss-trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <h3>Stockage local</h3>
+        <p>Vos préférences, vos spots, vos sorties — sur votre appareil. Pas de profil cloud, pas de revente.</p>
+      </div>
+      <div class="ss-trust">
+        <span class="ss-trust-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9Z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></span>
+        <h3>Alertes utiles</h3>
+        <p>Un signal seulement quand la fenêtre s'ouvre — ou quand la mer se referme. Pas de notification pour le bruit.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     BETA FORM
+══════════════════════════════════════════ -->
+<section class="ss-section" id="beta">
+  <div class="ss-container">
+    <div class="reveal ss-section-head">
+      <div>
+        <div class="ss-eyebrow-row"><span class="ss-kicker">Rejoindre la beta</span></div>
+        <h2 class="ss-h2">Candidatez à la beta fermée.</h2>
+      </div>
+      <p class="ss-lead">
+        La beta est limitée. On sélectionne sur la diversité des
+        pratiques et des zones de navigation, pas sur l'ancienneté.
+        Quelques questions pour cadrer votre profil.
+      </p>
+    </div>
+
+    <!-- Success state (hidden by default) -->
+    <div id="beta-success" style="display:none;max-width:720px;margin:0 auto">
+      <div class="ss-form" style="padding:0">
+        <div class="ss-success">
+          <div class="ss-success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div>
+          <h2 class="ss-h2" style="font-size:clamp(24px,2.4vw,32px);margin:0">Bienvenue à bord, <span id="beta-success-name">navigateur</span>.</h2>
+          <p class="ss-lead" style="text-align:center;margin:8px auto 0">
+            On a bien reçu votre candidature. Vous recevrez un lien d'accès
+            à la beta et l'invitation au Discord testeurs dans les prochains jours.
+          </p>
+          <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+            <a class="ss-btn ss-btn--ghost" href="#feedback-form">Vous êtes déjà en beta&nbsp;?</a>
+            <button class="ss-btn" type="button" id="beta-reset-btn">Inscrire quelqu'un d'autre</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div id="beta-form-wrap" class="ss-form-wrap">
+      <form class="ss-form" id="beta-form" novalidate>
+
+        <div class="ss-row">
+          <div class="ss-field">
+            <label for="b-firstname">Prénom</label>
+            <input id="b-firstname" class="ss-input" placeholder="Camille" autocomplete="given-name"/>
+          </div>
+          <div class="ss-field">
+            <label for="b-email">Email</label>
+            <input id="b-email" type="email" class="ss-input" placeholder="camille@exemple.fr" autocomplete="email"/>
+          </div>
+        </div>
+
+        <div class="ss-field">
+          <label for="b-region">Région de navigation</label>
+          <input id="b-region" class="ss-input" placeholder="Sud Finistère, Quiberon, Côte d'Azur…"/>
+        </div>
+
+        <div class="ss-field">
+          <label>Type de navigation</label>
+          <div class="ss-chips" data-group="navtype">
+            <button type="button" class="ss-chip" data-val="Voile">Voile</button>
+            <button type="button" class="ss-chip" data-val="Moteur">Moteur</button>
+            <button type="button" class="ss-chip" data-val="Semi-rigide">Semi-rigide</button>
+            <button type="button" class="ss-chip" data-val="Kayak / paddle">Kayak / paddle</button>
+            <button type="button" class="ss-chip" data-val="Pêche">Pêche</button>
+            <button type="button" class="ss-chip" data-val="Autre">Autre</button>
+          </div>
+        </div>
+
+        <div class="ss-field">
+          <label>Fréquence de sortie</label>
+          <div class="ss-chips" data-group="freq">
+            <button type="button" class="ss-chip" data-val="≤ 1× / mois">≤ 1× / mois</button>
+            <button type="button" class="ss-chip" data-val="2–4× / mois">2–4× / mois</button>
+            <button type="button" class="ss-chip" data-val="1× / sem.">1× / sem.</button>
+            <button type="button" class="ss-chip" data-val="Plusieurs / sem.">Plusieurs / sem.</button>
+          </div>
+        </div>
+
+        <div class="ss-row">
+          <div class="ss-field">
+            <label for="b-boat">Bateau / engin</label>
+            <input id="b-boat" class="ss-input" placeholder="Modèle, longueur, propulsion (optionnel)"/>
+          </div>
+          <div class="ss-field">
+            <label>Plateforme</label>
+            <div class="ss-chips" data-group="platform">
+              <button type="button" class="ss-chip" data-val="iPhone">iPhone</button>
+              <button type="button" class="ss-chip" data-val="Android">Android</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ss-field">
+          <label>Pratique principale</label>
+          <div class="ss-chips" data-group="practice">
+            <button type="button" class="ss-chip" data-val="Balade côtière">Balade côtière</button>
+            <button type="button" class="ss-chip" data-val="Sortie familiale">Sortie familiale</button>
+            <button type="button" class="ss-chip" data-val="Session courte">Session courte</button>
+            <button type="button" class="ss-chip" data-val="Pêche côtière">Pêche côtière</button>
+            <button type="button" class="ss-chip" data-val="Navigation sportive">Navigation sportive</button>
+          </div>
+        </div>
+
+        <div class="ss-field">
+          <label for="b-blocker">Qu'est-ce qui vous fait généralement renoncer à une sortie&nbsp;?</label>
+          <textarea id="b-blocker" class="ss-textarea" rows="3" placeholder="Vent qui tourne, météo incertaine, équipage hésitant, fatigue mentale…"></textarea>
+        </div>
+
+        <label class="ss-consent">
+          <input type="checkbox" id="b-consent"/>
+          <span>
+            J'accepte de participer à la beta fermée de SeaScope et de
+            partager mes retours d'usage. Mes données ne sont utilisées
+            que pour le programme beta, sans cession à un tiers.
+          </span>
+        </label>
+
+        <div class="ss-form-cta">
+          <button type="submit" class="ss-btn ss-btn--lg">
+            Demander un accès beta
+            <span class="arr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </button>
+          <span style="font-family:var(--ss-mono);font-size:11px;color:var(--ss-fg-mute);letter-spacing:0.08em">Réponse sous 5 jours ouvrés</span>
+        </div>
+        <div id="beta-error" style="display:none;margin-top:12px;font-family:var(--ss-mono);font-size:12px;color:var(--ss-deconseille);letter-spacing:0.06em">
+          Veuillez remplir les champs obligatoires (prénom, email, région, type de navigation, fréquence, plateforme, pratique).
+        </div>
+
+      </form>
+
+      <aside class="ss-form-aside">
+        <div class="ss-aside-card">
+          <h4>Ce qu'on attend de vous</h4>
+          <ul class="ss-aside-list" style="margin-top:14px">
+            <li><span class="num">01</span><span>Tester en conditions réelles, avant chaque sortie.</span></li>
+            <li><span class="num">02</span><span>Comparer la recommandation à la réalité observée.</span></li>
+            <li><span class="num">03</span><span>Signaler quand SeaScope se trompe — et pourquoi.</span></li>
+          </ul>
+        </div>
+        <div class="ss-aside-card">
+          <h4>Canaux beta</h4>
+          <p>Un Discord privé pour les testeurs. Un fil Telegram pour les alertes critiques. Les deux modérés par l'équipe produit.</p>
+          <div style="display:flex;gap:8px;margin-top:14px">
+            <span class="ss-pill ss-pill--bon">Discord</span>
+            <span class="ss-pill ss-pill--bon">Telegram</span>
+          </div>
+        </div>
+        <div class="ss-aside-card">
+          <h4>Critères de sélection</h4>
+          <p>Diversité de la zone, du bateau, de la pratique. Une session régulière sur l'été 2026, et l'envie d'aider à construire un outil que vous utiliserez.</p>
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FEEDBACK LOOP
+══════════════════════════════════════════ -->
+<section class="ss-section ss-section--band">
+  <div class="ss-container">
+    <div class="ss-feedback-grid">
+      <div class="reveal">
+        <div class="ss-eyebrow-row"><span class="ss-kicker">Boucle terrain</span></div>
+        <h2 class="ss-h2">La beta sert à affûter<br>les recommandations réelles.</h2>
+        <p class="ss-lead" style="margin-top:16px">
+          On ne cherche pas à valider une démo. On cherche à valider une
+          décision&nbsp;: est-ce que SeaScope a vu juste cette fois&nbsp;?
+          Vos retours terrain font évoluer la pondération des modèles,
+          les seuils par profil, et la façon dont on formule un signal.
+        </p>
+        <p class="ss-lead" style="margin-top:12px">
+          L'objectif n'est pas une appli météo de plus. C'est un vrai
+          copilote de décision — entraîné avec vous.
+        </p>
+      </div>
+
+      <div class="reveal" style="transition-delay:120ms">
+        <div class="ss-loop">
+          <div class="ss-loop-step">
+            <span class="step-n">01 · AVANT</span>
+            <span class="step-t">SeaScope recommande.</span>
+            <span class="step-d">Score, fenêtre, heure de retour adaptés à votre profil.</span>
+          </div>
+          <div class="ss-loop-step">
+            <span class="step-n">02 · APRÈS</span>
+            <span class="step-t">Vous notez la réalité.</span>
+            <span class="step-d">Mer vue, vent ressenti, écart à la prévision, décision prise.</span>
+          </div>
+          <div class="ss-loop-step">
+            <span class="step-n">03 · ENTRE</span>
+            <span class="step-t">Le modèle s'ajuste.</span>
+            <span class="step-d">Pondération locale, calibrage par zone, par profil, par saison.</span>
+          </div>
+          <div class="ss-loop-foot">
+            <span>BOUCLE FERMÉE · MÉTRIQUE PRINCIPALE</span>
+            <span>"SeaScope a-t-il vu juste&nbsp;?"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FEEDBACK FORM (new)
+══════════════════════════════════════════ -->
+<section class="ss-section" id="feedback-form">
+  <div class="ss-container">
+    <div class="reveal ss-section-head">
+      <div>
+        <div class="ss-eyebrow-row"><span class="ss-kicker">Bêta-testeurs</span></div>
+        <h2 class="ss-h2">Envoyez un retour terrain.</h2>
+      </div>
+      <p class="ss-lead">
+        Une recommandation qui ne collait pas&nbsp;? Un bug&nbsp;? Une donnée
+        manquante&nbsp;? Ce formulaire va directement à l'équipe produit.
+        Chaque retour est traité — pas archivé.
+      </p>
+    </div>
+
+    <!-- Success state -->
+    <div id="fb-success" style="display:none;max-width:720px;margin:0 auto">
+      <div class="ss-form" style="padding:0">
+        <div class="ss-success">
+          <div class="ss-success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div>
+          <h2 class="ss-h2" style="font-size:clamp(22px,2vw,30px);margin:0">Merci, votre retour a bien été envoyé.</h2>
+          <p class="ss-lead" style="text-align:center;margin:8px auto 0">On revient vers vous si on a besoin de précisions. Continuez à naviguer.</p>
+          <button class="ss-btn ss-btn--ghost" type="button" id="fb-reset-btn" style="margin-top:8px">Envoyer un autre retour</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="fb-form-wrap" class="ss-fb-form-wrap">
+
+      <aside class="ss-form-aside" style="position:static">
+        <div class="ss-aside-card">
+          <h4>Ce qu'on cherche à comprendre</h4>
+          <ul class="ss-aside-list" style="margin-top:14px">
+            <li><span class="num">01</span><span>Les cas où la recommandation et la réalité divergent.</span></li>
+            <li><span class="num">02</span><span>Les données manquantes pour votre zone ou pratique.</span></li>
+            <li><span class="num">03</span><span>Les moments où l'interface vous a bloqué ou confus.</span></li>
+          </ul>
+        </div>
+        <div class="ss-aside-card">
+          <h4>Délai de traitement</h4>
+          <p>Les retours de type "recommandation incorrecte" sont examinés sous 48h. Les bugs critiques sous 24h.</p>
+        </div>
+        <div class="ss-aside-card" style="border-color:rgba(94,234,212,0.20)">
+          <h4 style="color:var(--ss-teal)">Vous n'êtes pas encore en beta&nbsp;?</h4>
+          <p>Ce formulaire est réservé aux testeurs. Pour rejoindre la beta, candidatez ci-dessus.</p>
+          <a href="#beta" class="ss-btn ss-btn--sm" style="margin-top:14px;display:inline-flex">Rejoindre la beta</a>
+        </div>
+      </aside>
+
+      <form class="ss-form" id="fb-form" novalidate>
+
+        <div class="ss-field">
+          <label for="fb-email">Votre email (testeur)</label>
+          <input id="fb-email" type="email" class="ss-input" placeholder="camille@exemple.fr" autocomplete="email"/>
+        </div>
+
+        <div class="ss-field">
+          <label>Type de retour</label>
+          <div class="ss-chips" data-group="fbtype">
+            <button type="button" class="ss-chip" data-val="Bug">Bug</button>
+            <button type="button" class="ss-chip" data-val="Recommandation incorrecte">Recommandation incorrecte</button>
+            <button type="button" class="ss-chip" data-val="Donnée manquante">Donnée manquante</button>
+            <button type="button" class="ss-chip" data-val="Interface confuse">Interface confuse</button>
+            <button type="button" class="ss-chip" data-val="Autre">Autre</button>
+          </div>
+        </div>
+
+        <div class="ss-field">
+          <label for="fb-spot">Spot concerné</label>
+          <input id="fb-spot" class="ss-input" placeholder="Trévignon, Quiberon, port de départ…"/>
+        </div>
+
+        <div class="ss-field">
+          <label for="fb-what">Que s'est-il passé&nbsp;?</label>
+          <textarea id="fb-what" class="ss-textarea" rows="4" placeholder="SeaScope m'a dit BON, mais une fois au large les conditions étaient…"></textarea>
+        </div>
+
+        <div class="ss-field">
+          <label for="fb-expected">Qu'est-ce que vous attendiez&nbsp;?</label>
+          <textarea id="fb-expected" class="ss-textarea" rows="3" placeholder="J'aurais voulu que SeaScope me signale le changement avant le départ…"></textarea>
+        </div>
+
+        <div class="ss-field">
+          <label>Capture d'écran (optionnel)</label>
+          <label class="ss-file-label" for="fb-screenshot">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><circle cx="9" cy="6" r="0.5" fill="currentColor"/><circle cx="12" cy="6" r="0.5" fill="currentColor"/><circle cx="15" cy="6" r="0.5" fill="currentColor"/></svg>
+            <span id="fb-file-text">Ajouter une capture (PNG, JPG — max 5 Mo)</span>
+            <input type="file" id="fb-screenshot" accept="image/*" style="display:none"/>
+          </label>
+        </div>
+
+        <div class="ss-form-cta">
+          <button type="submit" class="ss-btn ss-btn--lg">
+            Envoyer un retour
+            <span class="arr"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </button>
+        </div>
+        <div id="fb-error" style="display:none;margin-top:12px;font-family:var(--ss-mono);font-size:12px;color:var(--ss-deconseille);letter-spacing:0.06em">
+          Veuillez renseigner votre email, le type de retour et décrire ce qui s'est passé.
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer class="ss-footer">
+  <div class="ss-container">
+    <div class="ss-footer-grid">
+      <div>
+        <span class="ss-wordmark" style="font-size:22px"><span class="sea">Sea</span><span class="scope">Scope</span></span>
+        <p>Copilote météo décisionnel pour navigation côtière.<br>Conçu pour la décision, pas pour la décoration.</p>
+        <p style="margin-top:16px">
+          <a href="mailto:beta@seascope.app" style="color:var(--ss-teal);font-family:var(--ss-mono);font-size:12px;letter-spacing:0.06em">beta@seascope.app</a>
+        </p>
+      </div>
+      <div>
+        <h5>Produit</h5>
+        <ul>
+          <li><a href="#how">Comment ça marche</a></li>
+          <li><a href="#perso">Personnalisation</a></li>
+          <li><a href="#trust">Confiance</a></li>
+          <li><a href="#beta">Beta fermée</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Programme beta</h5>
+        <ul>
+          <li><a href="#beta">Candidater</a></li>
+          <li><a href="#feedback-form">Envoyer un retour</a></li>
+          <li><a href="mailto:beta@seascope.app">beta@seascope.app</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ss-footer-base">
+      <span>© 2026 SeaScope · Tous droits réservés</span>
+      <span>Beta privée · Été 2026</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  /* ── Reveal on scroll ── */
+  function initReveal() {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function(el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var delayStr = e.target.style.transitionDelay || '0';
+          var delay = delayStr.indexOf('ms') !== -1
+            ? parseFloat(delayStr)
+            : parseFloat(delayStr) * 1000;
+          if (isNaN(delay)) delay = 0;
+          setTimeout(function() { e.target.classList.add('in'); }, delay);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.10 });
+    els.forEach(function(el) { io.observe(el); });
+  }
+
+  /* ── Persona names lookup ── */
+  var PERSONA_NAMES = {
+    balade: 'Balade côtière',
+    famille: 'Sortie familiale',
+    courte: 'Session courte',
+    peche: 'Pêche côtière',
+    sport: 'Navigation sportive'
+  };
+
+  var activePersona = 'famille';
+  var activeTol     = 'vivante';
+
+  /* ── Update scenario cards ── */
+  function updateScenario() {
+    var cards = document.querySelectorAll('[data-tol-card]');
+    var personaName = PERSONA_NAMES[activePersona] || activePersona;
+    cards.forEach(function(card) {
+      var tol = card.getAttribute('data-tol-card');
+      card.style.opacity = tol === activeTol ? '1' : '0.62';
+    });
+    document.querySelectorAll('.scenario-persona').forEach(function(el) {
+      el.textContent = personaName;
+    });
+  }
+
+  /* ── Personalization interactivity ── */
+  function initPersonalization() {
+    var personaGrid = document.getElementById('persona-grid');
+    var tolGrid = document.getElementById('tol-grid');
+    if (!personaGrid || !tolGrid) return;
+
+    personaGrid.addEventListener('click', function(e) {
+      var btn = e.target.closest('[data-persona]');
+      if (!btn) return;
+      activePersona = btn.getAttribute('data-persona');
+      personaGrid.querySelectorAll('.ss-persona').forEach(function(p) {
+        p.classList.toggle('is-active', p === btn);
+      });
+      updateScenario();
+    });
+
+    tolGrid.addEventListener('click', function(e) {
+      var btn = e.target.closest('[data-tol]');
+      if (!btn) return;
+      activeTol = btn.getAttribute('data-tol');
+      tolGrid.querySelectorAll('.ss-tol').forEach(function(t) {
+        t.classList.toggle('is-active', t === btn);
+      });
+      updateScenario();
+    });
+  }
+
+  /* ── Chip group selector (single select) ── */
+  function initChips(form) {
+    form.querySelectorAll('[data-group]').forEach(function(group) {
+      group.addEventListener('click', function(e) {
+        var chip = e.target.closest('.ss-chip');
+        if (!chip) return;
+        group.querySelectorAll('.ss-chip').forEach(function(c) { c.classList.remove('is-active'); });
+        chip.classList.add('is-active');
+      });
+    });
+  }
+
+  /* ── Get active chip value ── */
+  function getChipVal(form, group) {
+    var active = form.querySelector('[data-group="' + group + '"] .ss-chip.is-active');
+    return active ? active.getAttribute('data-val') : '';
+  }
+
+  /* ── Beta form ── */
+  function initBetaForm() {
+    var form = document.getElementById('beta-form');
+    if (!form) return;
+    initChips(form);
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var firstname = form.querySelector('#b-firstname').value.trim();
+      var email     = form.querySelector('#b-email').value.trim();
+      var region    = form.querySelector('#b-region').value.trim();
+      var navtype   = getChipVal(form, 'navtype');
+      var freq      = getChipVal(form, 'freq');
+      var platform  = getChipVal(form, 'platform');
+      var practice  = getChipVal(form, 'practice');
+      var consent   = form.querySelector('#b-consent').checked;
+
+      var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      var valid = firstname.length >= 2 && emailOk && region.length >= 2
+               && navtype && freq && platform && practice && consent;
+
+      var errEl = document.getElementById('beta-error');
+      if (!valid) {
+        errEl.style.display = 'block';
+        /* highlight empty required inputs */
+        [['#b-firstname', firstname.length < 2],
+         ['#b-email', !emailOk],
+         ['#b-region', region.length < 2]].forEach(function(pair) {
+          var el = form.querySelector(pair[0]);
+          if (el) el.classList.toggle('error', pair[1]);
+        });
+        return;
+      }
+      errEl.style.display = 'none';
+      document.getElementById('beta-success-name').textContent = firstname;
+      document.getElementById('beta-form-wrap').style.display = 'none';
+      document.getElementById('beta-success').style.display = 'block';
+      document.getElementById('beta-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    /* clear error on input */
+    ['#b-firstname','#b-email','#b-region'].forEach(function(sel) {
+      var el = form.querySelector(sel);
+      if (el) el.addEventListener('input', function() { el.classList.remove('error'); });
+    });
+
+    document.getElementById('beta-reset-btn').addEventListener('click', function() {
+      form.reset();
+      form.querySelectorAll('.ss-chip').forEach(function(c) { c.classList.remove('is-active'); });
+      document.getElementById('beta-success').style.display = 'none';
+      document.getElementById('beta-form-wrap').style.display = '';
+    });
+  }
+
+  /* ── Feedback form ── */
+  function initFeedbackForm() {
+    var form = document.getElementById('fb-form');
+    if (!form) return;
+    initChips(form);
+
+    /* file input label */
+    var fileInput = form.querySelector('#fb-screenshot');
+    var fileText  = document.getElementById('fb-file-text');
+    if (fileInput && fileText) {
+      fileInput.addEventListener('change', function() {
+        fileText.textContent = fileInput.files.length > 0
+          ? fileInput.files[0].name
+          : 'Ajouter une capture (PNG, JPG — max 5 Mo)';
+      });
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var email    = form.querySelector('#fb-email').value.trim();
+      var fbtype   = getChipVal(form, 'fbtype');
+      var what     = form.querySelector('#fb-what').value.trim();
+      var emailOk  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      var valid    = emailOk && fbtype && what.length >= 10;
+
+      var errEl = document.getElementById('fb-error');
+      var emailEl = form.querySelector('#fb-email');
+      if (!valid) {
+        errEl.style.display = 'block';
+        emailEl.classList.toggle('error', !emailOk);
+        return;
+      }
+      errEl.style.display = 'none';
+      document.getElementById('fb-form-wrap').style.display = 'none';
+      document.getElementById('fb-success').style.display = 'block';
+      document.getElementById('fb-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    var emailEl = form.querySelector('#fb-email');
+    if (emailEl) emailEl.addEventListener('input', function() { emailEl.classList.remove('error'); });
+
+    document.getElementById('fb-reset-btn').addEventListener('click', function() {
+      form.reset();
+      form.querySelectorAll('.ss-chip').forEach(function(c) { c.classList.remove('is-active'); });
+      var fileText = document.getElementById('fb-file-text');
+      if (fileText) fileText.textContent = 'Ajouter une capture (PNG, JPG — max 5 Mo)';
+      document.getElementById('fb-success').style.display = 'none';
+      document.getElementById('fb-form-wrap').style.display = '';
+    });
+  }
+
+  /* ── Smooth scroll for anchor links ── */
+  function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var id = link.getAttribute('href').slice(1);
+        var target = document.getElementById(id);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+  }
+
+  /* ── Init all ── */
+  document.addEventListener('DOMContentLoaded', function() {
+    initReveal();
+    initPersonalization();
+    initBetaForm();
+    initFeedbackForm();
+    initSmoothScroll();
+  });
+
+})();
+</script>
+
+</body>
+</html>

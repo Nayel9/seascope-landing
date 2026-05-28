@@ -36,6 +36,8 @@ export function BetaForm() {
   const [data, setData]           = useState<BetaFormValues>(EMPTY)
   const [touched, setTouched]     = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [apiError, setApiError]   = useState('')
 
   const upd = (key: keyof BetaFormValues) =>
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -44,10 +46,29 @@ export function BetaForm() {
   const set = (key: keyof BetaFormValues, val: string | boolean) =>
     setData((d) => ({ ...d, [key]: val }))
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setTouched(true)
-    if (isValid(data)) setSubmitted(true)
+    setApiError('')
+    if (!isValid(data)) return
+    setIsLoading(true)
+    try {
+      const res = await fetch('/api/beta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const json = await res.json()
+      if (!res.ok) {
+        setApiError(json.error ?? 'Une erreur est survenue. Réessayez.')
+      } else {
+        setSubmitted(true)
+      }
+    } catch {
+      setApiError('Impossible de contacter le serveur. Vérifiez votre connexion.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   if (submitted) {
@@ -214,14 +235,17 @@ export function BetaForm() {
             )}
 
             <div className="flex items-center gap-3.5 flex-wrap">
-              <Button type="submit" size="lg">
-                Demander un accès beta
-                <ArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" />
+              <Button type="submit" size="lg" disabled={isLoading}>
+                {isLoading ? 'Envoi en cours…' : 'Demander un accès beta'}
+                {!isLoading && <ArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" />}
               </Button>
               <span className="font-mono text-[11px] text-ss-fg/50 tracking-[0.08em]">
                 Réponse sous 5 jours ouvrés
               </span>
             </div>
+            {apiError && (
+              <p className="font-mono text-[12px] text-ss-deconseille tracking-[0.06em] mt-2">{apiError}</p>
+            )}
           </form>
 
           <aside className="sticky top-24 flex flex-col gap-5">

@@ -30,6 +30,8 @@ export function FeedbackForm() {
   const [touched, setTouched]     = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [fileName, setFileName]   = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [apiError, setApiError]   = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
 
   const upd = (key: keyof FeedbackFormValues) =>
@@ -39,10 +41,29 @@ export function FeedbackForm() {
   const set = (key: keyof FeedbackFormValues, val: string) =>
     setData((d) => ({ ...d, [key]: val }))
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setTouched(true)
-    if (isValid(data)) setSubmitted(true)
+    setApiError('')
+    if (!isValid(data)) return
+    setIsLoading(true)
+    try {
+      const res = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const json = await res.json()
+      if (!res.ok) {
+        setApiError(json.error ?? 'Une erreur est survenue. Réessayez.')
+      } else {
+        setSubmitted(true)
+      }
+    } catch {
+      setApiError('Impossible de contacter le serveur. Vérifiez votre connexion.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const reset = () => {
@@ -50,6 +71,7 @@ export function FeedbackForm() {
     setTouched(false)
     setSubmitted(false)
     setFileName('')
+    setApiError('')
   }
 
   if (submitted) {
@@ -204,11 +226,14 @@ export function FeedbackForm() {
             )}
 
             <div className="flex items-center gap-3.5">
-              <Button type="submit" size="lg">
-                Envoyer un retour
-                <ArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" />
+              <Button type="submit" size="lg" disabled={isLoading}>
+                {isLoading ? 'Envoi en cours…' : 'Envoyer un retour'}
+                {!isLoading && <ArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" />}
               </Button>
             </div>
+            {apiError && (
+              <p className="font-mono text-[12px] text-ss-deconseille tracking-[0.06em] mt-2">{apiError}</p>
+            )}
           </form>
         </div>
       </div>

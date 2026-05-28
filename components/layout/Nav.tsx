@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
+import { Logo } from '@/components/ui/Logo'
 
 export function Nav() {
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md border-b border-white/7 bg-ss-bg/72">
       <div className="max-w-landing mx-auto px-8 sm:px-5 flex items-center justify-between h-16">
-        <Link href="/" className="font-sans font-semibold text-[20px] tracking-[-0.02em] inline-flex items-baseline gap-0">
-          <span className="text-ss-teal">Sea</span>
-          <span className="text-ss-fg/90">Scope</span>
+        <Link href="/" className="flex-none">
+          <Logo size={36} showWordmark wordmarkSize={20} />
         </Link>
 
         <nav className="hidden md:flex items-center gap-7">

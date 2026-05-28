@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Logo } from '@/components/ui/Logo'
 
 export function Footer() {
   return (
@@ -6,11 +7,8 @@ export function Footer() {
       <div className="max-w-landing mx-auto px-8 sm:px-5">
         <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-10 items-start">
           <div>
-            <span className="font-sans font-semibold text-[22px] tracking-[-0.02em] inline-flex items-baseline">
-              <span className="text-ss-teal">Sea</span>
-              <span className="text-ss-fg/90">Scope</span>
-            </span>
-            <p className="mt-3 text-[13px] text-ss-fg/50 max-w-[36ch] leading-relaxed">
+            <Logo size={40} showWordmark wordmarkSize={22} />
+            <p className="mt-4 text-[13px] text-ss-fg/50 max-w-[36ch] leading-relaxed">
               Copilote météo décisionnel pour navigation côtière.
               <br />Conçu pour la décision, pas pour la décoration.
             </p>

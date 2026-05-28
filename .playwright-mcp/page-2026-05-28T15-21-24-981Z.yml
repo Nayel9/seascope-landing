@@ -1,0 +1,523 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Sea Scope" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e5]:
+          - img [ref=e6]
+          - generic [ref=e19]:
+            - generic [ref=e20]: Sea
+            - generic [ref=e21]: Scope
+      - link "Rejoindre" [ref=e23] [cursor=pointer]:
+        - /url: "#beta"
+  - main [ref=e24]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e31]: Beta fermée · Été 2026
+        - heading "Décidez quand sortir en mer en toute confiance." [level=1] [ref=e34]:
+          - text: Décidez quand sortir en mer
+          - text: en toute confiance.
+        - paragraph [ref=e36]: SeaScope transforme les conditions météo en recommandations concrètes, adaptées à votre façon de naviguer. Quand sortir, quand rentrer, et avec quel niveau de confiance.
+        - generic [ref=e38]:
+          - link "Rejoindre la beta fermée" [ref=e39] [cursor=pointer]:
+            - /url: "#beta"
+            - text: Rejoindre la beta fermée
+            - img [ref=e40]
+          - link "Voir comment ça marche" [ref=e42] [cursor=pointer]:
+            - /url: "#how"
+        - generic [ref=e44]:
+          - generic [ref=e45]: Fusion multi-sources météo
+          - generic [ref=e47]: Recommandations explicables
+          - generic [ref=e49]: Stockage local uniquement
+      - img "Tableau de bord SeaScope — conditions BON" [ref=e56]
+    - generic [ref=e58]:
+      - generic [ref=e60]:
+        - generic [ref=e61]:
+          - generic [ref=e63]: Le problème
+          - heading "Trop de données. Pas assez de décision." [level=2] [ref=e65]:
+            - text: Trop de données.
+            - text: Pas assez de décision.
+        - paragraph [ref=e66]: Avant chaque sortie, on jongle entre trois applis météo, des modèles qui ne s'accordent pas, et l'intuition. La décision finale repose sur la fatigue d'un dimanche matin.
+      - generic [ref=e68]:
+        - generic [ref=e69]:
+          - generic [ref=e70]: 01 — Météo dispersée
+          - generic [ref=e71]: Trois applis, trois modèles, trois verdicts différents.
+          - img [ref=e73]
+          - generic [ref=e76]: Vent ici, houle là-bas, rafales nulle part. Les sources se contredisent.
+        - generic [ref=e77]:
+          - generic [ref=e78]: 02 — Surcharge cognitive
+          - generic [ref=e79]: Lire la météo devient un travail à temps plein.
+          - img [ref=e81]
+          - generic [ref=e84]: Vagues, vent, rafales, coefficient, période… on cumule sans savoir quoi en faire.
+        - generic [ref=e85]:
+          - generic [ref=e86]: 03 — Décision sous stress
+          - generic [ref=e87]: Sortir ou pas ? On tranche dans l'incertitude.
+          - img [ref=e89]
+          - generic [ref=e92]: On choisit par intuition, en croisant les doigts pour que la mer suive.
+        - generic [ref=e93]:
+          - generic [ref=e94]: 04 — Peur de rater la fenêtre
+          - generic [ref=e95]: "\"Et si j'avais pu sortir ce matin ?\""
+          - img [ref=e97]
+          - generic [ref=e100]: Les meilleures fenêtres sont courtes. Sans signal clair, elles passent à côté.
+        - generic [ref=e101]:
+          - generic [ref=e102]: 05 — Peur de mal sortir
+          - generic [ref=e103]: "\"Et si les conditions tournent une fois au large ?\""
+          - img [ref=e105]
+          - generic [ref=e108]: "La vraie peur, ce n'est pas la mauvaise météo : c'est ne pas l'avoir vue venir."
+    - generic [ref=e110]:
+      - generic [ref=e112]:
+        - generic [ref=e113]:
+          - generic [ref=e115]: Comment ça marche
+          - heading "Trois gestes. Une décision claire." [level=2] [ref=e117]:
+            - text: Trois gestes.
+            - text: Une décision claire.
+        - paragraph [ref=e118]: SeaScope vous demande l'essentiel — votre spot, votre pratique — puis renvoie un signal décisionnel, pas un dump de données.
+      - generic [ref=e119]:
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]: "01"
+            - img [ref=e125]
+          - heading "Choisissez votre spot." [level=3] [ref=e128]
+          - paragraph [ref=e129]: Trévignon, Quiberon, Glénan, ou n'importe quel point GPS. Vos spots préférés sont mémorisés.
+          - generic [ref=e130]:
+            - img [ref=e131]
+            - generic [ref=e136]: TRÉVIGNON
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - generic [ref=e140]: "02"
+            - img [ref=e142]
+          - heading "SeaScope analyse les conditions." [level=3] [ref=e146]
+          - paragraph [ref=e147]: Fusion de plusieurs modèles météo marins, croisée avec les seuils de votre profil de navigation.
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e150]: ARPEGE
+              - generic [ref=e153]: "72"
+            - generic [ref=e154]:
+              - generic [ref=e155]: ICON-EU
+              - generic [ref=e158]: "65"
+            - generic [ref=e159]:
+              - generic [ref=e160]: GFS
+              - generic [ref=e163]: "58"
+            - generic [ref=e164]:
+              - generic [ref=e165]: WAVEWATCH
+              - generic [ref=e168]: "70"
+            - generic [ref=e169]:
+              - generic [ref=e170]: SEASCOPE
+              - generic [ref=e173]: "88"
+        - generic [ref=e175]:
+          - generic [ref=e176]:
+            - generic [ref=e177]: "03"
+            - img [ref=e179]
+          - heading "Obtenez votre signal." [level=3] [ref=e182]
+          - paragraph [ref=e183]: Une recommandation tranchée — meilleure fenêtre, heure de retour, niveau adapté à votre pratique.
+          - generic [ref=e184]:
+            - generic [ref=e185]:
+              - generic [ref=e186]: BON
+              - generic [ref=e188]: 88 / 100
+            - generic [ref=e189]:
+              - generic [ref=e190]:
+                - generic [ref=e191]: Départ optimal
+                - generic [ref=e192]: 08:00 — 11:00
+              - generic [ref=e193]:
+                - generic [ref=e194]: Rentrer avant
+                - generic [ref=e195]: 10:15
+    - generic [ref=e197]:
+      - generic [ref=e199]:
+        - generic [ref=e200]:
+          - generic [ref=e202]: Personnalisation
+          - heading "SeaScope s'adapte à votre façon de naviguer." [level=2] [ref=e204]:
+            - text: SeaScope s'adapte à votre
+            - text: façon de naviguer.
+        - paragraph [ref=e205]: Mêmes conditions, recommandations différentes. Vos seuils, votre pratique et votre tolérance définissent ce qui vous est confortable — et ce qui ne l'est pas.
+      - generic [ref=e206]:
+        - paragraph [ref=e207]: 01 — Vous naviguez plutôt comment ?
+        - generic [ref=e208]:
+          - button "Balade côtière Sortie tranquille, plaisir de naviguer." [ref=e209] [cursor=pointer]:
+            - img [ref=e211]
+            - generic [ref=e214]: Balade côtière
+            - generic [ref=e215]: Sortie tranquille, plaisir de naviguer.
+          - button "Sortie familiale Équipage varié, confort et sécurité." [ref=e216] [cursor=pointer]:
+            - img [ref=e218]
+            - generic [ref=e223]: Sortie familiale
+            - generic [ref=e224]: Équipage varié, confort et sécurité.
+          - button "Session courte Peu de temps, fenêtre optimisée." [ref=e225] [cursor=pointer]:
+            - img [ref=e227]
+            - generic [ref=e230]: Session courte
+            - generic [ref=e231]: Peu de temps, fenêtre optimisée.
+          - button "Pêche côtière Stabilité, mouillage, mer calme." [ref=e232] [cursor=pointer]:
+            - img [ref=e234]
+            - generic [ref=e238]: Pêche côtière
+            - generic [ref=e239]: Stabilité, mouillage, mer calme.
+          - button "Navigation sportive Vent, vitesse, conditions engagées." [ref=e240] [cursor=pointer]:
+            - img [ref=e242]
+            - generic [ref=e244]: Navigation sportive
+            - generic [ref=e245]: Vent, vitesse, conditions engagées.
+      - generic [ref=e246]:
+        - paragraph [ref=e247]: 02 — Votre sortie idéale, c'est quoi ?
+        - generic [ref=e248]:
+          - button "Tranquille Mer clémente, sortie sereine." [ref=e249] [cursor=pointer]:
+            - generic [ref=e254]:
+              - generic [ref=e255]: Tranquille
+              - generic [ref=e256]: Mer clémente, sortie sereine.
+            - img [ref=e258]
+          - button "Vivante Du relief, ni sage ni chargé." [ref=e260] [cursor=pointer]:
+            - generic [ref=e265]:
+              - generic [ref=e266]: Vivante
+              - generic [ref=e267]: Du relief, ni sage ni chargé.
+            - img [ref=e269]
+          - button "Engagée Sportif, vent et mer formée." [ref=e271] [cursor=pointer]:
+            - generic [ref=e276]:
+              - generic [ref=e277]: Engagée
+              - generic [ref=e278]: Sportif, vent et mer formée.
+            - img [ref=e280]
+      - generic [ref=e282]:
+        - img "SeaScope — simulation sortie délicate" [ref=e287]
+        - generic [ref=e288]:
+          - generic [ref=e290]: Cas réel · simulation
+          - heading "Sur cette sortie, vos seuils disent DÉLICAT." [level=3] [ref=e292]
+          - paragraph [ref=e293]: SeaScope a comparé le départ, le pire moment et le retour à vos limites personnelles. Vent trop fort par rafales, mer dans le profil mais à la limite. Le score traduit ce que vous savez déjà — sans avoir à le calculer.
+          - list [ref=e294]:
+            - listitem [ref=e295]:
+              - img [ref=e297]
+              - generic [ref=e299]: Vos limites personnelles, pas des moyennes anonymes.
+            - listitem [ref=e300]:
+              - img [ref=e302]
+              - generic [ref=e304]: Chaque dépassement nommé, chiffré, expliqué.
+            - listitem [ref=e305]:
+              - img [ref=e307]
+              - generic [ref=e309]: Un score qui change avec votre profil — pas avec le marketing.
+      - generic [ref=e310]:
+        - generic [ref=e311]:
+          - generic [ref=e312]:
+            - generic [ref=e314]: Comparaison live
+            - heading "Mêmes conditions. Trois verdicts." [level=3] [ref=e316]
+          - paragraph [ref=e317]: Trévignon · 14 août · 09h — Vent 14 nd ESE, vagues 1.0 m, rafales 15 nd. Vos réglages ci-dessus changent la recommandation.
+        - generic [ref=e318]:
+          - generic [ref=e319]:
+            - generic [ref=e320]: Tranquille · Sortie familiale
+            - generic [ref=e321]:
+              - generic [ref=e322]: DÉCONSEILLÉ
+              - generic [ref=e324]: 22 / 100
+            - generic [ref=e325]: Conditions au-dessus de votre confort
+            - generic [ref=e326]:
+              - generic [ref=e327]:
+                - generic [ref=e328]: Fenêtre
+                - generic [ref=e329]: Aucune fenêtre
+              - generic [ref=e330]:
+                - generic [ref=e331]: Rentrer avant
+                - generic [ref=e332]: —
+            - generic [ref=e334]:
+              - generic [ref=e335]:
+                - img [ref=e337]
+                - generic [ref=e340]: Rafales 18 nd — dépasse limite 12 nd
+              - generic [ref=e341]:
+                - img [ref=e343]
+                - generic [ref=e346]: Vagues 1.4 m — dépasse limite 0.8 m
+              - generic [ref=e347]:
+                - img [ref=e349]
+                - generic [ref=e351]: Mer croisée préoccupante
+            - generic [ref=e352]: Profil tranquille
+          - generic [ref=e354]:
+            - generic [ref=e355]: Vivante · Sortie familiale
+            - generic [ref=e356]:
+              - generic [ref=e357]: DÉLICAT
+              - generic [ref=e359]: 58 / 100
+            - generic [ref=e360]: Sortie possible — à surveiller
+            - generic [ref=e361]:
+              - generic [ref=e362]:
+                - generic [ref=e363]: Fenêtre
+                - generic [ref=e364]: 10:30 — 13:00
+              - generic [ref=e365]:
+                - generic [ref=e366]: Rentrer avant
+                - generic [ref=e367]: 13:30
+            - generic [ref=e369]:
+              - generic [ref=e370]:
+                - img [ref=e372]
+                - generic [ref=e375]: Rafales 15 nd — proche limite 16 nd
+              - generic [ref=e376]:
+                - img [ref=e378]
+                - generic [ref=e381]: Vagues 0.9 m — dans le profil
+              - generic [ref=e382]:
+                - img [ref=e384]
+                - generic [ref=e387]: Renforcement attendu après 13h
+            - generic [ref=e388]: Profil vivante
+          - generic [ref=e390]:
+            - generic [ref=e391]: Engagée · Sortie familiale
+            - generic [ref=e392]:
+              - generic [ref=e393]: BON
+              - generic [ref=e395]: 84 / 100
+            - generic [ref=e396]: Conditions idéales pour vous
+            - generic [ref=e397]:
+              - generic [ref=e398]:
+                - generic [ref=e399]: Fenêtre
+                - generic [ref=e400]: 09:00 — 15:00
+              - generic [ref=e401]:
+                - generic [ref=e402]: Rentrer avant
+                - generic [ref=e403]: 16:00
+            - generic [ref=e405]:
+              - generic [ref=e406]:
+                - img [ref=e408]
+                - generic [ref=e411]: Rafales 14 nd — terrain de jeu confortable
+              - generic [ref=e412]:
+                - img [ref=e414]
+                - generic [ref=e417]: Mer formée — 1.0 m, période 8s
+              - generic [ref=e418]:
+                - img [ref=e420]
+                - generic [ref=e423]: Vent stable orienté ESE
+            - generic [ref=e424]: Profil engagée
+    - generic [ref=e427]:
+      - generic [ref=e429]:
+        - generic [ref=e430]:
+          - generic [ref=e432]: Confiance
+          - heading "Une décision n'a de valeur que si on peut la défendre." [level=2] [ref=e434]:
+            - text: Une décision n'a de valeur
+            - text: que si on peut la défendre.
+        - paragraph [ref=e435]: Pas de boîte noire, pas de cloud personnel, pas de score marketing. Chaque recommandation est traçable jusqu'aux chiffres qui l'ont produite.
+      - generic [ref=e437]:
+        - generic [ref=e438]:
+          - img [ref=e440]
+          - heading "Fusion multi-sources" [level=3] [ref=e444]
+          - paragraph [ref=e445]: Plusieurs modèles météo marins — ARPEGE, ICON-EU, GFS, WaveWatch — agrégés et pondérés selon leur fiabilité locale.
+        - generic [ref=e446]:
+          - img [ref=e448]
+          - heading "Recommandations explicables" [level=3] [ref=e451]
+          - paragraph [ref=e452]: Chaque score affiche les seuils dépassés, les modèles utilisés et le niveau d'incertitude. Vous voyez ce qu'on vous dit.
+        - generic [ref=e453]:
+          - img [ref=e455]
+          - heading "Personnalisation réelle" [level=3] [ref=e458]
+          - paragraph [ref=e459]: Vos limites de vent, vagues et rafales définissent le BON. Pas un seuil moyen pour navigateur moyen.
+        - generic [ref=e460]:
+          - img [ref=e462]
+          - heading "Logique transparente" [level=3] [ref=e466]
+          - paragraph [ref=e467]: Un score, trois moments (départ, pire, retour), des raisons nommées. Aucune magie, aucun algorithme secret.
+        - generic [ref=e468]:
+          - img [ref=e470]
+          - heading "Stockage local" [level=3] [ref=e473]
+          - paragraph [ref=e474]: Vos préférences, vos spots, vos sorties — sur votre appareil. Pas de profil cloud, pas de revente.
+        - generic [ref=e475]:
+          - img [ref=e477]
+          - heading "Alertes utiles" [level=3] [ref=e480]
+          - paragraph [ref=e481]: Un signal seulement quand la fenêtre s'ouvre — ou quand la mer se referme. Pas de notification pour le bruit.
+    - generic [ref=e483]:
+      - generic [ref=e484]:
+        - generic [ref=e485]:
+          - generic [ref=e487]: Rejoindre la beta
+          - heading "Candidatez à la beta fermée." [level=2] [ref=e489]
+        - paragraph [ref=e490]: La beta est limitée. On sélectionne sur la diversité des pratiques et des zones de navigation, pas sur l'ancienneté.
+      - generic [ref=e491]:
+        - generic [ref=e492]:
+          - generic [ref=e493]:
+            - generic [ref=e494]:
+              - generic [ref=e495]: Prénom
+              - textbox "Prénom" [ref=e496]:
+                - /placeholder: Camille
+            - generic [ref=e497]:
+              - generic [ref=e498]: Email
+              - textbox "Email" [ref=e499]:
+                - /placeholder: camille@exemple.fr
+          - generic [ref=e500]:
+            - generic [ref=e501]: Région de navigation
+            - textbox "Région de navigation" [ref=e502]:
+              - /placeholder: Sud Finistère, Quiberon, Côte d'Azur…
+          - generic [ref=e503]:
+            - generic [ref=e504]: Type de navigation
+            - generic [ref=e505]:
+              - button "Voile" [ref=e506] [cursor=pointer]
+              - button "Moteur" [ref=e507] [cursor=pointer]
+              - button "Semi-rigide" [ref=e508] [cursor=pointer]
+              - button "Kayak / paddle" [ref=e509] [cursor=pointer]
+              - button "Pêche" [ref=e510] [cursor=pointer]
+              - button "Autre" [ref=e511] [cursor=pointer]
+          - generic [ref=e512]:
+            - generic [ref=e513]: Fréquence de sortie
+            - generic [ref=e514]:
+              - button "≤ 1× / mois" [ref=e515] [cursor=pointer]
+              - button "2–4× / mois" [ref=e516] [cursor=pointer]
+              - button "1× / sem." [ref=e517] [cursor=pointer]
+              - button "Plusieurs / sem." [ref=e518] [cursor=pointer]
+          - generic [ref=e519]:
+            - generic [ref=e520]:
+              - generic [ref=e521]: Bateau / engin
+              - textbox "Bateau / engin" [ref=e522]:
+                - /placeholder: Modèle, longueur, propulsion (optionnel)
+            - generic [ref=e523]:
+              - generic [ref=e524]: Plateforme
+              - generic [ref=e525]:
+                - button "Android" [ref=e526] [cursor=pointer]
+                - generic "iPhone — disponible prochainement" [ref=e527]:
+                  - text: iPhone
+                  - generic [ref=e528]: Bientôt
+              - generic [ref=e529]: iOS disponible prochainement
+          - generic [ref=e530]:
+            - generic [ref=e531]: Pratique principale
+            - generic [ref=e532]:
+              - button "Balade côtière" [ref=e533] [cursor=pointer]
+              - button "Sortie familiale" [ref=e534] [cursor=pointer]
+              - button "Session courte" [ref=e535] [cursor=pointer]
+              - button "Pêche côtière" [ref=e536] [cursor=pointer]
+              - button "Navigation sportive" [ref=e537] [cursor=pointer]
+          - generic [ref=e538]:
+            - generic [ref=e539]: Qu'est-ce qui vous fait généralement renoncer à une sortie ?
+            - textbox "Qu'est-ce qui vous fait généralement renoncer à une sortie ?" [ref=e540]:
+              - /placeholder: Vent qui tourne, météo incertaine, équipage hésitant…
+          - generic [ref=e541] [cursor=pointer]:
+            - checkbox "J'accepte de participer à la beta fermée de SeaScope et de partager mes retours d'usage. Mes données ne sont utilisées que pour le programme beta, sans cession à un tiers." [ref=e542]
+            - generic [ref=e543]: J'accepte de participer à la beta fermée de SeaScope et de partager mes retours d'usage. Mes données ne sont utilisées que pour le programme beta, sans cession à un tiers.
+          - generic [ref=e544]:
+            - button "Demander un accès beta" [ref=e545] [cursor=pointer]:
+              - text: Demander un accès beta
+              - img [ref=e546]
+            - generic [ref=e548]: Réponse sous 5 jours ouvrés
+        - complementary [ref=e549]:
+          - generic [ref=e550]:
+            - heading "Ce qu'on attend de vous" [level=4] [ref=e551]
+            - list [ref=e552]:
+              - listitem [ref=e553]:
+                - generic [ref=e554]: "01"
+                - generic [ref=e555]: Tester en conditions réelles, avant chaque sortie.
+              - listitem [ref=e556]:
+                - generic [ref=e557]: "02"
+                - generic [ref=e558]: Comparer la recommandation à la réalité observée.
+              - listitem [ref=e559]:
+                - generic [ref=e560]: "03"
+                - generic [ref=e561]: Signaler quand SeaScope se trompe — et pourquoi.
+          - generic [ref=e562]:
+            - heading "Canaux beta" [level=4] [ref=e563]
+            - paragraph [ref=e564]: Un Discord privé pour les testeurs. Un fil Telegram pour les alertes critiques.
+            - generic [ref=e565]:
+              - generic [ref=e566]: Discord
+              - generic [ref=e568]: Telegram
+          - generic [ref=e570]:
+            - heading "Critères de sélection" [level=4] [ref=e571]
+            - paragraph [ref=e572]: Diversité de la zone, du bateau, de la pratique. Une session régulière sur l'été 2026, et l'envie d'aider à construire un outil que vous utiliserez.
+    - generic [ref=e575]:
+      - generic [ref=e576]:
+        - generic [ref=e578]: Boucle terrain
+        - heading "La beta sert à affûter les recommandations réelles." [level=2] [ref=e580]:
+          - text: La beta sert à affûter
+          - text: les recommandations réelles.
+        - paragraph [ref=e581]: "On ne cherche pas à valider une démo. On cherche à valider une décision : est-ce que SeaScope a vu juste cette fois ? Vos retours terrain font évoluer la pondération des modèles, les seuils par profil, et la façon dont on formule un signal."
+        - paragraph [ref=e582]: L'objectif n'est pas une appli météo de plus. C'est un vrai copilote de décision — entraîné avec vous.
+      - generic [ref=e584]:
+        - generic [ref=e585]:
+          - generic [ref=e586]: 01 · AVANT
+          - generic [ref=e587]: SeaScope recommande.
+          - generic [ref=e588]: Score, fenêtre, heure de retour adaptés à votre profil.
+        - generic [ref=e589]:
+          - generic [ref=e590]: 02 · APRÈS
+          - generic [ref=e591]: Vous notez la réalité.
+          - generic [ref=e592]: Mer vue, vent ressenti, écart à la prévision, décision prise.
+        - generic [ref=e593]:
+          - generic [ref=e594]: 03 · ENTRE
+          - generic [ref=e595]: Le modèle s'ajuste.
+          - generic [ref=e596]: Pondération locale, calibrage par zone, par profil, par saison.
+        - generic [ref=e597]:
+          - generic [ref=e598]: Boucle fermée · Métrique principale
+          - generic [ref=e599]: "\"SeaScope a-t-il vu juste ?\""
+    - generic [ref=e601]:
+      - generic [ref=e602]:
+        - generic [ref=e603]:
+          - generic [ref=e605]: Bêta-testeurs
+          - heading "Envoyez un retour terrain." [level=2] [ref=e607]
+        - paragraph [ref=e608]: Une recommandation qui ne collait pas ? Un bug ? Ce formulaire va directement à l'équipe produit. Chaque retour est traité — pas archivé.
+      - generic [ref=e609]:
+        - complementary [ref=e610]:
+          - generic [ref=e611]:
+            - heading "Ce qu'on cherche à comprendre" [level=4] [ref=e612]
+            - list [ref=e613]:
+              - listitem [ref=e614]:
+                - generic [ref=e615]: "01"
+                - generic [ref=e616]: Les cas où la recommandation et la réalité divergent.
+              - listitem [ref=e617]:
+                - generic [ref=e618]: "02"
+                - generic [ref=e619]: Les données manquantes pour votre zone ou pratique.
+              - listitem [ref=e620]:
+                - generic [ref=e621]: "03"
+                - generic [ref=e622]: Les moments où l'interface vous a bloqué ou confus.
+          - generic [ref=e623]:
+            - heading "Délai de traitement" [level=4] [ref=e624]
+            - paragraph [ref=e625]: Les retours "recommandation incorrecte" sont examinés sous 48h. Les bugs critiques sous 24h.
+          - generic [ref=e626]:
+            - heading "Pas encore en beta ?" [level=4] [ref=e627]
+            - paragraph [ref=e628]: Ce formulaire est réservé aux testeurs. Pour rejoindre la beta, candidatez ci-dessus.
+            - link "Rejoindre la beta" [ref=e629] [cursor=pointer]:
+              - /url: "#beta"
+        - generic [ref=e630]:
+          - generic [ref=e631]:
+            - generic [ref=e632]: Votre email (testeur)
+            - textbox "Votre email (testeur)" [ref=e633]:
+              - /placeholder: camille@exemple.fr
+          - generic [ref=e634]:
+            - generic [ref=e635]: Type de retour
+            - generic [ref=e636]:
+              - button "Bug" [ref=e637] [cursor=pointer]
+              - button "Recommandation incorrecte" [ref=e638] [cursor=pointer]
+              - button "Donnée manquante" [ref=e639] [cursor=pointer]
+              - button "Interface confuse" [ref=e640] [cursor=pointer]
+              - button "Autre" [ref=e641] [cursor=pointer]
+          - generic [ref=e642]:
+            - generic [ref=e643]: Spot concerné
+            - textbox "Spot concerné" [ref=e644]:
+              - /placeholder: Trévignon, Quiberon, port de départ…
+          - generic [ref=e645]:
+            - generic [ref=e646]: Que s'est-il passé ?
+            - textbox "Que s'est-il passé ?" [ref=e647]:
+              - /placeholder: SeaScope m'a dit BON, mais une fois au large les conditions étaient…
+          - generic [ref=e648]:
+            - generic [ref=e649]: Qu'est-ce que vous attendiez ?
+            - textbox "Qu'est-ce que vous attendiez ?" [ref=e650]:
+              - /placeholder: J'aurais voulu que SeaScope me signale le changement avant le départ…
+          - generic [ref=e651]:
+            - generic [ref=e652]: Capture d'écran (optionnel)
+            - generic [ref=e653] [cursor=pointer]:
+              - img [ref=e654]
+              - generic [ref=e658]: Ajouter une capture (PNG, JPG — max 5 Mo)
+          - button "Envoyer un retour" [ref=e660] [cursor=pointer]:
+            - text: Envoyer un retour
+            - img [ref=e661]
+  - contentinfo [ref=e663]:
+    - generic [ref=e664]:
+      - generic [ref=e665]:
+        - generic [ref=e666]:
+          - generic [ref=e667]:
+            - img [ref=e668]
+            - generic [ref=e681]:
+              - generic [ref=e682]: Sea
+              - generic [ref=e683]: Scope
+          - paragraph [ref=e684]:
+            - text: Copilote météo décisionnel pour navigation côtière.
+            - text: Conçu pour la décision, pas pour la décoration.
+          - paragraph [ref=e685]:
+            - link "seascope-contact@pennarstudio.fr" [ref=e686] [cursor=pointer]:
+              - /url: mailto:seascope-contact@pennarstudio.fr
+        - generic [ref=e687]:
+          - heading "Produit" [level=5] [ref=e688]
+          - list [ref=e689]:
+            - listitem [ref=e690]:
+              - link "Comment ça marche" [ref=e691] [cursor=pointer]:
+                - /url: "#how"
+            - listitem [ref=e692]:
+              - link "Personnalisation" [ref=e693] [cursor=pointer]:
+                - /url: "#perso"
+            - listitem [ref=e694]:
+              - link "Confiance" [ref=e695] [cursor=pointer]:
+                - /url: "#trust"
+            - listitem [ref=e696]:
+              - link "Beta fermée" [ref=e697] [cursor=pointer]:
+                - /url: "#beta"
+        - generic [ref=e698]:
+          - heading "Programme beta" [level=5] [ref=e699]
+          - list [ref=e700]:
+            - listitem [ref=e701]:
+              - link "Candidater" [ref=e702] [cursor=pointer]:
+                - /url: "#beta"
+            - listitem [ref=e703]:
+              - link "Envoyer un retour" [ref=e704] [cursor=pointer]:
+                - /url: "#feedback-form"
+            - listitem [ref=e705]:
+              - link "seascope-contact@pennarstudio.fr" [ref=e706] [cursor=pointer]:
+                - /url: mailto:seascope-contact@pennarstudio.fr
+      - generic [ref=e707]:
+        - generic [ref=e708]: © 2026 SeaScope · Tous droits réservés
+        - generic [ref=e709]: Beta privée · Été 2026
+  - alert [ref=e710]

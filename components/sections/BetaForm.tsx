@@ -118,7 +118,7 @@ export function BetaForm() {
             noValidate
             className="bg-ss-surface border border-white/7 rounded-ss-xl p-5 sm:p-6 lg:p-10"
           >
-            <div className="grid grid-cols-2 sm:grid-cols-1 gap-3.5 mb-[22px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-[22px]">
               <div className="flex flex-col gap-2">
                 <label htmlFor="b-firstname" className={labelBase}>Prénom</label>
                 <input
@@ -174,7 +174,7 @@ export function BetaForm() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-1 gap-3.5 mb-[22px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-[22px]">
               <div className="flex flex-col gap-2">
                 <label htmlFor="b-boat" className={labelBase}>Bateau / engin</label>
                 <input

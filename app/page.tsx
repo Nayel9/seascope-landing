@@ -3,8 +3,11 @@ import { Footer } from '@/components/layout/Footer'
 import { Hero } from '@/components/sections/Hero'
 import { Problem } from '@/components/sections/Problem'
 import { HowItWorks } from '@/components/sections/HowItWorks'
+import { Personalization } from '@/components/sections/Personalization'
 import { Trust } from '@/components/sections/Trust'
+import { BetaForm } from '@/components/sections/BetaForm'
 import { FeedbackLoop } from '@/components/sections/FeedbackLoop'
+import { FeedbackForm } from '@/components/sections/FeedbackForm'
 
 export default function Page() {
   return (
@@ -14,8 +17,11 @@ export default function Page() {
         <Hero />
         <Problem />
         <HowItWorks />
+        <Personalization />
         <Trust />
+        <BetaForm />
         <FeedbackLoop />
+        <FeedbackForm />
       </main>
       <Footer />
     </>

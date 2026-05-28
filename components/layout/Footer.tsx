@@ -16,10 +16,10 @@ export function Footer() {
             </p>
             <p className="mt-4">
               <a
-                href="mailto:beta@seascope.app"
+                href="mailto:seascope-contact@pennarstudio.fr"
                 className="font-mono text-[12px] tracking-[0.06em] text-ss-teal"
               >
-                beta@seascope.app
+                seascope-contact@pennarstudio.fr
               </a>
             </p>
           </div>
@@ -52,7 +52,7 @@ export function Footer() {
               {[
                 { href: '#beta',          label: 'Candidater' },
                 { href: '#feedback-form', label: 'Envoyer un retour' },
-                { href: 'mailto:beta@seascope.app', label: 'beta@seascope.app' },
+                { href: 'mailto:seascope-contact@pennarstudio.fr', label: 'seascope-contact@pennarstudio.fr' },
               ].map(({ href, label }) => (
                 <li key={href}>
                   <Link href={href} className="text-[14px] text-ss-fg/72 hover:text-ss-fg transition-colors">

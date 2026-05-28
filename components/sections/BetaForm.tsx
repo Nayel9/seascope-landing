@@ -76,20 +76,24 @@ export function BetaForm() {
       <section id="beta" className="py-[120px]">
         <div className="max-w-[720px] mx-auto px-8 sm:px-5">
           <div className="bg-ss-surface border border-white/7 rounded-ss-xl flex flex-col items-center text-center gap-4 py-12 px-6">
-            <div className="w-14 h-14 rounded-full bg-ss-bon/10 border border-ss-bon/30 text-ss-bon grid place-items-center">
+            <div className="w-14 h-14 rounded-full bg-ss-teal/10 border border-ss-teal/30 text-ss-teal grid place-items-center">
               <Check size={28} />
             </div>
             <h2 className="text-[clamp(24px,2.4vw,32px)] tracking-[-0.02em] font-medium m-0">
-              Bienvenue à bord, {data.firstname}.
+              Candidature reçue, {data.firstname}.
             </h2>
-            <p className="text-[clamp(16px,1.25vw,19px)] leading-[1.6] text-ss-fg/72 max-w-[50ch] text-pretty m-0">
-              On a bien reçu votre candidature. Vous recevrez un lien d&apos;accès
-              à la beta et l&apos;invitation au Discord testeurs dans les prochains jours.
+            <p className="text-[clamp(15px,1.1vw,17px)] leading-[1.7] text-ss-fg/72 max-w-[52ch] text-pretty m-0">
+              On analyse les profils et on vous recontacte sous quelques jours
+              — si votre zone, votre pratique et vos disponibilités correspondent
+              à ce qu&apos;on cherche pour cette vague.
             </p>
-            <div className="flex gap-3 flex-wrap justify-center mt-4">
-              <Button href="#feedback-form" variant="ghost">Vous êtes déjà en beta ?</Button>
-              <Button onClick={() => { setData(EMPTY); setTouched(false); setSubmitted(false) }}>
-                Inscrire quelqu&apos;un d&apos;autre
+            <p className="text-[13px] text-ss-fg/50 max-w-[44ch] text-pretty m-0 leading-relaxed">
+              La beta est limitée et chaque profil est lu. Pas de réponse automatique
+              — une vraie décision.
+            </p>
+            <div className="flex gap-3 flex-wrap justify-center mt-2">
+              <Button onClick={() => { setData(EMPTY); setTouched(false); setSubmitted(false) }} variant="ghost">
+                Soumettre une autre candidature
               </Button>
             </div>
           </div>
@@ -183,11 +187,23 @@ export function BetaForm() {
               </div>
               <div className="flex flex-col gap-2">
                 <span className={labelBase}>Plateforme</span>
-                <div className="flex gap-2">
-                  {PLATFORMS.map((v) => (
-                    <Chip key={v} active={data.platform === v} onClick={() => set('platform', v)}>{v}</Chip>
-                  ))}
+                <div className="flex gap-2 flex-wrap">
+                  <Chip active={data.platform === 'Android'} onClick={() => set('platform', 'Android')}>
+                    Android
+                  </Chip>
+                  <span
+                    className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-white/7 text-[13px] text-ss-fg/32 cursor-not-allowed select-none"
+                    title="iPhone — disponible prochainement"
+                  >
+                    iPhone
+                    <span className="font-mono text-[10px] tracking-[0.12em] uppercase text-ss-teal/60 border border-ss-teal/20 rounded-full px-1.5 py-0.5 leading-none">
+                      Bientôt
+                    </span>
+                  </span>
                 </div>
+                <span className="font-mono text-[11px] text-ss-fg/32 tracking-[0.06em]">
+                  iOS disponible prochainement
+                </span>
               </div>
             </div>
 

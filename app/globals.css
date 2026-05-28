@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #061425;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-image:
+      radial-gradient(ellipse 1200px 700px at 80% -10%, rgba(94,234,212,0.06), transparent 60%),
+      radial-gradient(ellipse 900px 600px at 10% 5%,   rgba(59,130,246,0.05), transparent 60%);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+
+  ::selection {
+    background-color: #5EEAD4;
+    color: #061425;
+  }
+}

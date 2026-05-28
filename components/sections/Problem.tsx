@@ -1,5 +1,6 @@
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeader } from '@/components/ui/SectionHeader'
+import clsx from 'clsx'
 
 const problems = [
   {
@@ -46,8 +47,8 @@ const problems = [
 
 export function Problem() {
   return (
-    <section id="problem" className="py-[120px] bg-ss-bg-2 border-y border-white/7">
-      <div className="max-w-landing mx-auto px-8 sm:px-5">
+    <section id="problem" className="py-16 md:py-[120px] bg-ss-bg-2 border-y border-white/7">
+      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
         <Reveal>
           <SectionHeader
             kicker="Le problème"
@@ -58,24 +59,21 @@ export function Problem() {
 
         <Reveal>
           <div
-            className="rounded-ss-lg overflow-hidden border border-white/7"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(12, 1fr)',
-              gap: '1px',
-              background: 'rgba(255,255,255,0.07)',
-            }}
+            className="rounded-ss-lg overflow-hidden border border-white/7 grid grid-cols-1 md:grid-cols-6"
+            style={{ gap: '1px', background: 'rgba(255,255,255,0.07)' }}
           >
             {problems.map((p) => (
               <div
                 key={p.idx}
-                className="bg-ss-bg flex flex-col gap-3.5 p-7 min-h-[220px]"
-                style={{ gridColumn: `span ${p.wide ? 6 : 4}` }}
+                className={clsx(
+                  'bg-ss-bg flex flex-col gap-3 p-5 md:p-7 md:min-h-[220px]',
+                  p.wide ? 'md:col-span-3' : 'md:col-span-2'
+                )}
               >
                 <div className="font-mono text-[11px] tracking-[0.16em] text-ss-fg/50">{p.idx}</div>
-                <div className="text-[20px] leading-[1.25] font-medium tracking-[-0.01em]">{p.title}</div>
+                <div className="text-[17px] md:text-[20px] leading-[1.25] font-medium tracking-[-0.01em]">{p.title}</div>
                 <div
-                  className="h-14 rounded-[8px] overflow-hidden"
+                  className="h-12 md:h-14 rounded-[8px] overflow-hidden"
                   style={{
                     background:
                       'repeating-linear-gradient(90deg, transparent 0, transparent 11px, rgba(255,255,255,0.07) 11px, rgba(255,255,255,0.07) 12px), linear-gradient(180deg, rgba(94,234,212,0.04), transparent)',
@@ -86,7 +84,7 @@ export function Problem() {
                     <path d={`${p.path} L 100 56 L 0 56 Z`} fill={p.color} opacity="0.08" />
                   </svg>
                 </div>
-                <div className="text-[14px] text-ss-fg/50 leading-[1.5] mt-auto">{p.desc}</div>
+                <div className="text-[13px] md:text-[14px] text-ss-fg/50 leading-[1.5] mt-auto">{p.desc}</div>
               </div>
             ))}
           </div>

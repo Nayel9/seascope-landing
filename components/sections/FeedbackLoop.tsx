@@ -2,9 +2,9 @@ import { Reveal } from '@/components/ui/Reveal'
 
 export function FeedbackLoop() {
   return (
-    <section className="py-[120px] bg-ss-bg-2 border-y border-white/7">
-      <div className="max-w-landing mx-auto px-8 sm:px-5">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[60px] items-center">
+    <section className="py-16 md:py-[120px] bg-ss-bg-2 border-y border-white/7">
+      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[60px] items-center">
           <Reveal>
             <div className="flex items-center gap-3 mb-[22px]">
               <span className="inline-flex items-center gap-2.5 font-mono text-[11px] tracking-[0.18em] uppercase text-ss-teal">
@@ -28,7 +28,7 @@ export function FeedbackLoop() {
           </Reveal>
 
           <Reveal delay={120}>
-            <div className="border border-white/7 rounded-ss-xl p-8 bg-ss-surface grid grid-cols-3 gap-3.5">
+            <div className="border border-white/7 rounded-ss-xl p-5 sm:p-8 bg-ss-surface grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               {[
                 { n: '01 · AVANT',  t: 'SeaScope recommande.',   d: 'Score, fenêtre, heure de retour adaptés à votre profil.' },
                 { n: '02 · APRÈS',  t: 'Vous notez la réalité.', d: 'Mer vue, vent ressenti, écart à la prévision, décision prise.' },
@@ -40,7 +40,7 @@ export function FeedbackLoop() {
                   <span className="text-[12px] text-ss-fg/50 leading-[1.5]">{s.d}</span>
                 </div>
               ))}
-              <div className="col-span-3 mt-3 pt-4 border-t border-white/7 flex items-center justify-between flex-wrap gap-3">
+              <div className="col-span-1 sm:col-span-3 mt-3 pt-4 border-t border-white/7 flex items-center justify-between flex-wrap gap-3">
                 <span className="font-mono text-[11px] tracking-[0.14em] text-ss-fg/50 uppercase">Boucle fermée · Métrique principale</span>
                 <span className="font-mono text-[14px] text-ss-teal">&quot;SeaScope a-t-il vu juste ?&quot;</span>
               </div>

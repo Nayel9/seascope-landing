@@ -56,8 +56,8 @@ export function Personalization() {
   const personaName = PERSONAS.find((p) => p.id === activePersona)?.name ?? ''
 
   return (
-    <section id="perso" className="py-[120px]">
-      <div className="max-w-landing mx-auto px-8 sm:px-5">
+    <section id="perso" className="py-16 md:py-[120px]">
+      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
         <Reveal>
           <SectionHeader
             kicker="Personnalisation"
@@ -145,8 +145,8 @@ export function Personalization() {
         </Reveal>
 
         {/* Compose block */}
-        <div className="mt-20 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-[60px] items-center">
-          <div className="relative min-h-[720px] flex justify-center items-center">
+        <div className="mt-10 lg:mt-20 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-[60px] items-center">
+          <div className="relative min-h-0 lg:min-h-[720px] flex justify-center items-center">
             <div
               className="absolute pointer-events-none"
               style={{ inset: '-10% -20%', background: 'radial-gradient(closest-side, rgba(94,234,212,0.10), transparent 70%)' }}

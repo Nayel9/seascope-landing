@@ -73,8 +73,8 @@ export function BetaForm() {
 
   if (submitted) {
     return (
-      <section id="beta" className="py-[120px]">
-        <div className="max-w-[720px] mx-auto px-8 sm:px-5">
+      <section id="beta" className="py-16 md:py-[120px]">
+        <div className="max-w-[720px] mx-auto px-4 sm:px-6 md:px-8">
           <div className="bg-ss-surface border border-white/7 rounded-ss-xl flex flex-col items-center text-center gap-4 py-12 px-6">
             <div className="w-14 h-14 rounded-full bg-ss-teal/10 border border-ss-teal/30 text-ss-teal grid place-items-center">
               <Check size={28} />
@@ -104,8 +104,8 @@ export function BetaForm() {
 
   const t = touched
   return (
-    <section id="beta" className="py-[120px]">
-      <div className="max-w-landing mx-auto px-8 sm:px-5">
+    <section id="beta" className="py-16 md:py-[120px]">
+      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeader
           kicker="Rejoindre la beta"
           heading="Candidatez à la beta fermée."
@@ -116,7 +116,7 @@ export function BetaForm() {
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="bg-ss-surface border border-white/7 rounded-ss-xl p-10 sm:p-6"
+            className="bg-ss-surface border border-white/7 rounded-ss-xl p-5 sm:p-6 lg:p-10"
           >
             <div className="grid grid-cols-2 sm:grid-cols-1 gap-3.5 mb-[22px]">
               <div className="flex flex-col gap-2">

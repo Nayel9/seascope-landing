@@ -37,8 +37,8 @@ const items = [
 
 export function Trust() {
   return (
-    <section id="trust" className="py-[120px] bg-ss-bg-2 border-y border-white/7">
-      <div className="max-w-landing mx-auto px-8 sm:px-5">
+    <section id="trust" className="py-16 md:py-[120px] bg-ss-bg-2 border-y border-white/7">
+      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
         <Reveal>
           <SectionHeader
             kicker="Confiance"
@@ -53,7 +53,7 @@ export function Trust() {
             style={{ background: 'rgba(255,255,255,0.07)', gap: '1px' }}
           >
             {items.map(({ Icon, title, body }) => (
-              <div key={title} className="bg-ss-bg flex flex-col gap-3.5 p-7 min-h-[220px]">
+              <div key={title} className="bg-ss-bg flex flex-col gap-3.5 p-7 md:min-h-[220px]">
                 <span className="w-9 h-9 rounded-[10px] bg-ss-teal/[0.08] inline-flex items-center justify-center text-ss-teal">
                   <Icon size={18} />
                 </span>

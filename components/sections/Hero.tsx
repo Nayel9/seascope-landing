@@ -8,20 +8,20 @@ import { ArrowRight } from '@/components/ui/icons'
 
 export function Hero() {
   return (
-    <section className="pt-20 pb-24 relative overflow-hidden">
-      <div className="max-w-landing mx-auto px-8 sm:px-5">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-20 items-center">
+    <section className="pt-8 pb-12 md:pt-20 md:pb-24 relative overflow-hidden">
+      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-20 items-center">
 
           {/* Copy */}
           <div className="relative z-10">
             <Reveal>
-              <div className="flex items-center gap-3 mb-[22px]">
+              <div className="flex items-center gap-3 mb-5">
                 <Kicker>Beta fermée · Été 2026</Kicker>
               </div>
             </Reveal>
 
             <Reveal delay={80}>
-              <h1 className="text-[clamp(38px,5.4vw,74px)] leading-[1.03] tracking-[-0.025em] font-medium m-0 text-balance">
+              <h1 className="text-[clamp(34px,5.4vw,74px)] leading-[1.03] tracking-[-0.025em] font-medium m-0 text-balance">
                 Décidez quand sortir en mer
                 <br />
                 <span className="text-ss-teal">en toute confiance.</span>
@@ -29,7 +29,7 @@ export function Hero() {
             </Reveal>
 
             <Reveal delay={160}>
-              <p className="mt-[22px] text-[clamp(16px,1.25vw,19px)] leading-[1.6] text-ss-fg/72 max-w-[60ch] text-pretty">
+              <p className="mt-4 md:mt-[22px] text-[clamp(15px,1.25vw,19px)] leading-[1.6] text-ss-fg/72 max-w-[60ch] text-pretty">
                 SeaScope transforme les conditions météo en recommandations
                 concrètes, adaptées à votre façon de naviguer. Quand sortir,
                 quand rentrer, et avec quel niveau de confiance.
@@ -37,7 +37,7 @@ export function Hero() {
             </Reveal>
 
             <Reveal delay={240}>
-              <div className="flex gap-3.5 mt-9 flex-wrap">
+              <div className="flex gap-3 mt-7 md:mt-9 flex-wrap">
                 <Button href="#beta" size="lg">
                   Rejoindre la beta fermée
                   <ArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" />
@@ -49,14 +49,14 @@ export function Hero() {
             </Reveal>
 
             <Reveal delay={320}>
-              <div className="mt-9 flex gap-7 items-center flex-wrap text-[13px] text-ss-fg/50">
+              <div className="mt-7 md:mt-9 flex flex-wrap gap-3 sm:gap-6 items-center text-[13px] text-ss-fg/50">
                 {[
                   'Fusion multi-sources météo',
                   'Recommandations explicables',
                   'Stockage local uniquement',
                 ].map((item) => (
                   <span key={item} className="inline-flex items-center gap-2">
-                    <span className="w-[5px] h-[5px] rounded-full bg-ss-teal" />
+                    <span className="w-[5px] h-[5px] rounded-full bg-ss-teal flex-none" />
                     {item}
                   </span>
                 ))}
@@ -65,7 +65,7 @@ export function Hero() {
           </div>
 
           {/* Device stage */}
-          <div className="relative flex justify-center items-center min-h-[720px]">
+          <div className="relative flex justify-center items-center min-h-0 lg:min-h-[720px] mt-4 lg:mt-0">
             <div
               className="absolute pointer-events-none"
               style={{
@@ -85,7 +85,7 @@ export function Hero() {
                   alt="Tableau de bord SeaScope — conditions BON"
                   fill
                   className="object-cover"
-                  sizes="(max-width: 720px) 280px, 380px"
+                  sizes="(max-width: 640px) 220px, (max-width: 1024px) 300px, 380px"
                   priority
                 />
               </DeviceFrame>

@@ -76,8 +76,8 @@ export function FeedbackForm() {
 
   if (submitted) {
     return (
-      <section id="feedback-form" className="py-[120px]">
-        <div className="max-w-[720px] mx-auto px-8 sm:px-5">
+      <section id="feedback-form" className="py-16 md:py-[120px]">
+        <div className="max-w-[720px] mx-auto px-4 sm:px-6 md:px-8">
           <div className="bg-ss-surface border border-white/7 rounded-ss-xl flex flex-col items-center text-center gap-4 py-12 px-6">
             <div className="w-14 h-14 rounded-full bg-ss-bon/10 border border-ss-bon/30 text-ss-bon grid place-items-center">
               <Check size={28} />
@@ -99,8 +99,8 @@ export function FeedbackForm() {
 
   const t = touched
   return (
-    <section id="feedback-form" className="py-[120px]">
-      <div className="max-w-landing mx-auto px-8 sm:px-5">
+    <section id="feedback-form" className="py-16 md:py-[120px]">
+      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
         <SectionHeader
           kicker="Bêta-testeurs"
           heading="Envoyez un retour terrain."
@@ -142,7 +142,7 @@ export function FeedbackForm() {
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="bg-ss-surface border border-white/7 rounded-ss-xl p-10 sm:p-6"
+            className="bg-ss-surface border border-white/7 rounded-ss-xl p-5 sm:p-6 lg:p-10"
           >
             <div className="flex flex-col gap-2 mb-[22px]">
               <label htmlFor="fb-email" className={labelBase}>Votre email (testeur)</label>

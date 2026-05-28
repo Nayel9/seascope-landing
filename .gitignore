@@ -13,6 +13,7 @@
 *.pem
 .env*.local
 npm-debug.log*
+pnpm-debug.log*
 .vercel
 *.tsbuildinfo
 next-env.d.ts

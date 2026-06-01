@@ -55,7 +55,7 @@ export function HowItWorks() {
                   <Layers size={18} />
                 </span>
               </div>
-              <h3 className="text-[20px] leading-[1.25] font-medium m-0">SeaScope analyse les conditions.</h3>
+              <h3 className="text-[20px] leading-[1.25] font-medium m-0">SeaScope confronte les modèles à vos limites.</h3>
               <p className="text-[14px] text-ss-fg/50 leading-[1.5] m-0">
                 Fusion de plusieurs modèles météo marins, croisée avec les seuils de votre profil de navigation.
               </p>

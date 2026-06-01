@@ -5,7 +5,7 @@ import { Layers, Eye, Compass, Cpu, Lock, Bell } from '@/components/ui/icons'
 const items = [
   {
     Icon: Layers,
-    title: 'Fusion multi-sources',
+    title: 'Plusieurs modèles, un seul verdict',
     body: "Plusieurs modèles météo marins — ARPEGE, ICON-EU, GFS, WaveWatch — agrégés et pondérés selon leur fiabilité locale.",
   },
   {

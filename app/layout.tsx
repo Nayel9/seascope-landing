@@ -4,7 +4,7 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'SeaScope — Décidez quand sortir en mer en toute confiance.',
+  title: 'SeaScope — Décidez quand sortir, sachez quand rentrer.',
   description:
     'SeaScope est un copilote décisionnel pour navigation côtière. Fenêtres météo, heure de retour, recommandations adaptées à votre façon de naviguer. Beta fermée — Été 2026.',
 }

@@ -9,8 +9,8 @@ export function Footer() {
           <div>
             <Logo size={40} showWordmark wordmarkSize={22} />
             <p className="mt-4 text-[13px] text-ss-fg/50 max-w-[36ch] leading-relaxed">
-              Copilote météo décisionnel pour navigation côtière.
-              <br />Conçu pour la décision, pas pour la décoration.
+              Copilote décisionnel pour la navigation côtière.
+              <br />Conçu pour décider, pas pour scroller.
             </p>
             <p className="mt-4">
               <a

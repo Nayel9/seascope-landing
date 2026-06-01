@@ -10,7 +10,7 @@ export function Hero() {
   return (
     <section className="pt-8 pb-12 md:pt-20 md:pb-24 relative overflow-hidden">
       <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-20 items-center lg:items-start lg:pt-6">
 
           {/* Copy */}
           <div className="relative z-10">
@@ -21,18 +21,20 @@ export function Hero() {
             </Reveal>
 
             <Reveal delay={80}>
-              <h1 className="text-[clamp(34px,5.4vw,74px)] leading-[1.03] tracking-[-0.025em] font-medium m-0 text-balance">
-                Décidez quand sortir en mer
+              <h1 className="text-[clamp(34px,3.6vw,48px)] leading-[1.08] tracking-[-0.022em] font-medium m-0 text-balance">
+                Décidez quand sortir.
                 <br />
-                <span className="text-ss-teal">en toute confiance.</span>
+                Sachez quand rentrer.
+                <br />
+                <span className="text-ss-teal">Sans interpréter la météo.</span>
               </h1>
             </Reveal>
 
             <Reveal delay={160}>
               <p className="mt-4 md:mt-[22px] text-[clamp(15px,1.25vw,19px)] leading-[1.6] text-ss-fg/72 max-w-[60ch] text-pretty">
-                SeaScope transforme les conditions météo en recommandations
-                concrètes, adaptées à votre façon de naviguer. Quand sortir,
-                quand rentrer, et avec quel niveau de confiance.
+                SeaScope transforme les conditions marines en recommandations
+                concrètes, adaptées à votre façon de naviguer : la meilleure
+                fenêtre, l&apos;heure de retour, et le niveau de confiance.
               </p>
             </Reveal>
 

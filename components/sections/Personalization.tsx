@@ -169,7 +169,7 @@ export function Personalization() {
 
           <Reveal>
             <div className="flex items-center gap-3 mb-[22px]">
-              <Kicker>Cas réel · simulation</Kicker>
+              <Kicker>Démo interactive</Kicker>
             </div>
             <h3 className="text-[clamp(28px,2.4vw,40px)] leading-[1.08] tracking-[-0.02em] font-medium mb-4 text-balance">
               Sur cette sortie, vos seuils disent{' '}
@@ -185,7 +185,7 @@ export function Personalization() {
               {[
                 'Vos limites personnelles, pas des moyennes anonymes.',
                 'Chaque dépassement nommé, chiffré, expliqué.',
-                'Un score qui change avec votre profil — pas avec le marketing.',
+                'Un score qui est le vôtre, pas une moyenne pour navigateur moyen.',
               ].map((line) => (
                 <li key={line} className="flex gap-3 items-start text-[14px] text-ss-fg/72">
                   <span className="text-ss-teal mt-0.5 flex-none"><Check size={16} /></span>

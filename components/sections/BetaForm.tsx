@@ -283,10 +283,10 @@ export function BetaForm() {
             <div className="border border-white/7 rounded-ss-lg p-[22px] bg-ss-surface/50">
               <h4 className="text-[14px] font-medium m-0 mb-2">Canaux beta</h4>
               <p className="text-[13px] text-ss-fg/50 leading-relaxed m-0 mt-2">
-                Un Discord privé pour les testeurs. Un fil Telegram pour les alertes critiques.
+                Un groupe WhatsApp privé pour les échanges et les alertes. Un email direct avec l&apos;équipe pour les retours détaillés.
               </p>
               <div className="flex gap-2 mt-3.5">
-                {['Discord', 'Telegram'].map((c) => (
+                {['WhatsApp', 'Email'].map((c) => (
                   <span key={c} className="inline-flex items-center gap-2 h-6 px-2.5 rounded-full font-mono text-[11px] font-semibold tracking-[0.08em] text-ss-bon bg-ss-bon/10">
                     <span className="w-1.5 h-1.5 rounded-full bg-current" />{c}
                   </span>

@@ -5,6 +5,7 @@ import { Problem } from '@/components/sections/Problem'
 import { HowItWorks } from '@/components/sections/HowItWorks'
 import { Personalization } from '@/components/sections/Personalization'
 import { Trust } from '@/components/sections/Trust'
+import { FAQ } from '@/components/sections/FAQ'
 import { BetaForm } from '@/components/sections/BetaForm'
 import { FeedbackLoop } from '@/components/sections/FeedbackLoop'
 import { FeedbackForm } from '@/components/sections/FeedbackForm'
@@ -19,6 +20,7 @@ export default function Page() {
         <HowItWorks />
         <Personalization />
         <Trust />
+        <FAQ />
         <BetaForm />
         <FeedbackLoop />
         <FeedbackForm />

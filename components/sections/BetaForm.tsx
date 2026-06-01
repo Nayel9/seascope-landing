@@ -252,7 +252,7 @@ export function BetaForm() {
 
             <div className="flex items-center gap-3.5 flex-wrap">
               <Button type="submit" size="lg" disabled={isLoading}>
-                {isLoading ? 'Envoi en cours…' : 'Demander un accès beta'}
+                {isLoading ? 'Envoi en cours…' : 'Rejoindre la beta'}
                 {!isLoading && <ArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" />}
               </Button>
               <span className="font-mono text-[11px] text-ss-fg/50 tracking-[0.08em]">

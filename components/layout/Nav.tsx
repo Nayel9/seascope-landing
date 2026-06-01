@@ -16,6 +16,7 @@ export function Nav() {
             { href: '#how',      label: 'Fonctionnement' },
             { href: '#perso',    label: 'Personnalisation' },
             { href: '#trust',    label: 'Confiance' },
+            { href: '#faq',      label: 'FAQ' },
             { href: '#beta',     label: 'Beta' },
           ].map(({ href, label }) => (
             <Link
@@ -32,7 +33,7 @@ export function Nav() {
           <span className="hidden sm:inline-block font-mono text-[10px] tracking-[0.16em] uppercase text-ss-fg/50 border border-white/7 rounded-full px-2.5 py-[5px]">
             Beta · 2026
           </span>
-          <Button href="#beta" size="sm">Rejoindre</Button>
+          <Button href="#beta" size="sm">Rejoindre la beta</Button>
         </div>
       </div>
     </header>

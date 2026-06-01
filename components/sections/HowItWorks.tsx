@@ -11,7 +11,7 @@ export function HowItWorks() {
           <SectionHeader
             kicker="Comment ça marche"
             heading={<>Trois gestes.<br />Une décision claire.</>}
-            lead="SeaScope vous demande l'essentiel — votre spot, votre pratique — puis renvoie un signal décisionnel, pas un dump de données."
+            lead="SeaScope vous demande l'essentiel — votre spot, votre pratique — puis renvoie un signal décisionnel, pas une avalanche de chiffres."
           />
         </Reveal>
 

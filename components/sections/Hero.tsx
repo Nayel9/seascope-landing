@@ -39,7 +39,7 @@ export function Hero() {
             <Reveal delay={240}>
               <div className="flex gap-3 mt-7 md:mt-9 flex-wrap">
                 <Button href="#beta" size="lg">
-                  Rejoindre la beta fermée
+                  Rejoindre la beta
                   <ArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" />
                 </Button>
                 <Button href="#how" variant="ghost" size="lg">
@@ -51,7 +51,7 @@ export function Hero() {
             <Reveal delay={320}>
               <div className="mt-7 md:mt-9 flex flex-wrap gap-3 sm:gap-6 items-center text-[13px] text-ss-fg/50">
                 {[
-                  'Fusion multi-sources météo',
+                  'Une réponse, pas un tableau de chiffres',
                   'Recommandations explicables',
                   'Stockage local uniquement',
                 ].map((item) => (
@@ -106,7 +106,7 @@ export function Hero() {
             <Callout
               num="3"
               label="Pourquoi"
-              text="Mer croisée préoccupante — vent et vagues favorables."
+              text="Mer maniable, vent stable — rien ne dépasse vos limites."
               style={{ left: -40, bottom: 120 }}
             />
           </div>

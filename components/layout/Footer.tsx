@@ -31,6 +31,7 @@ export function Footer() {
                 { href: '#how',   label: 'Comment ça marche' },
                 { href: '#perso', label: 'Personnalisation' },
                 { href: '#trust', label: 'Confiance' },
+                { href: '#faq',   label: 'FAQ' },
                 { href: '#beta',  label: 'Beta fermée' },
               ].map(({ href, label }) => (
                 <li key={href}>

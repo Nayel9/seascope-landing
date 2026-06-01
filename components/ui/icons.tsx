@@ -133,6 +133,12 @@ export const ArrowRight = ({ size = 16, ...p }: P) => (
   </svg>
 )
 
+export const Plus = ({ size = 16, ...p }: P) => (
+  <svg {...base(size)} {...p}>
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+)
+
 export const Bell = ({ size = 16, ...p }: P) => (
   <svg {...base(size)} {...p}>
     <path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9Z" />

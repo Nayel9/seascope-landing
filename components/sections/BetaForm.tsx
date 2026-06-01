@@ -74,7 +74,7 @@ export function BetaForm() {
   if (submitted) {
     return (
       <section id="beta" className="py-16 md:py-[120px]">
-        <div className="max-w-[720px] mx-auto px-4 sm:px-6 md:px-8">
+        <div className="container-narrow">
           <div className="bg-ss-surface border border-white/7 rounded-ss-xl flex flex-col items-center text-center gap-4 py-12 px-6">
             <div className="w-14 h-14 rounded-full bg-ss-teal/10 border border-ss-teal/30 text-ss-teal grid place-items-center">
               <Check size={28} />
@@ -105,7 +105,7 @@ export function BetaForm() {
   const t = touched
   return (
     <section id="beta" className="py-16 md:py-[120px]">
-      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
+      <div className="container-landing">
         <SectionHeader
           kicker="Rejoindre la beta"
           heading="Candidatez à la beta fermée."

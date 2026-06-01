@@ -28,7 +28,7 @@ const faqs = [
 export function FAQ() {
   return (
     <section id="faq" className="py-16 md:py-[120px]">
-      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
+      <div className="container-landing">
         <Reveal>
           <SectionHeader
             kicker="Questions fréquentes"

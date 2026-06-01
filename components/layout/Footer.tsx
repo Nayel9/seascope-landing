@@ -4,7 +4,7 @@ import { Logo } from '@/components/ui/Logo'
 export function Footer() {
   return (
     <footer className="border-t border-white/7 pt-14 pb-10">
-      <div className="max-w-landing mx-auto px-8 sm:px-5">
+      <div className="container-landing">
         <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-10 items-start">
           <div>
             <Logo size={40} showWordmark wordmarkSize={22} />
@@ -63,7 +63,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/7 flex items-center justify-between font-mono text-[11px] tracking-[0.06em] text-ss-fg/50">
+        <div className="mt-12 pt-6 border-t border-white/7 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 font-mono text-[11px] tracking-[0.06em] text-ss-fg/50">
           <span>© 2026 SeaScope · Tous droits réservés</span>
           <span>Beta privée · Été 2026</span>
         </div>

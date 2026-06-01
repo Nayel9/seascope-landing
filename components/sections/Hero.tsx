@@ -9,7 +9,7 @@ import { ArrowRight } from '@/components/ui/icons'
 export function Hero() {
   return (
     <section className="pt-8 pb-12 md:pt-20 md:pb-24 relative overflow-hidden">
-      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
+      <div className="container-landing">
         <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-20 items-center lg:items-start lg:pt-6">
 
           {/* Copy */}
@@ -66,8 +66,8 @@ export function Hero() {
             </Reveal>
           </div>
 
-          {/* Device stage */}
-          <div className="relative flex justify-center items-center min-h-0 lg:min-h-[720px] mt-4 lg:mt-0">
+          {/* Device stage — clip decorative bleed on mobile; let callouts overflow from lg up */}
+          <div className="relative flex justify-center items-center min-h-0 lg:min-h-[720px] mt-4 lg:mt-0 overflow-hidden lg:overflow-visible">
             <div
               className="absolute pointer-events-none"
               style={{

@@ -57,7 +57,7 @@ export function Personalization() {
 
   return (
     <section id="perso" className="py-16 md:py-[120px]">
-      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
+      <div className="container-landing">
         <Reveal>
           <SectionHeader
             kicker="Personnalisation"
@@ -146,7 +146,7 @@ export function Personalization() {
 
         {/* Compose block */}
         <div className="mt-10 lg:mt-20 grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-[60px] items-center">
-          <div className="relative min-h-0 lg:min-h-[720px] flex justify-center items-center">
+          <div className="relative min-h-0 lg:min-h-[720px] flex justify-center items-center overflow-hidden lg:overflow-visible">
             <div
               className="absolute pointer-events-none"
               style={{ inset: '-10% -20%', background: 'radial-gradient(closest-side, rgba(94,234,212,0.10), transparent 70%)' }}

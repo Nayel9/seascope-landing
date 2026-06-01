@@ -3,7 +3,7 @@ import { Reveal } from '@/components/ui/Reveal'
 export function FeedbackLoop() {
   return (
     <section className="py-16 md:py-[120px] bg-ss-bg-2 border-y border-white/7">
-      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
+      <div className="container-landing">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-[60px] items-center">
           <Reveal>
             <div className="flex items-center gap-3 mb-[22px]">

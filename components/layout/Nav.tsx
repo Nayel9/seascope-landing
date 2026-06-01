@@ -5,7 +5,7 @@ import { Logo } from '@/components/ui/Logo'
 export function Nav() {
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md border-b border-white/7 bg-ss-bg/72">
-      <div className="max-w-landing mx-auto px-8 sm:px-5 flex items-center justify-between h-16">
+      <div className="container-landing flex items-center justify-between h-16">
         <Link href="/" className="flex-none">
           <Logo size={36} showWordmark wordmarkSize={20} />
         </Link>

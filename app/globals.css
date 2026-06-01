@@ -21,3 +21,17 @@
     color: #061425;
   }
 }
+
+@layer components {
+  /* Single source of truth for page gutters. Every section, the nav and the
+     footer share the exact same width, centering and symmetric padding so
+     nothing can drift horizontally between blocks. */
+  .container-landing {
+    @apply w-full max-w-landing mx-auto px-4 sm:px-6 md:px-8;
+  }
+
+  /* Narrow variant for centered form/confirmation blocks — same gutters. */
+  .container-narrow {
+    @apply w-full max-w-[720px] mx-auto px-4 sm:px-6 md:px-8;
+  }
+}

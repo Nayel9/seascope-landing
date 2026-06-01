@@ -48,7 +48,7 @@ const problems = [
 export function Problem() {
   return (
     <section id="problem" className="py-16 md:py-[120px] bg-ss-bg-2 border-y border-white/7">
-      <div className="max-w-landing mx-auto px-4 sm:px-6 md:px-8">
+      <div className="container-landing">
         <Reveal>
           <SectionHeader
             kicker="Le problème"

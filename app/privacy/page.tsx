@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 const UPDATED = '2 juin 2026'
-const VERSION = '1.0'
+const VERSION = '1.1'
 
 // ── Helpers de mise en forme (cohérents avec le design system) ──────────────────
 
@@ -44,15 +44,6 @@ function LI({ children }: { children: React.ReactNode }) {
       <span className="w-[5px] h-[5px] rounded-full bg-ss-teal flex-none mt-2.5" />
       <span>{children}</span>
     </li>
-  )
-}
-
-// Marque un élément à confirmer avant publication finale.
-function TBD({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="font-mono text-[13px] text-ss-delicat bg-ss-delicat/10 border border-ss-delicat/25 rounded px-1.5 py-0.5">
-      {children}
-    </span>
   )
 }
 
@@ -111,10 +102,10 @@ export default function PrivacyPage() {
           <div className="mt-12">
             <H2 id="responsable">1. Qui est responsable de vos données</H2>
             <P>
-              SeaScope est édité par <strong className="text-ss-fg">Pennar Studio</strong>{' '}
-              <TBD>[À CONFIRMER : forme juridique, n° SIREN, adresse postale]</TBD>. Pennar Studio agit
-              en tant que responsable du traitement de vos données personnelles au sens du Règlement
-              général sur la protection des données (RGPD).
+              SeaScope est édité par <strong className="text-ss-fg">Pennar Studio</strong> (SIRET
+              750&nbsp;835&nbsp;944&nbsp;00034). Pennar Studio agit en tant que responsable du
+              traitement de vos données personnelles au sens du Règlement général sur la protection
+              des données (RGPD).
             </P>
             <P>
               Pour toute question relative à cette politique ou à vos données, vous pouvez nous écrire
@@ -179,23 +170,28 @@ export default function PrivacyPage() {
               en arrière-plan à des fins commerciales.
             </P>
 
-            <H3>2.4 Notifications push</H3>
+            <H3>2.4 Notifications</H3>
             <P>
-              Si vous activez les alertes, SeaScope peut vous envoyer une notification lorsqu&apos;une
-              fenêtre favorable s&apos;ouvre ou que les conditions se dégradent sur un spot suivi. La
-              diffusion de ces notifications repose sur{' '}
-              <TBD>[À CONFIRMER : Firebase Cloud Messaging (Google) ou autre service]</TBD>, ce qui
-              implique le traitement d&apos;un identifiant technique de notification (jeton). Vous pouvez
-              désactiver les notifications à tout moment.
+              Si vous activez les alertes, SeaScope vous prévient lorsqu&apos;une fenêtre favorable
+              s&apos;ouvre ou que les conditions se dégradent sur un spot suivi. En version bêta, ces
+              notifications sont <strong className="text-ss-fg">uniquement locales</strong> : elles sont
+              générées sur votre appareil. SeaScope <strong className="text-ss-fg">n&apos;utilise aucun
+              service de notification push distant</strong>, ne collecte aucun jeton Firebase Cloud
+              Messaging (FCM) et ne transmet aucune donnée utilisateur pour les notifications. Vous
+              pouvez les désactiver à tout moment.
             </P>
 
             <H3>2.5 Mesure d&apos;audience et statistiques</H3>
             <P>
-              <TBD>[À CONFIRMER]</TBD> SeaScope{' '}
-              <TBD>n&apos;utilise pas / utilise [nom de l&apos;outil]</TBD> d&apos;outil de mesure d&apos;audience.
-              Lorsqu&apos;une mesure est réalisée, elle l&apos;est à des fins d&apos;amélioration du produit, sous
-              forme agrégée, et sans revente à des tiers. Le détail de l&apos;outil utilisé et des données
-              collectées sera précisé ici avant la sortie publique.
+              <strong className="text-ss-fg">Dans l&apos;application</strong> : SeaScope n&apos;utilise aucun
+              outil d&apos;analyse d&apos;audience, de suivi comportemental ou de publicité.
+            </P>
+            <P>
+              <strong className="text-ss-fg">Sur notre site</strong> (cette page, la page d&apos;accueil et
+              les formulaires) : nous utilisons Vercel Web Analytics et Vercel Speed Insights pour
+              mesurer la fréquentation et les performances. Cette mesure est agrégée et respectueuse de
+              la vie privée : pas de cookie de suivi publicitaire, pas de profil individuel, pas de
+              revente.
             </P>
 
             <H3>2.6 Formulaires (programme beta et retours)</H3>
@@ -247,8 +243,11 @@ export default function PrivacyPage() {
             <UL>
               <LI>Nous ne vendons pas vos données.</LI>
               <LI>Nous ne les louons pas et ne les cédons pas à des courtiers en données.</LI>
-              <LI>Nous ne construisons pas de profil publicitaire à partir de votre navigation en mer.</LI>
-              <LI>Nous n&apos;affichons pas de publicité ciblée dans l&apos;application.</LI>
+              <LI>Nous ne créons aucun compte utilisateur.</LI>
+              <LI>Nous n&apos;utilisons aucun outil de suivi comportemental ou publicitaire (la mesure d&apos;audience du site se limite à des statistiques agrégées — voir §2.5).</LI>
+              <LI>Nous n&apos;utilisons aucun identifiant publicitaire.</LI>
+              <LI>Nous ne construisons aucun profil marketing ni publicitaire à partir de votre navigation en mer.</LI>
+              <LI>Nous n&apos;affichons pas de publicité dans l&apos;application.</LI>
             </UL>
 
             <H2 id="sous-traitants">5. Avec qui nous partageons des données (sous-traitants)</H2>
@@ -266,45 +265,47 @@ export default function PrivacyPage() {
                 suivi des candidatures et des retours beta.
               </LI>
               <LI>
-                <strong className="text-ss-fg">Vercel</strong> (États-Unis/UE) — hébergement de notre site
-                et journaux techniques associés.
+                <strong className="text-ss-fg">Vercel</strong> (États-Unis/UE) — hébergement de notre site,
+                journaux techniques associés, et mesure d&apos;audience/performance agrégée (Vercel Web
+                Analytics et Speed Insights).
               </LI>
               <LI>
-                <strong className="text-ss-fg">Services de prévision marine</strong>{' '}
-                <TBD>[À CONFIRMER : fournisseurs / API météo marine]</TBD> — réception des coordonnées
-                d&apos;un spot pour renvoyer les conditions correspondantes.
+                <strong className="text-ss-fg">Open-Meteo</strong> (Union européenne) — réception des
+                coordonnées d&apos;un spot pour renvoyer les prévisions météo et marines correspondantes.
               </LI>
               <LI>
-                <strong className="text-ss-fg">Google (Play Services / Firebase)</strong>{' '}
-                <TBD>[À CONFIRMER selon usage réel]</TBD> — distribution de l&apos;application et, le cas
-                échéant, notifications push et rapports de plantage.
+                <strong className="text-ss-fg">OpenFreeMap / OpenStreetMap</strong> — fonds de carte et
+                données de ports&nbsp;; les coordonnées de la zone affichée sont transmises pour charger
+                la carte.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Notre backend SeaScope</strong> — proxy qui relaie les
+                coordonnées d&apos;un spot vers les services de prévision&nbsp;; il ne reçoit aucun
+                identifiant de compte (l&apos;application n&apos;en crée pas).
               </LI>
             </UL>
 
             <H2 id="transferts">6. Transferts hors Union européenne</H2>
             <P>
-              Certains prestataires (notamment Notion et, le cas échéant, les services Google) sont
-              situés aux États-Unis. Lorsque des données y sont transférées, ce transfert est encadré
-              par les mécanismes prévus par le RGPD (clauses contractuelles types et/ou adhésion au{' '}
-              <em>Data Privacy Framework</em>). Nous limitons ces transferts au strict nécessaire.
+              Certains prestataires (notamment Notion et Vercel) sont situés aux États-Unis. Lorsque
+              des données y sont transférées, ce transfert est encadré par les mécanismes prévus par le
+              RGPD (clauses contractuelles types et/ou adhésion au <em>Data Privacy Framework</em>).
+              Nous limitons ces transferts au strict nécessaire.
             </P>
 
             <H2 id="conservation">7. Durée de conservation</H2>
             <UL>
               <LI>
                 <strong className="text-ss-fg">Données locales</strong> : conservées sur votre appareil
-                jusqu&apos;à ce que vous les supprimiez ou désinstalliez l&apos;application.
+                jusqu&apos;à leur suppression par vos soins ou la désinstallation de l&apos;application.
               </LI>
               <LI>
-                <strong className="text-ss-fg">Candidatures et retours beta</strong> : conservés pendant la
-                durée du programme de test, puis{' '}
-                <TBD>[À CONFIRMER : ex. supprimés ou anonymisés dans les 12 mois suivant la fin de la
-                beta]</TBD>.
+                <strong className="text-ss-fg">Candidatures et retours beta</strong> : conservés
+                12&nbsp;mois maximum après la fin du programme bêta.
               </LI>
               <LI>
-                <strong className="text-ss-fg">Journaux techniques</strong> : conservés pour une durée
-                limitée à des fins de sécurité et de diagnostic{' '}
-                <TBD>[À CONFIRMER : ex. 30 à 90 jours]</TBD>.
+                <strong className="text-ss-fg">Journaux techniques</strong> : conservés 30&nbsp;jours
+                maximum, à des fins de sécurité et de diagnostic.
               </LI>
             </UL>
 

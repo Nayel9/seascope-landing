@@ -124,7 +124,7 @@ ${spotLine}
 </td></tr>
 <tr><td style="padding:24px;background:#f8f9fa;text-align:center">
 <p style="margin:0;font-size:13px;color:#0E2236;font-weight:600">SeaScope</p>
-<p style="margin:4px 0 0;font-size:12px;color:#777">Copilote m&eacute;t&eacute;o d&eacute;cisionnel &middot; Beta 2026<br>
+<p style="margin:4px 0 0;font-size:12px;color:#777">Copilote d&eacute;cisionnel pour la navigation c&ocirc;ti&egrave;re &middot; Beta 2026<br>
 <a href="mailto:seascope-contact@pennarstudio.fr" style="color:#5EEAD4">seascope-contact@pennarstudio.fr</a></p>
 </td></tr>
 </table></td></tr></table></body></html>`

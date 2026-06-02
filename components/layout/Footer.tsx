@@ -64,7 +64,12 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-white/7 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 font-mono text-[11px] tracking-[0.06em] text-ss-fg/50">
-          <span>© 2026 SeaScope · Tous droits réservés</span>
+          <span className="flex items-center gap-x-4 gap-y-2 flex-wrap">
+            <span>© 2026 SeaScope · Tous droits réservés</span>
+            <Link href="/privacy" className="hover:text-ss-fg transition-colors">
+              Confidentialité
+            </Link>
+          </span>
           <span>Beta privée · Été 2026</span>
         </div>
       </div>

@@ -55,7 +55,7 @@ export function Hero() {
                 {[
                   'Une réponse, pas un tableau de chiffres',
                   'Recommandations explicables',
-                  'Stockage local uniquement',
+                  'Vos données restent sur votre appareil',
                 ].map((item) => (
                   <span key={item} className="inline-flex items-center gap-2">
                     <span className="w-[5px] h-[5px] rounded-full bg-ss-teal flex-none" />

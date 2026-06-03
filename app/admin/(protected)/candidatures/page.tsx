@@ -6,7 +6,7 @@ import CandidaturesTable from '@/components/admin/CandidaturesTable'
 
 export const dynamic = 'force-dynamic'
 
-export type TabKey = 'traiter' | 'inviter' | 'invites' | 'relancer' | 'actifs' | 'refuses' | 'tous'
+export type TabKey = 'traiter' | 'emailgp' | 'inviter' | 'invites' | 'relancer' | 'actifs' | 'refuses' | 'tous'
 
 export interface Row extends Candidature {
   aRelancer: boolean
@@ -29,7 +29,8 @@ function enrich(c: Candidature): Row {
 
 const filters: Record<TabKey, (r: Row) => boolean> = {
   traiter: (r) => ['Nouveau', 'En cours', 'En attente'].includes(r.statut),
-  inviter: (r) => r.statut === 'Accepté' && !r.invitationEnvoyee,
+  emailgp: (r) => r.statut === 'Accepté' && !r.invitationEnvoyee && !r.emailGooglePlay,
+  inviter: (r) => r.statut === 'Accepté' && !r.invitationEnvoyee && !!r.emailGooglePlay,
   invites: (r) => r.statut === 'Invité Google Play',
   relancer: (r) => r.aRelancer,
   actifs: (r) => r.statut === 'Actif',
@@ -38,8 +39,8 @@ const filters: Record<TabKey, (r: Row) => boolean> = {
 }
 
 const tabLabels: Record<TabKey, string> = {
-  traiter: '📋 À traiter', inviter: '✅ À inviter', invites: '📨 Invités',
-  relancer: '🔁 À relancer', actifs: '🟢 Actifs', refuses: '❌ Refusés', tous: 'Tous',
+  traiter: '📋 À traiter', emailgp: '📮 Email Google à confirmer', inviter: '✅ À inviter',
+  invites: '📨 Invités', relancer: '🔁 À relancer', actifs: '🟢 Actifs', refuses: '❌ Refusés', tous: 'Tous',
 }
 
 export default async function CandidaturesPage({
@@ -65,6 +66,7 @@ export default async function CandidaturesPage({
 
   const kpis: Array<{ tab: TabKey; label: string; alert?: boolean }> = [
     { tab: 'traiter', label: '📋 À traiter' },
+    { tab: 'emailgp', label: '📮 Email GP à confirmer', alert: true },
     { tab: 'inviter', label: '✅ À inviter' },
     { tab: 'invites', label: '📨 Invités' },
     { tab: 'relancer', label: '🔁 À relancer', alert: true },
@@ -73,7 +75,7 @@ export default async function CandidaturesPage({
 
   return (
     <main className="px-6 py-5">
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-6">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-7">
         {kpis.map((k) => (
           <Link
             key={k.tab}

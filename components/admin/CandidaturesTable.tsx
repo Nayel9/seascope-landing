@@ -179,19 +179,19 @@ export default function CandidaturesTable({
               <BulkBtn kind="neutral" label="⏸ En attente" disabled={pending} onClick={() => run(() => qualifierEnLot([...selected], 'En attente'))} />
             </>
           )}
+          {tab === 'emailgp' && (
+            <BulkBtn kind="warn" label="📮 Demander email GP" disabled={pending} onClick={() => {
+              const targets = selRows.filter((r) => !r.emailGPDemande)
+              if (targets.length === 0) { setError('Demande déjà envoyée à toute la sélection — attendez leurs réponses'); return }
+              openModal('demande', targets)
+            }} />
+          )}
           {tab === 'inviter' && (
-            <>
-              <BulkBtn kind="primary" label="✉️ Envoyer les invitations" disabled={pending} onClick={() => {
-                const targets = selRows.filter((r) => r.emailGooglePlay)
-                if (targets.length === 0) { setError('Aucun sélectionné n’a d’Email Google Play — demandez-le d’abord'); return }
-                openModal('invitation', targets)
-              }} />
-              <BulkBtn kind="warn" label="📮 Demander email GP" disabled={pending} onClick={() => {
-                const targets = selRows.filter((r) => !r.emailGooglePlay && !r.emailGPDemande)
-                if (targets.length === 0) { setError('Rien à demander : email GP déjà renseigné ou déjà demandé pour toute la sélection'); return }
-                openModal('demande', targets)
-              }} />
-            </>
+            <BulkBtn kind="primary" label="✉️ Envoyer les invitations" disabled={pending} onClick={() => {
+              const targets = selRows.filter((r) => r.emailGooglePlay)
+              if (targets.length === 0) { setError('Aucun sélectionné n’a d’Email Google Play'); return }
+              openModal('invitation', targets)
+            }} />
           )}
           {(tab === 'invites' || tab === 'relancer') && (
             <>

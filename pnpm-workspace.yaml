@@ -1,0 +1,6 @@
+allowBuilds:
+  sharp: true
+
+# Dependabot #39 : postcss < 8.5.10 (XSS via </style>) — Next épingle 8.4.31, on force la version patchée.
+overrides:
+  postcss: '>=8.5.10'

@@ -90,7 +90,7 @@ export default function CandidaturesTable({
           </thead>
           <tbody>
             {rows.length === 0 && (
-              <tr><td colSpan={8} className="px-4 py-8 text-center text-ss-fg/50">Aucune candidature dans cet onglet.</td></tr>
+              <tr><td colSpan={tab === 'traiter' ? 8 : 7} className="px-4 py-8 text-center text-ss-fg/50">Aucune candidature dans cet onglet.</td></tr>
             )}
             {rows.map((r) => (
               <tr key={r.id} className={`border-b border-white/5 align-middle ${selected.has(r.id) ? 'bg-ss-teal/5' : ''}`}>
@@ -109,17 +109,19 @@ export default function CandidaturesTable({
                 </td>
                 <td className="px-3 py-3">
                   <input
+                    key={`gp-${r.emailGooglePlay}`}
                     type="email"
                     defaultValue={r.emailGooglePlay}
                     placeholder="—"
                     onBlur={(e) => {
-                      if (e.target.value !== r.emailGooglePlay) run(() => setEmailGooglePlay(r.id, e.target.value))
+                      if (e.target.value.trim() !== r.emailGooglePlay) run(() => setEmailGooglePlay(r.id, e.target.value))
                     }}
                     className="w-44 rounded-md border border-ss-teal/25 bg-ss-surface px-2 py-1 text-xs outline-none focus:border-ss-teal"
                   />
                 </td>
                 <td className="px-3 py-3">
                   <select
+                    key={`prio-${r.priorite}`}
                     defaultValue={r.priorite}
                     onChange={(e) => run(() => setPriorite(r.id, e.target.value))}
                     className="rounded-md border border-white/15 bg-ss-surface px-1.5 py-1 text-xs"
@@ -130,6 +132,7 @@ export default function CandidaturesTable({
                 {tab === 'traiter' && (
                   <td className="px-3 py-3">
                     <select
+                      key={`canal-${r.canal}`}
                       defaultValue={r.canal}
                       onChange={(e) => run(() => setCanal(r.id, e.target.value))}
                       className="rounded-md border border-white/15 bg-ss-surface px-1.5 py-1 text-xs"
@@ -167,7 +170,11 @@ export default function CandidaturesTable({
           )}
           {(tab === 'invites' || tab === 'relancer') && (
             <>
-              <BulkBtn kind="warn" label="🔁 Relancer la sélection" disabled={pending} onClick={() => openModal('relance', selRows.filter((r) => !r.relanceEnvoyee))} />
+              <BulkBtn kind="warn" label="🔁 Relancer la sélection" disabled={pending} onClick={() => {
+                const targets = selRows.filter((r) => !r.relanceEnvoyee)
+                if (targets.length === 0) { setError('Tous les sélectionnés ont déjà été relancés'); return }
+                openModal('relance', targets)
+              }} />
               <BulkBtn kind="ok" label="🟢 Marquer actifs" disabled={pending} onClick={() => run(() => marquerActifs([...selected]))} />
             </>
           )}

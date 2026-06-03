@@ -177,7 +177,7 @@ export async function updatePage(pageId: string, properties: Record<string, unkn
 // ── Builders de propriétés pour les PATCH ─────────────────────────────────────
 
 export const prop = {
-  select: (name: string) => ({ select: { name } }),
+  select: (name: string) => ({ select: name ? { name } : null }),
   checkbox: (v: boolean) => ({ checkbox: v }),
   email: (v: string) => ({ email: v || null }),
   // fr-CA produit nativement YYYY-MM-DD ; timezone Paris pour éviter le J-1 avant 1h/2h du matin.

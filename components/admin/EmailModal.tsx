@@ -21,7 +21,7 @@ export default function EmailModal({
   const label = state.mode === 'invitation' ? 'invitation' : 'relance'
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-6" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-6" onClick={() => { if (!sending) onClose() }}>
       <div
         className="w-full max-w-2xl rounded-ss-lg border border-ss-teal/25 bg-ss-bg-2"
         onClick={(e) => e.stopPropagation()}
@@ -65,7 +65,7 @@ export default function EmailModal({
               <br />Envois séquentiels — un échec n'interrompt pas les suivants.
             </span>
           )}
-          <button onClick={onClose} className="ml-auto rounded-md border border-gray-400/25 bg-gray-400/10 px-4 py-2 text-xs font-semibold">
+          <button onClick={onClose} disabled={sending} className="ml-auto rounded-md border border-gray-400/25 bg-gray-400/10 px-4 py-2 text-xs font-semibold disabled:opacity-40">
             {report ? 'Fermer' : 'Annuler'}
           </button>
           {!report && (

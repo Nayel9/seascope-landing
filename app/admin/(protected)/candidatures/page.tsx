@@ -98,6 +98,7 @@ export default async function CandidaturesPage({
       </div>
 
       <CandidaturesTable
+        key={tab}
         rows={rows.filter(filters[tab])}
         tab={tab}
         previewInvitation={previewInvitation}

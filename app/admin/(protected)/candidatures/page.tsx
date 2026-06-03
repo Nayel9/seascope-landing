@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { requireAdmin } from '@/lib/admin/auth'
-import { queryCandidatures, type Candidature } from '@/lib/admin/notion'
+import { queryCandidatures, queryFeedbacks, type Candidature } from '@/lib/admin/notion'
 import { invitationEmail, relanceEmail } from '@/lib/admin/emails'
 import CandidaturesTable from '@/components/admin/CandidaturesTable'
 
@@ -51,7 +51,9 @@ export default async function CandidaturesPage({
   const { tab: rawTab } = await searchParams
   const tab: TabKey = (Object.keys(filters) as TabKey[]).includes(rawTab as TabKey) ? (rawTab as TabKey) : 'traiter'
 
-  const rows = (await queryCandidatures()).map(enrich)
+  const [candidatures, feedbacks] = await Promise.all([queryCandidatures(), queryFeedbacks()])
+  const rows = candidatures.map(enrich)
+  const retoursNonTraites = feedbacks.filter((f) => ['Nouveau', 'À investiguer', ''].includes(f.statut)).length
   const counts = Object.fromEntries(
     (Object.keys(filters) as TabKey[]).map((k) => [k, rows.filter(filters[k]).length]),
   ) as Record<TabKey, number>
@@ -70,7 +72,7 @@ export default async function CandidaturesPage({
 
   return (
     <main className="px-6 py-5">
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-6">
         {kpis.map((k) => (
           <Link
             key={k.tab}
@@ -83,6 +85,15 @@ export default async function CandidaturesPage({
             <span className="text-[11px] text-ss-fg/70">{k.label}</span>
           </Link>
         ))}
+        <Link
+          href="/admin/feedbacks"
+          className="rounded-ss border border-ss-teal/12 bg-ss-surface-2 px-3.5 py-3 hover:border-ss-teal/40"
+        >
+          <b className={`block text-2xl ${retoursNonTraites > 0 ? 'text-ss-variable' : 'text-white'}`}>
+            {retoursNonTraites}
+          </b>
+          <span className="text-[11px] text-ss-fg/70">🚨 Retours non traités</span>
+        </Link>
       </div>
 
       <div className="mt-5 flex flex-wrap gap-1">

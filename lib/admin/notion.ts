@@ -77,9 +77,9 @@ async function notionFetch(path: string, init?: RequestInit): Promise<unknown> {
 type Props = Record<string, any>
 
 const text = (p: Props, name: string): string =>
-  (p[name]?.rich_text ?? []).map((t: any) => t.plain_text).join('') ?? ''
+  (p[name]?.rich_text ?? []).map((t: any) => t.plain_text).join('')
 const title = (p: Props, name: string): string =>
-  (p[name]?.title ?? []).map((t: any) => t.plain_text).join('') ?? ''
+  (p[name]?.title ?? []).map((t: any) => t.plain_text).join('')
 const sel = (p: Props, name: string): string => p[name]?.select?.name ?? ''
 const email = (p: Props, name: string): string => p[name]?.email ?? ''
 const check = (p: Props, name: string): boolean => p[name]?.checkbox === true
@@ -180,5 +180,6 @@ export const prop = {
   select: (name: string) => ({ select: { name } }),
   checkbox: (v: boolean) => ({ checkbox: v }),
   email: (v: string) => ({ email: v || null }),
-  dateToday: () => ({ date: { start: new Date().toISOString().slice(0, 10) } }),
+  // fr-CA produit nativement YYYY-MM-DD ; timezone Paris pour éviter le J-1 avant 1h/2h du matin.
+  dateToday: () => ({ date: { start: new Date().toLocaleDateString('fr-CA', { timeZone: 'Europe/Paris' }) } }),
 }

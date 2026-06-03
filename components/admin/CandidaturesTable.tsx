@@ -1,0 +1,244 @@
+'use client'
+
+import { useState, useTransition } from 'react'
+import StatutChip from '@/components/admin/StatutChip'
+import EmailModal, { type ModalState } from '@/components/admin/EmailModal'
+import {
+  envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot,
+  setCanal, setEmailGooglePlay, setPriorite, type BatchReport,
+} from '@/lib/admin/actions'
+import type { Row, TabKey } from '@/app/admin/(protected)/candidatures/page'
+
+const CANAUX = ['', 'LinkedIn', 'Facebook', 'Hisse Et Oh', 'Bouche-à-oreille', 'Autre']
+const PRIORITES = ['', 'Haute', 'Moyenne', 'Basse']
+
+export default function CandidaturesTable({
+  rows, tab, previewInvitation, previewRelance,
+}: {
+  rows: Row[]
+  tab: TabKey
+  previewInvitation: string
+  previewRelance: string
+}) {
+  const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [modal, setModal] = useState<ModalState | null>(null)
+  const [report, setReport] = useState<BatchReport | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [pending, startTransition] = useTransition()
+
+  const run = (fn: () => Promise<{ ok: boolean; error?: string }>) =>
+    startTransition(async () => {
+      setError(null)
+      const r = await fn()
+      if (!r.ok) setError(r.error ?? 'Erreur')
+      setSelected(new Set())
+    })
+
+  const toggle = (id: string) =>
+    setSelected((s) => {
+      const next = new Set(s)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+
+  const toggleAll = () =>
+    setSelected((s) => (s.size === rows.length ? new Set() : new Set(rows.map((r) => r.id))))
+
+  const openModal = (mode: ModalState['mode'], targets: Row[]) => {
+    setReport(null)
+    setModal({
+      mode,
+      recipients: targets.map((r) => ({ id: r.id, prenom: r.prenom, email: r.emailGooglePlay || r.email })),
+    })
+  }
+
+  const confirmModal = () => {
+    if (!modal) return
+    startTransition(async () => {
+      const ids = modal.recipients.map((r) => r.id)
+      const rep = modal.mode === 'invitation' ? await envoyerInvitations(ids) : await envoyerRelances(ids)
+      setReport(rep)
+      setSelected(new Set())
+    })
+  }
+
+  const selRows = rows.filter((r) => selected.has(r.id))
+
+  return (
+    <div className="rounded-b-ss rounded-tr-ss bg-ss-bg-2 pb-2">
+      {error && (
+        <p className="mx-4 mt-3 rounded-md border border-ss-deconseille/40 bg-ss-deconseille/10 px-4 py-2 text-sm text-ss-deconseille">
+          {error}
+        </p>
+      )}
+      <div className="overflow-x-auto">
+        <table className="w-full text-[13px]">
+          <thead>
+            <tr className="border-b border-white/10 text-left text-[11px] uppercase tracking-wide text-ss-fg/50">
+              <th className="w-9 px-3 py-2.5">
+                <input type="checkbox" className="accent-ss-teal" checked={rows.length > 0 && selected.size === rows.length} onChange={toggleAll} />
+              </th>
+              <th className="px-3 py-2.5">Candidat</th>
+              <th className="px-3 py-2.5">Profil</th>
+              <th className="px-3 py-2.5">Email Google Play</th>
+              <th className="px-3 py-2.5">Priorité</th>
+              {tab === 'traiter' && <th className="px-3 py-2.5">Canal</th>}
+              <th className="px-3 py-2.5">Statut</th>
+              <th className="min-w-[240px] px-3 py-2.5">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.length === 0 && (
+              <tr><td colSpan={8} className="px-4 py-8 text-center text-ss-fg/50">Aucune candidature dans cet onglet.</td></tr>
+            )}
+            {rows.map((r) => (
+              <tr key={r.id} className={`border-b border-white/5 align-middle ${selected.has(r.id) ? 'bg-ss-teal/5' : ''}`}>
+                <td className="px-3 py-3">
+                  <input type="checkbox" className="accent-ss-teal" checked={selected.has(r.id)} onChange={() => toggle(r.id)} />
+                </td>
+                <td className="px-3 py-3">
+                  <b>{r.prenom}</b>
+                  {r.aRelancer && <span className="ml-2 text-[10px] text-ss-variable">⚠ J+{r.joursDepuisInvitation} sans retour</span>}
+                  <br />
+                  <span className="text-xs text-ss-fg/55">{r.email} · {r.region}</span>
+                </td>
+                <td className="px-3 py-3">
+                  {r.typeNav} · {r.frequence}
+                  <br /><span className="text-xs text-ss-fg/55">{r.pratique}</span>
+                </td>
+                <td className="px-3 py-3">
+                  <input
+                    type="email"
+                    defaultValue={r.emailGooglePlay}
+                    placeholder="—"
+                    onBlur={(e) => {
+                      if (e.target.value !== r.emailGooglePlay) run(() => setEmailGooglePlay(r.id, e.target.value))
+                    }}
+                    className="w-44 rounded-md border border-ss-teal/25 bg-ss-surface px-2 py-1 text-xs outline-none focus:border-ss-teal"
+                  />
+                </td>
+                <td className="px-3 py-3">
+                  <select
+                    defaultValue={r.priorite}
+                    onChange={(e) => run(() => setPriorite(r.id, e.target.value))}
+                    className="rounded-md border border-white/15 bg-ss-surface px-1.5 py-1 text-xs"
+                  >
+                    {PRIORITES.map((p) => <option key={p} value={p}>{p || '—'}</option>)}
+                  </select>
+                </td>
+                {tab === 'traiter' && (
+                  <td className="px-3 py-3">
+                    <select
+                      defaultValue={r.canal}
+                      onChange={(e) => run(() => setCanal(r.id, e.target.value))}
+                      className="rounded-md border border-white/15 bg-ss-surface px-1.5 py-1 text-xs"
+                    >
+                      {CANAUX.map((c) => <option key={c} value={c}>{c || '—'}</option>)}
+                    </select>
+                  </td>
+                )}
+                <td className="px-3 py-3">
+                  <StatutChip statut={r.statut} />
+                  {r.dateInvitation && <><br /><span className="text-[11px] text-ss-fg/50">invité le {r.dateInvitation}</span></>}
+                  {r.relanceEnvoyee && r.dateRelance && <><br /><span className="text-[11px] text-ss-variable/80">relancé le {r.dateRelance}</span></>}
+                </td>
+                <td className="px-3 py-3">
+                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {selected.size > 0 && (
+        <div className="sticky bottom-3 mx-4 mt-3 flex items-center gap-2.5 rounded-ss border border-ss-teal/40 bg-ss-bg px-4 py-3 shadow-2xl">
+          <span className="mr-2 text-[13px] font-bold text-ss-teal">{selected.size} sélectionné{selected.size > 1 ? 's' : ''}</span>
+          {tab === 'traiter' && (
+            <>
+              <BulkBtn kind="ok" label="✓ Accepter la sélection" disabled={pending} onClick={() => run(() => qualifierEnLot([...selected], 'Accepté'))} />
+              <BulkBtn kind="ko" label="✕ Refuser" disabled={pending} onClick={() => run(() => qualifierEnLot([...selected], 'Refusé'))} />
+              <BulkBtn kind="neutral" label="⏸ En attente" disabled={pending} onClick={() => run(() => qualifierEnLot([...selected], 'En attente'))} />
+            </>
+          )}
+          {tab === 'inviter' && (
+            <BulkBtn kind="primary" label="✉️ Envoyer les invitations" disabled={pending} onClick={() => openModal('invitation', selRows)} />
+          )}
+          {(tab === 'invites' || tab === 'relancer') && (
+            <>
+              <BulkBtn kind="warn" label="🔁 Relancer la sélection" disabled={pending} onClick={() => openModal('relance', selRows.filter((r) => !r.relanceEnvoyee))} />
+              <BulkBtn kind="ok" label="🟢 Marquer actifs" disabled={pending} onClick={() => run(() => marquerActifs([...selected]))} />
+            </>
+          )}
+          <button onClick={() => setSelected(new Set())} className="ml-auto text-xs text-ss-fg/50 underline">
+            Tout désélectionner
+          </button>
+        </div>
+      )}
+
+      {modal && (
+        <EmailModal
+          state={modal}
+          previewHtml={modal.mode === 'invitation' ? previewInvitation : previewRelance}
+          sending={pending}
+          report={report}
+          onConfirm={confirmModal}
+          onClose={() => { setModal(null); setReport(null) }}
+        />
+      )}
+    </div>
+  )
+}
+
+const btnStyles = {
+  ok: 'border border-ss-bon/30 bg-ss-bon/15 text-ss-bon',
+  ko: 'border border-ss-deconseille/25 bg-ss-deconseille/10 text-ss-deconseille',
+  neutral: 'border border-gray-400/25 bg-gray-400/10 text-gray-300',
+  primary: 'bg-ss-teal text-ss-bg',
+  warn: 'border border-ss-variable/30 bg-ss-variable/15 text-ss-variable',
+} as const
+
+function BulkBtn({ kind, label, disabled, onClick }: { kind: keyof typeof btnStyles; label: string; disabled?: boolean; onClick: () => void }) {
+  return (
+    <button onClick={onClick} disabled={disabled} className={`rounded-md px-3 py-1.5 text-xs font-semibold disabled:opacity-40 ${btnStyles[kind]}`}>
+      {label}
+    </button>
+  )
+}
+
+function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif }: {
+  row: Row
+  disabled: boolean
+  onQualifier: (s: 'Accepté' | 'Refusé' | 'En attente') => void
+  onInvite: () => void
+  onRelance: () => void
+  onActif: () => void
+}) {
+  // Boutons explicites avec libellés (maquette v1 validée).
+  if (['Nouveau', 'En cours', 'En attente'].includes(row.statut)) {
+    return (
+      <span className="flex flex-wrap gap-1.5">
+        <BulkBtn kind="ok" label="✓ Accepter" disabled={disabled} onClick={() => onQualifier('Accepté')} />
+        <BulkBtn kind="ko" label="✕ Refuser" disabled={disabled} onClick={() => onQualifier('Refusé')} />
+        {row.statut !== 'En attente' && <BulkBtn kind="neutral" label="⏸ Attente" disabled={disabled} onClick={() => onQualifier('En attente')} />}
+      </span>
+    )
+  }
+  if (row.statut === 'Accepté') {
+    return row.invitationEnvoyee
+      ? <BulkBtn kind="primary" label="✉️ Invité ✓" disabled onClick={() => {}} />
+      : <BulkBtn kind="primary" label="✉️ Envoyer invitation" disabled={disabled || !row.emailGooglePlay} onClick={onInvite} />
+  }
+  if (row.statut === 'Invité Google Play' || row.statut === 'Actif') {
+    return (
+      <span className="flex flex-wrap gap-1.5">
+        {row.statut !== 'Actif' && <BulkBtn kind="ok" label="🟢 Marquer actif" disabled={disabled} onClick={onActif} />}
+        {row.relanceEnvoyee
+          ? <BulkBtn kind="warn" label="🔁 Relancé ✓" disabled onClick={() => {}} />
+          : <BulkBtn kind="warn" label="🔁 Relancer" disabled={disabled} onClick={onRelance} />}
+      </span>
+    )
+  }
+  return null
+}

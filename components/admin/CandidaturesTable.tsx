@@ -151,6 +151,7 @@ export default function CandidaturesTable({
                     >
                       {CANAUX.map((c) => <option key={c} value={c}>{c || '—'}</option>)}
                     </select>
+                    {r.canalAutre && <><br /><span className="text-[11px] text-ss-fg/50">« {r.canalAutre} »</span></>}
                   </td>
                 )}
                 <td className="px-3 py-3">

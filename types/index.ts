@@ -42,6 +42,7 @@ export interface BetaFormValues {
   practice: string
   blocker: string
   canal: string
+  canalAutre: string
   consent: boolean
 }
 

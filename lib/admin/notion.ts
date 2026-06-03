@@ -19,6 +19,7 @@ export interface Candidature {
   typeNav: string
   statut: StatutCandidature | ''
   canal: string
+  canalAutre: string
   priorite: string
   dateCandidature: string   // ISO ou ''
   emailGooglePlay: string
@@ -103,6 +104,7 @@ function mapCandidature(page: any): Candidature {
     typeNav: sel(p, 'Type de navigation'),
     statut: sel(p, 'Statut') as Candidature['statut'],
     canal: sel(p, 'Canal de recrutement'),
+    canalAutre: text(p, 'Canal (précision)'),
     priorite: sel(p, 'Priorité bêta'),
     dateCandidature: date(p, 'Date de candidature'),
     emailGooglePlay: email(p, 'Email Google Play'),

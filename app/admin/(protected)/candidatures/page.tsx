@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { requireAdmin } from '@/lib/admin/auth'
 import { queryCandidatures, queryFeedbacks, type Candidature } from '@/lib/admin/notion'
-import { invitationEmail, relanceEmail } from '@/lib/admin/emails'
+import { demandeEmailGPEmail, invitationEmail, relanceEmail } from '@/lib/admin/emails'
 import CandidaturesTable from '@/components/admin/CandidaturesTable'
 
 export const dynamic = 'force-dynamic'
@@ -61,6 +61,7 @@ export default async function CandidaturesPage({
   // Aperçus générés côté serveur (les env GOOGLE_PLAY_URL etc. restent serveur).
   const previewInvitation = invitationEmail({ prenom: '{Prénom}', emailGooglePlay: '{email Google Play}' }).html
   const previewRelance = relanceEmail({ prenom: '{Prénom}' }).html
+  const previewDemande = demandeEmailGPEmail({ prenom: '{Prénom}' }).html
 
   const kpis: Array<{ tab: TabKey; label: string; alert?: boolean }> = [
     { tab: 'traiter', label: '📋 À traiter' },
@@ -114,6 +115,7 @@ export default async function CandidaturesPage({
         tab={tab}
         previewInvitation={previewInvitation}
         previewRelance={previewRelance}
+        previewDemande={previewDemande}
       />
     </main>
   )

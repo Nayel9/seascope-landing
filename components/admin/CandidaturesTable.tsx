@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import StatutChip from '@/components/admin/StatutChip'
 import EmailModal, { type ModalState } from '@/components/admin/EmailModal'
 import {
-  envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot,
+  envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot,
   setCanal, setEmailGooglePlay, setPriorite, type BatchReport,
 } from '@/lib/admin/actions'
 import type { Row, TabKey } from '@/app/admin/(protected)/candidatures/page'
@@ -13,12 +13,13 @@ const CANAUX = ['', 'LinkedIn', 'Facebook', 'Hisse Et Oh', 'Bouche-à-oreille', 
 const PRIORITES = ['', 'Haute', 'Moyenne', 'Basse']
 
 export default function CandidaturesTable({
-  rows, tab, previewInvitation, previewRelance,
+  rows, tab, previewInvitation, previewRelance, previewDemande,
 }: {
   rows: Row[]
   tab: TabKey
   previewInvitation: string
   previewRelance: string
+  previewDemande: string
 }) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [modal, setModal] = useState<ModalState | null>(null)
@@ -49,15 +50,26 @@ export default function CandidaturesTable({
     setReport(null)
     setModal({
       mode,
-      recipients: targets.map((r) => ({ id: r.id, prenom: r.prenom, email: r.emailGooglePlay || r.email })),
+      // La demande d'email GP part sur l'email de candidature ; le reste sur l'email Google Play.
+      recipients: targets.map((r) => ({
+        id: r.id,
+        prenom: r.prenom,
+        email: mode === 'demande' ? r.email : r.emailGooglePlay || r.email,
+      })),
     })
+  }
+
+  const batchActions: Record<ModalState['mode'], (ids: string[]) => Promise<BatchReport>> = {
+    invitation: envoyerInvitations,
+    relance: envoyerRelances,
+    demande: envoyerDemandesEmailGP,
   }
 
   const confirmModal = () => {
     if (!modal) return
     startTransition(async () => {
       const ids = modal.recipients.map((r) => r.id)
-      const rep = modal.mode === 'invitation' ? await envoyerInvitations(ids) : await envoyerRelances(ids)
+      const rep = await batchActions[modal.mode](ids)
       setReport(rep)
       setSelected(new Set())
     })
@@ -143,11 +155,12 @@ export default function CandidaturesTable({
                 )}
                 <td className="px-3 py-3">
                   <StatutChip statut={r.statut} />
+                  {r.emailGPDemande && !r.emailGooglePlay && r.dateDemandeGP && <><br /><span className="text-[11px] text-ss-teal/80">email GP demandé le {r.dateDemandeGP}</span></>}
                   {r.dateInvitation && <><br /><span className="text-[11px] text-ss-fg/50">invité le {r.dateInvitation}</span></>}
                   {r.relanceEnvoyee && r.dateRelance && <><br /><span className="text-[11px] text-ss-variable/80">relancé le {r.dateRelance}</span></>}
                 </td>
                 <td className="px-3 py-3">
-                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} />
+                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} onDemande={() => openModal('demande', [r])} />
                 </td>
               </tr>
             ))}
@@ -166,7 +179,18 @@ export default function CandidaturesTable({
             </>
           )}
           {tab === 'inviter' && (
-            <BulkBtn kind="primary" label="✉️ Envoyer les invitations" disabled={pending} onClick={() => openModal('invitation', selRows)} />
+            <>
+              <BulkBtn kind="primary" label="✉️ Envoyer les invitations" disabled={pending} onClick={() => {
+                const targets = selRows.filter((r) => r.emailGooglePlay)
+                if (targets.length === 0) { setError('Aucun sélectionné n’a d’Email Google Play — demandez-le d’abord'); return }
+                openModal('invitation', targets)
+              }} />
+              <BulkBtn kind="warn" label="📮 Demander email GP" disabled={pending} onClick={() => {
+                const targets = selRows.filter((r) => !r.emailGooglePlay && !r.emailGPDemande)
+                if (targets.length === 0) { setError('Rien à demander : email GP déjà renseigné ou déjà demandé pour toute la sélection'); return }
+                openModal('demande', targets)
+              }} />
+            </>
           )}
           {(tab === 'invites' || tab === 'relancer') && (
             <>
@@ -187,7 +211,7 @@ export default function CandidaturesTable({
       {modal && (
         <EmailModal
           state={modal}
-          previewHtml={modal.mode === 'invitation' ? previewInvitation : previewRelance}
+          previewHtml={modal.mode === 'invitation' ? previewInvitation : modal.mode === 'relance' ? previewRelance : previewDemande}
           sending={pending}
           report={report}
           onConfirm={confirmModal}
@@ -214,13 +238,14 @@ function BulkBtn({ kind, label, disabled, onClick }: { kind: keyof typeof btnSty
   )
 }
 
-function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif }: {
+function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, onDemande }: {
   row: Row
   disabled: boolean
   onQualifier: (s: 'Accepté' | 'Refusé' | 'En attente') => void
   onInvite: () => void
   onRelance: () => void
   onActif: () => void
+  onDemande: () => void
 }) {
   // Boutons explicites avec libellés (maquette v1 validée).
   if (['Nouveau', 'En cours', 'En attente'].includes(row.statut)) {
@@ -233,9 +258,17 @@ function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif }
     )
   }
   if (row.statut === 'Accepté') {
-    return row.invitationEnvoyee
-      ? <BulkBtn kind="primary" label="✉️ Invité ✓" disabled onClick={() => {}} />
-      : <BulkBtn kind="primary" label="✉️ Envoyer invitation" disabled={disabled || !row.emailGooglePlay} onClick={onInvite} />
+    if (row.invitationEnvoyee) return <BulkBtn kind="primary" label="✉️ Invité ✓" disabled onClick={() => {}} />
+    return (
+      <span className="flex flex-wrap gap-1.5">
+        {!row.emailGooglePlay && (
+          row.emailGPDemande
+            ? <BulkBtn kind="warn" label="📮 Demandé ✓" disabled onClick={() => {}} />
+            : <BulkBtn kind="warn" label="📮 Demander email GP" disabled={disabled} onClick={onDemande} />
+        )}
+        <BulkBtn kind="primary" label="✉️ Envoyer invitation" disabled={disabled || !row.emailGooglePlay} onClick={onInvite} />
+      </span>
+    )
   }
   if (row.statut === 'Invité Google Play' || row.statut === 'Actif') {
     return (

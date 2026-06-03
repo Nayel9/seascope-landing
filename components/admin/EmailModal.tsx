@@ -3,8 +3,20 @@
 import type { BatchReport } from '@/lib/admin/actions'
 
 export interface ModalState {
-  mode: 'invitation' | 'relance'
+  mode: 'invitation' | 'relance' | 'demande'
   recipients: Array<{ id: string; prenom: string; email: string }>
+}
+
+const modeLabels: Record<ModalState['mode'], string> = {
+  invitation: 'invitation',
+  relance: 'relance',
+  demande: 'demande email GP',
+}
+
+const modeEffects: Record<ModalState['mode'], string> = {
+  invitation: 'Après envoi (par destinataire) : ☑ Invitation envoyée · ☑ Lien envoyé · 📅 Date du jour · Statut → Invité Google Play',
+  relance: 'Après envoi (par destinataire) : ☑ Relance envoyée · 📅 Date relance = aujourd’hui',
+  demande: 'Après envoi (par destinataire) : ☑ Email GP demandé · 📅 Date demande = aujourd’hui',
 }
 
 export default function EmailModal({
@@ -18,7 +30,7 @@ export default function EmailModal({
   onClose: () => void
 }) {
   const n = state.recipients.length
-  const label = state.mode === 'invitation' ? 'invitation' : 'relance'
+  const label = modeLabels[state.mode]
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-6" onClick={() => { if (!sending) onClose() }}>
@@ -59,9 +71,7 @@ export default function EmailModal({
         <div className="flex items-center gap-2.5 px-6 pb-5">
           {!report && (
             <span className="mr-auto text-[11px] leading-relaxed text-ss-fg/60">
-              {state.mode === 'invitation'
-                ? 'Après envoi (par destinataire) : ☑ Invitation envoyée · ☑ Lien envoyé · 📅 Date du jour · Statut → Invité Google Play'
-                : 'Après envoi (par destinataire) : ☑ Relance envoyée · 📅 Date relance = aujourd’hui'}
+              {modeEffects[state.mode]}
               <br />Envois séquentiels — un échec n'interrompt pas les suivants.
             </span>
           )}

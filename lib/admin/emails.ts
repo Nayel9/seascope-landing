@@ -14,6 +14,12 @@ export function emailEnv() {
   return { playUrl, formUrl }
 }
 
+export function whatsappEnv() {
+  const whatsappUrl = process.env.WHATSAPP_GROUP_URL
+  if (!whatsappUrl) throw new Error('Variable manquante: WHATSAPP_GROUP_URL')
+  return { whatsappUrl }
+}
+
 export interface EmailContent {
   subject: string
   html: string
@@ -66,6 +72,33 @@ export function invitationEmail(c: { prenom: string; emailGooglePlay: string }):
 </td></tr>
 <tr><td style="padding:0 40px 36px;">${signature}</td></tr>`
   return { subject: 'Votre accès à la bêta SeaScope est ouvert', html: shell('Votre accès à la bêta SeaScope est ouvert', inner) }
+}
+
+export function demandeEmailGPEmail(c: { prenom: string }): EmailContent {
+  const { whatsappUrl } = whatsappEnv()
+  const prenom = esc(c.prenom)
+  const inner = `${header('Bienvenue dans la b&ecirc;ta&nbsp;!')}
+<tr><td style="padding:0 40px;">
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Bonjour ${prenom},</p>
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Bonne nouvelle&nbsp;: votre candidature pour la b&ecirc;ta SeaScope est <strong style="color:#f4f7f9;">accept&eacute;e</strong>. Merci de faire partie de l'aventure.</p>
+<p style="margin:0 0 24px;color:#c2d3dd;font-size:15px;line-height:1.6;">Avant de vous envoyer l'acc&egrave;s, il nous manque une seule chose.</p>
+</td></tr>
+<tr><td style="padding:0 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0b1f2e;border-radius:8px;">
+<tr><td style="padding:20px 24px;">
+<p style="margin:0 0 8px;color:#f4f7f9;font-size:14px;font-weight:600;">L'adresse de votre compte Google</p>
+<p style="margin:0;color:#c2d3dd;font-size:14px;line-height:1.7;">La b&ecirc;ta passe par le programme de test ferm&eacute; Google Play&nbsp;: il nous faut l'adresse du <strong style="color:#f4f7f9;">compte Google connect&eacute; au Play Store sur votre t&eacute;l&eacute;phone Android</strong> (le plus souvent une adresse @gmail.com).<br><br><strong style="color:#1ec8a5;">R&eacute;pondez simplement &agrave; cet email avec cette adresse</strong>, et vous recevrez l'invitation dans la foul&eacute;e.</p>
+</td></tr></table>
+</td></tr>
+<tr><td style="padding:24px 40px 8px;" align="center">
+<a href="${esc(whatsappUrl)}" style="display:inline-block;background-color:#1ec8a5;color:#06151f;text-decoration:none;font-size:16px;font-weight:600;padding:14px 36px;border-radius:8px;">Rejoindre le groupe WhatsApp des testeurs</a>
+<p style="margin:12px 0 0;color:#7a93a3;font-size:12px;line-height:1.5;">Entraide, annonces de versions et retours rapides entre testeurs.</p>
+</td></tr>
+<tr><td style="padding:24px 40px 36px;">
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">D&egrave;s r&eacute;ception de votre adresse, on vous ajoute &agrave; la liste des testeurs et vous recevez le lien d'installation.</p>
+${signature}
+</td></tr>`
+  return { subject: 'Candidature acceptée — une dernière étape pour accéder à la bêta SeaScope', html: shell('Candidature acceptée — bêta SeaScope', inner) }
 }
 
 export function relanceEmail(c: { prenom: string }): EmailContent {

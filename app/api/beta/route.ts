@@ -12,7 +12,12 @@ interface BetaPayload {
   platform: string
   practice: string
   blocker?: string
+  canal?: string
+  canalAutre?: string
 }
+
+// Doit correspondre aux options du select Notion « Canal de recrutement ».
+const CANAUX_VALIDES = ['LinkedIn', 'Facebook', 'Hisse Et Oh', 'Bouche-à-oreille', 'Autre']
 
 // ── HTML escape — applied to every user value before email template insertion ──
 
@@ -63,6 +68,10 @@ function validate(data: unknown): BetaPayload {
     platform:  (d.platform as string).trim().slice(0, 50),
     practice:  (d.practice as string).trim().slice(0, 100),
     blocker:   typeof d.blocker === 'string' ? d.blocker.trim().slice(0, 1000) : undefined,
+    // Optionnel ; toute valeur hors liste est ignorée (pas de création d'option sauvage dans Notion).
+    canal:     typeof d.canal === 'string' && CANAUX_VALIDES.includes(d.canal.trim()) ? d.canal.trim() : undefined,
+    // Précision libre, conservée uniquement quand canal = Autre.
+    canalAutre: typeof d.canalAutre === 'string' && d.canal === 'Autre' ? d.canalAutre.trim().slice(0, 200) || undefined : undefined,
   }
 }
 
@@ -96,6 +105,7 @@ function ownerHtml(p: BetaPayload): string {
     ['Plateforme',         esc(p.platform)],
     ['Pratique',           esc(p.practice)],
     ...(p.boat ? [['Bateau', esc(p.boat)]] : []),
+    ...(p.canal ? [['Canal', esc(p.canal) + (p.canalAutre ? ` — ${esc(p.canalAutre)}` : '')]] : []),
   ].map(([k, v]) =>
     `<tr><td style="padding:10px 12px;background:#f8f9fa;font-weight:600;color:#0E2236;width:38%;border-bottom:1px solid #e9ecef">${k}</td><td style="padding:10px 12px;border-bottom:1px solid #e9ecef;color:#555">${v}</td></tr>`
   ).join('')
@@ -165,6 +175,8 @@ async function createNotionBetaPage(token: string, dbId: string, p: BetaPayload)
   }
   if (p.boat)    properties['Bateau']                = { rich_text: [{ text: { content: p.boat } }] }
   if (p.blocker) properties['Raison de renoncement'] = { rich_text: [{ text: { content: p.blocker } }] }
+  if (p.canal)      properties['Canal de recrutement'] = { select: { name: p.canal } }
+  if (p.canalAutre) properties['Canal (précision)']    = { rich_text: [{ text: { content: p.canalAutre } }] }
 
   const res = await fetch('https://api.notion.com/v1/pages', {
     method: 'POST',

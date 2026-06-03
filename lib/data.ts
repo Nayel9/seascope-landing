@@ -52,3 +52,5 @@ export const FREQUENCIES  = ['≤ 1× / mois', '2–4× / mois', '1× / sem.', '
 export const PLATFORMS    = ['iPhone', 'Android'] as const
 export const PRACTICES    = ['Balade côtière', 'Sortie familiale', 'Session courte', 'Pêche côtière', 'Navigation sportive'] as const
 export const FEEDBACK_TYPES = ['Bug', 'Recommandation incorrecte', 'Donnée manquante', 'Interface confuse', 'Autre'] as const
+// Doit correspondre exactement aux options du select Notion « Canal de recrutement ».
+export const CANAUX = ['LinkedIn', 'Facebook', 'Hisse Et Oh', 'Bouche-à-oreille', 'Autre'] as const

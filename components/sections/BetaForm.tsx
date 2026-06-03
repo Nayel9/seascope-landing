@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import clsx from 'clsx'
-import { NAV_TYPES, FREQUENCIES, PLATFORMS, PRACTICES } from '@/lib/data'
+import { NAV_TYPES, FREQUENCIES, PLATFORMS, PRACTICES, CANAUX } from '@/lib/data'
 import { Chip } from '@/components/ui/Chip'
 import { Button } from '@/components/ui/Button'
 import { SectionHeader } from '@/components/ui/SectionHeader'
@@ -11,7 +11,7 @@ import type { BetaFormValues } from '@/types'
 
 const EMPTY: BetaFormValues = {
   firstname: '', email: '', region: '', navType: '', freq: '',
-  boat: '', platform: '', practice: '', blocker: '', consent: false,
+  boat: '', platform: '', practice: '', blocker: '', canal: '', canalAutre: '', consent: false,
 }
 
 function isValidEmail(v: string) {
@@ -214,6 +214,35 @@ export function BetaForm() {
                   <Chip key={v} active={data.practice === v} onClick={() => set('practice', v)}>{v}</Chip>
                 ))}
               </div>
+            </div>
+
+            <div className="flex flex-col gap-2 mb-[22px]">
+              <span className={labelBase}>Comment nous avez-vous connu&nbsp;? <span className="normal-case tracking-normal text-ss-fg/32">(optionnel)</span></span>
+              <div className="flex flex-wrap gap-2">
+                {CANAUX.map((v) => (
+                  <Chip
+                    key={v}
+                    active={data.canal === v}
+                    onClick={() => {
+                      const next = data.canal === v ? '' : v
+                      setData((d) => ({ ...d, canal: next, canalAutre: next === 'Autre' ? d.canalAutre : '' }))
+                    }}
+                  >
+                    {v}
+                  </Chip>
+                ))}
+              </div>
+              {data.canal === 'Autre' && (
+                <input
+                  id="b-canal-autre"
+                  className={inputBase}
+                  value={data.canalAutre}
+                  onChange={upd('canalAutre')}
+                  placeholder="Précisez : forum, presse, un ami, recherche Google…"
+                  aria-label="Précisez comment vous nous avez connu"
+                  autoFocus
+                />
+              )}
             </div>
 
             <div className="flex flex-col gap-2 mb-[22px]">

@@ -9,6 +9,9 @@ import { fileURLToPath } from 'node:url'
 const projectRoot = path.dirname(fileURLToPath(import.meta.url))
 
 const nextConfig: NextConfig = {
+  // Next 16 bloque par défaut les requêtes dev (HMR, server actions) quand la
+  // page est ouverte via une autre origine que localhost — autorise 127.0.0.1.
+  allowedDevOrigins: ['127.0.0.1'],
   turbopack: {
     root: projectRoot,
   },

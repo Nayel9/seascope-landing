@@ -13,10 +13,13 @@ export default function LoginForm() {
         name="password"
         required
         autoFocus
+        aria-label="Mot de passe"
         placeholder="Mot de passe"
         className="w-full rounded-ss border border-ss-teal/25 bg-ss-surface px-4 py-3 text-ss-fg outline-none focus:border-ss-teal"
       />
-      {state?.error && <p className="text-sm text-ss-deconseille">{state.error}</p>}
+      <p role="alert" aria-live="polite" className="text-sm text-ss-deconseille">
+        {state?.error ?? ''}
+      </p>
       <button
         type="submit"
         disabled={pending}

@@ -1,3 +1,5 @@
+// Volontairement distinct des copies locales de sendBrevo dans app/api/beta/route.ts
+// et app/api/feedback/route.ts : ces routes restent autonomes, ne pas consolider.
 export interface BrevoEnv {
   apiKey: string
   sender: { name: string; email: string }

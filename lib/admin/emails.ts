@@ -20,7 +20,7 @@ export interface EmailContent {
 }
 
 const shell = (title: string, inner: string) => `<!DOCTYPE html>
-<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title}</title></head>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title></head>
 <body style="margin:0;padding:0;background-color:#0b1d2a;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0b1d2a;padding:32px 16px;">
 <tr><td align="center">
@@ -30,6 +30,7 @@ ${inner}
 <p style="margin:20px 0 0;color:#54707f;font-size:11px;">Vous recevez cet email car vous avez candidat&eacute; &agrave; la b&ecirc;ta SeaScope.</p>
 </td></tr></table></body></html>`
 
+// `h1` doit être pré-encodé (entités HTML) — les appelants passent des littéraux, jamais de valeur candidat.
 const header = (h1: string) => `<tr><td style="padding:40px 40px 24px;">
 <p style="margin:0;color:#7fd1c8;font-size:13px;letter-spacing:2px;text-transform:uppercase;">SeaScope &mdash; B&ecirc;ta ferm&eacute;e</p>
 <h1 style="margin:12px 0 0;color:#f4f7f9;font-size:26px;line-height:1.3;font-weight:600;">${h1}</h1>

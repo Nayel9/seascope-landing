@@ -287,7 +287,7 @@ export default function PrivacyPage() {
 
             <H3>3.5 Durée de conservation</H3>
             <P>
-              Les événements d&apos;usage sont conservés <strong className="text-ss-fg">12&nbsp;mois</strong>{' '}
+              Les événements d&apos;usage sont conservés <strong className="text-ss-fg">30&nbsp;jours</strong>{' '}
               au maximum, puis supprimés.
             </P>
 
@@ -399,7 +399,7 @@ export default function PrivacyPage() {
               </LI>
               <LI>
                 <strong className="text-ss-fg">Statistiques d&apos;utilisation anonymes</strong> :
-                conservées 12&nbsp;mois maximum (voir section&nbsp;3).
+                conservées 30&nbsp;jours maximum (voir section&nbsp;3).
               </LI>
               <LI>
                 <strong className="text-ss-fg">Journaux techniques</strong> : conservés 30&nbsp;jours

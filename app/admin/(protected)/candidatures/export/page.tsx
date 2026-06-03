@@ -49,6 +49,8 @@ export default async function ExportPage() {
       <div className="mt-5 flex flex-wrap items-center gap-2.5">
         <a
           href="/admin/candidatures/export/csv"
+          aria-disabled={rows.length === 0 || undefined}
+          tabIndex={rows.length === 0 ? -1 : undefined}
           className={`rounded-md bg-ss-teal px-5 py-2.5 text-xs font-bold text-ss-bg ${rows.length === 0 ? 'pointer-events-none opacity-40' : ''}`}
         >
           ⬇ Télécharger le CSV ({rows.length} email{rows.length > 1 ? 's' : ''})

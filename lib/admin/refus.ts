@@ -10,12 +10,14 @@ export interface MotifRefus {
   subject: string      // sujet du mail (UTF-8 brut, comme les autres templates)
   h1: string           // titre du header email (entités HTML)
   paragraphs: readonly string[]  // paragraphes du corps (entités HTML)
+  recontact: boolean   // mail promettant un recontact → onglet « ⏳ À recontacter »
 }
 
 export const MOTIFS_REFUS = [
   {
     key: 'beta_complete',
     label: 'Beta complète',
+    recontact: true,
     subject: 'Candidature SeaScope — la bêta affiche complet',
     h1: 'La b&ecirc;ta affiche complet',
     paragraphs: [
@@ -26,6 +28,7 @@ export const MOTIFS_REFUS = [
   {
     key: 'ios_incompatible',
     label: 'iOS non compatible',
+    recontact: true,
     subject: 'Candidature SeaScope — la version iOS arrive',
     h1: 'SeaScope n&#39;est pas encore sur iPhone',
     paragraphs: [
@@ -36,6 +39,7 @@ export const MOTIFS_REFUS = [
   {
     key: 'zone_non_couverte',
     label: 'Zone non couverte',
+    recontact: true,
     subject: 'Candidature SeaScope — votre zone arrive bientôt',
     h1: 'Votre zone n&#39;est pas encore couverte',
     paragraphs: [
@@ -46,6 +50,7 @@ export const MOTIFS_REFUS = [
   {
     key: 'profil_hors_cible',
     label: 'Profil hors cible',
+    recontact: false,
     subject: 'Candidature SeaScope — pas cette vague-ci',
     h1: 'Pas cette vague-ci',
     paragraphs: [
@@ -56,6 +61,7 @@ export const MOTIFS_REFUS = [
   {
     key: 'candidature_incomplete',
     label: 'Candidature incomplète',
+    recontact: false,
     subject: 'Candidature SeaScope — il manque quelques informations',
     h1: 'Il manque quelques infos',
     paragraphs: [
@@ -66,3 +72,8 @@ export const MOTIFS_REFUS = [
 ] as const satisfies readonly MotifRefus[]
 
 export type MotifRefusKey = (typeof MOTIFS_REFUS)[number]['key']
+
+/** Labels des motifs « recontactables » — sert au filtre de l'onglet ⏳ À recontacter. */
+export const MOTIFS_RECONTACT_LABELS: ReadonlySet<string> = new Set(
+  MOTIFS_REFUS.filter((m) => m.recontact).map((m) => m.label),
+)

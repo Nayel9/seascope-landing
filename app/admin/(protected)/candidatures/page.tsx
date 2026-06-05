@@ -2,12 +2,12 @@ import Link from 'next/link'
 import { requireAdmin } from '@/lib/admin/auth'
 import { queryCandidatures, queryFeedbacks, type Candidature } from '@/lib/admin/notion'
 import { demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
-import { MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
+import { MOTIFS_RECONTACT_LABELS, MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
 import CandidaturesTable from '@/components/admin/CandidaturesTable'
 
 export const dynamic = 'force-dynamic'
 
-export type TabKey = 'traiter' | 'emailgp' | 'inviter' | 'invites' | 'relancer' | 'actifs' | 'refuses' | 'tous'
+export type TabKey = 'traiter' | 'emailgp' | 'inviter' | 'invites' | 'relancer' | 'actifs' | 'recontacter' | 'refuses' | 'tous'
 
 export interface Row extends Candidature {
   aRelancer: boolean
@@ -35,13 +35,17 @@ const filters: Record<TabKey, (r: Row) => boolean> = {
   invites: (r) => r.statut === 'Invité Google Play',
   relancer: (r) => r.aRelancer,
   actifs: (r) => r.statut === 'Actif',
-  refuses: (r) => ['Refusé', 'Inactif'].includes(r.statut),
+  // Refusés « recontactables » (mail promettant un recontact : iOS, beta complète, zone…)
+  recontacter: (r) => r.statut === 'Refusé' && MOTIFS_RECONTACT_LABELS.has(r.motifRefus),
+  // Refus définitifs + inactifs (les recontactables ont leur propre onglet)
+  refuses: (r) => ['Refusé', 'Inactif'].includes(r.statut) && !MOTIFS_RECONTACT_LABELS.has(r.motifRefus),
   tous: () => true,
 }
 
 const tabLabels: Record<TabKey, string> = {
   traiter: '📋 À traiter', emailgp: '📮 Email Google à confirmer', inviter: '✅ À inviter',
-  invites: '📨 Invités', relancer: '🔁 À relancer', actifs: '🟢 Actifs', refuses: '❌ Refusés', tous: 'Tous',
+  invites: '📨 Invités', relancer: '🔁 À relancer', actifs: '🟢 Actifs',
+  recontacter: '⏳ À recontacter', refuses: '❌ Refusés', tous: 'Tous',
 }
 
 export default async function CandidaturesPage({
@@ -75,11 +79,12 @@ export default async function CandidaturesPage({
     { tab: 'invites', label: '📨 Invités' },
     { tab: 'relancer', label: '🔁 À relancer', alert: true },
     { tab: 'actifs', label: '🟢 Actifs' },
+    { tab: 'recontacter', label: '⏳ À recontacter' },
   ]
 
   return (
     <main className="px-6 py-5">
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-7">
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4 xl:grid-cols-8">
         {kpis.map((k) => (
           <Link
             key={k.tab}

@@ -1,5 +1,5 @@
 import { requireAdmin } from '@/lib/admin/auth'
-import { queryCandidatures } from '@/lib/admin/notion'
+import { aExporterGooglePlay, queryCandidatures } from '@/lib/admin/notion'
 import StatutChip from '@/components/admin/StatutChip'
 import MarkExportedButton from '@/components/admin/MarkExportedButton'
 
@@ -7,15 +7,13 @@ export const dynamic = 'force-dynamic'
 
 export default async function ExportPage() {
   await requireAdmin()
-  const rows = (await queryCandidatures()).filter(
-    (r) => r.statut === 'Accepté' && r.emailGooglePlay && !r.exportGooglePlay,
-  )
+  const rows = (await queryCandidatures()).filter(aExporterGooglePlay)
 
   return (
     <main className="px-6 py-6">
       <h1 className="text-base font-semibold text-white">📤 Export Google Play Console</h1>
       <p className="mt-1.5 text-sm text-ss-fg/55">
-        {rows.length} candidat{rows.length > 1 ? 's' : ''} accepté{rows.length > 1 ? 's' : ''}, email Google Play renseigné, pas encore exporté{rows.length > 1 ? 's' : ''}.
+        {rows.length} candidat{rows.length > 1 ? 's' : ''} avec email Google Play renseigné, pas encore exporté{rows.length > 1 ? 's' : ''} vers la Console (acceptés, invités ou actifs).
       </p>
 
       <div className="mt-4 overflow-x-auto rounded-ss bg-ss-bg-2">

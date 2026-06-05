@@ -182,6 +182,17 @@ export async function updatePage(pageId: string, properties: Record<string, unkn
   })
 }
 
+// ── Prédicats partagés ────────────────────────────────────────────────────────
+
+/** À exporter vers la liste de testeurs Google Play Console : email renseigné,
+ *  pas encore exporté, et toujours dans le pipeline. Le statut « Accepté » seul
+ *  ne suffit pas : l'admin peut inviter avant d'exporter (les invités passent en
+ *  « Invité Google Play » mais doivent rester exportables tant que la case
+ *  Export Google Play n'est pas cochée). Testé par scripts/test-export-filter.ts. */
+export const aExporterGooglePlay = (c: Candidature): boolean =>
+  ['Accepté', 'Invité Google Play', 'Actif'].includes(c.statut) &&
+  !!c.emailGooglePlay && !c.exportGooglePlay
+
 // ── Builders de propriétés pour les PATCH ─────────────────────────────────────
 
 export const prop = {

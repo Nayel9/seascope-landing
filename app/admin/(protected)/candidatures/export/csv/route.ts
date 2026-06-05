@@ -1,5 +1,5 @@
 import { isAuthenticated } from '@/lib/admin/auth'
-import { queryCandidatures } from '@/lib/admin/notion'
+import { aExporterGooglePlay, queryCandidatures } from '@/lib/admin/notion'
 
 export const dynamic = 'force-dynamic'
 
@@ -7,9 +7,7 @@ export async function GET() {
   if (!(await isAuthenticated())) return new Response('Unauthorized', { status: 401 })
 
   const rows = await queryCandidatures()
-  const emails = rows
-    .filter((r) => r.statut === 'Accepté' && r.emailGooglePlay && !r.exportGooglePlay)
-    .map((r) => r.emailGooglePlay)
+  const emails = rows.filter(aExporterGooglePlay).map((r) => r.emailGooglePlay)
 
   // Format liste de testeurs Google Play Console : un email par ligne, sans en-tête.
   const body = emails.join('\n') + (emails.length ? '\n' : '')

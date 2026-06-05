@@ -3,7 +3,7 @@
 import type { BatchReport } from '@/lib/admin/actions'
 
 export interface ModalState {
-  mode: 'invitation' | 'relance' | 'demande'
+  mode: 'invitation' | 'relance' | 'demande' | 'confirmation'
   recipients: Array<{ id: string; prenom: string; email: string }>
 }
 
@@ -11,12 +11,14 @@ const modeLabels: Record<ModalState['mode'], string> = {
   invitation: 'invitation',
   relance: 'relance',
   demande: 'demande email GP',
+  confirmation: 'demande de confirmation',
 }
 
 const modeEffects: Record<ModalState['mode'], string> = {
   invitation: 'Après envoi (par destinataire) : ☑ Invitation envoyée · ☑ Lien envoyé · 📅 Date du jour · Statut → Invité Google Play',
   relance: 'Après envoi (par destinataire) : ☑ Relance envoyée · 📅 Date relance = aujourd’hui',
   demande: 'Après envoi (par destinataire) : ☑ Email GP demandé · 📅 Date demande = aujourd’hui',
+  confirmation: 'Après envoi (par destinataire) : ☑ Confirmation demandée · 📅 Date du jour — liens personnalisés par candidat',
 }
 
 export default function EmailModal({
@@ -72,7 +74,7 @@ export default function EmailModal({
           {!report && (
             <span className="mr-auto text-[11px] leading-relaxed text-ss-fg/60">
               {modeEffects[state.mode]}
-              <br />Envois séquentiels — un échec n'interrompt pas les suivants.
+              <br />Envois séquentiels — un échec n’interrompt pas les suivants.
             </span>
           )}
           <button onClick={onClose} disabled={sending} className="ml-auto rounded-md border border-gray-400/25 bg-gray-400/10 px-4 py-2 text-xs font-semibold disabled:opacity-40">

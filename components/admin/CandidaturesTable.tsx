@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import StatutChip from '@/components/admin/StatutChip'
 import EmailModal, { type ModalState } from '@/components/admin/EmailModal'
 import {
-  envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot, refuser, releverReponsesGP,
+  envoyerConfirmations, envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot, refuser, releverReponsesGP,
   setCanal, setEmailGooglePlay, setPriorite, type BatchReport,
 } from '@/lib/admin/actions'
 import type { Row, TabKey } from '@/app/admin/(protected)/candidatures/page'
@@ -15,13 +15,14 @@ const CANAUX = ['', 'LinkedIn', 'Facebook', 'Hisse Et Oh', 'Bouche-à-oreille', 
 const PRIORITES = ['', 'Haute', 'Moyenne', 'Basse']
 
 export default function CandidaturesTable({
-  rows, tab, previewInvitation, previewRelance, previewDemande, previewsRefus,
+  rows, tab, previewInvitation, previewRelance, previewDemande, previewConfirmation, previewsRefus,
 }: {
   rows: Row[]
   tab: TabKey
   previewInvitation: string
   previewRelance: string
   previewDemande: string
+  previewConfirmation: string
   previewsRefus: Record<MotifRefusKey, string>
 }) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
@@ -69,6 +70,7 @@ export default function CandidaturesTable({
     invitation: envoyerInvitations,
     relance: envoyerRelances,
     demande: envoyerDemandesEmailGP,
+    confirmation: envoyerConfirmations,
   }
 
   const confirmModal = () => {
@@ -203,9 +205,10 @@ export default function CandidaturesTable({
                   {r.emailGPDemande && !r.emailGooglePlay && r.dateDemandeGP && <><br /><span className="text-[11px] text-ss-teal/80">email GP demandé le {r.dateDemandeGP}</span></>}
                   {r.dateInvitation && <><br /><span className="text-[11px] text-ss-fg/50">invité le {r.dateInvitation}</span></>}
                   {r.relanceEnvoyee && r.dateRelance && <><br /><span className="text-[11px] text-ss-variable/80">relancé le {r.dateRelance}</span></>}
+                  {r.confirmationDemandee && r.dateConfirmationDemandee && <><br /><span className="text-[11px] text-ss-fg/50">confirmation demandée le {r.dateConfirmationDemandee}</span></>}
                 </td>
                 <td className="px-3 py-3">
-                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} onDemande={() => openModal('demande', [r])} onRefuser={() => { setRefusReport(null); setRefusTargets([r]) }} />
+                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} onDemande={() => openModal('demande', [r])} onRefuser={() => { setRefusReport(null); setRefusTargets([r]) }} onConfirmation={() => openModal('confirmation', [r])} />
                 </td>
               </tr>
             ))}
@@ -245,6 +248,13 @@ export default function CandidaturesTable({
                 openModal('relance', targets)
               }} />
               <BulkBtn kind="ok" label="🟢 Marquer actifs" disabled={pending} onClick={() => run(() => marquerActifs([...selected]))} />
+              {tab === 'invites' && (
+                <BulkBtn kind="warn" label="📣 Demander confirmation" disabled={pending} onClick={() => {
+                  const targets = selRows.filter((r) => r.statut === 'Invité Google Play' && !r.confirmationDemandee)
+                  if (targets.length === 0) { setError('Confirmation déjà demandée à toute la sélection'); return }
+                  openModal('confirmation', targets)
+                }} />
+              )}
             </>
           )}
           <button onClick={() => setSelected(new Set())} className="ml-auto text-xs text-ss-fg/50 underline">
@@ -256,7 +266,7 @@ export default function CandidaturesTable({
       {modal && (
         <EmailModal
           state={modal}
-          previewHtml={modal.mode === 'invitation' ? previewInvitation : modal.mode === 'relance' ? previewRelance : previewDemande}
+          previewHtml={modal.mode === 'invitation' ? previewInvitation : modal.mode === 'relance' ? previewRelance : modal.mode === 'confirmation' ? previewConfirmation : previewDemande}
           sending={pending}
           report={report}
           onConfirm={confirmModal}
@@ -293,7 +303,7 @@ function BulkBtn({ kind, label, disabled, onClick }: { kind: keyof typeof btnSty
   )
 }
 
-function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, onDemande, onRefuser }: {
+function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, onDemande, onRefuser, onConfirmation }: {
   row: Row
   disabled: boolean
   onQualifier: (s: 'Accepté' | 'En attente') => void
@@ -302,6 +312,7 @@ function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, 
   onActif: () => void
   onDemande: () => void
   onRefuser: () => void
+  onConfirmation: () => void
 }) {
   // Boutons explicites avec libellés (maquette v1 validée).
   if (['Nouveau', 'En cours', 'En attente'].includes(row.statut)) {
@@ -333,6 +344,11 @@ function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, 
         {row.relanceEnvoyee
           ? <BulkBtn kind="warn" label="🔁 Relancé ✓" disabled onClick={() => {}} />
           : <BulkBtn kind="warn" label="🔁 Relancer" disabled={disabled} onClick={onRelance} />}
+        {row.statut === 'Invité Google Play' && (
+          row.confirmationDemandee
+            ? <BulkBtn kind="warn" label="📣 Demandé ✓" disabled onClick={() => {}} />
+            : <BulkBtn kind="warn" label="📣 Demander confirmation" disabled={disabled} onClick={onConfirmation} />
+        )}
       </span>
     )
   }

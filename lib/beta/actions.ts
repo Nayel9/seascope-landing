@@ -50,6 +50,9 @@ export async function signalerProbleme(token: string, p: ProblemePayload): Promi
   if (description.length < 10) return { ok: false, error: 'Description trop courte (min. 10 caractères)' }
   try {
     const c = await getCandidature(id)
+    // Adresse de correspondance : la candidature d'abord (celle que le testeur lit
+    // et depuis laquelle il répond), l'adresse Google Play en secours. Délibérément
+    // différent du destinataire de la campagne (emailGooglePlay || email).
     const email = c.email || c.emailGooglePlay
     const texte = `[${etape}] ${description}${telephone ? `\nTéléphone : ${telephone}` : ''}`
     await createFeedbackInstallation(email, texte)

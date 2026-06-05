@@ -5,15 +5,16 @@ import FeedbackRow from '@/components/admin/FeedbackRow'
 
 export const dynamic = 'force-dynamic'
 
-type FbTab = 'nontraites' | 'encours' | 'tous'
+type FbTab = 'nontraites' | 'encours' | 'installation' | 'tous'
 
 const filters: Record<FbTab, (f: Feedback) => boolean> = {
   nontraites: (f) => ['Nouveau', 'À investiguer', ''].includes(f.statut),
   encours: (f) => f.statut === 'En cours',
+  installation: (f) => f.typeRetour === 'Problème installation',
   tous: () => true,
 }
 
-const labels: Record<FbTab, string> = { nontraites: '🚨 Non traités', encours: 'En cours', tous: 'Tous' }
+const labels: Record<FbTab, string> = { nontraites: '🚨 Non traités', encours: 'En cours', installation: '🆘 Installation', tous: 'Tous' }
 
 export default async function FeedbacksPage({
   searchParams,

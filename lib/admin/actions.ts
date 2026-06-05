@@ -4,7 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/admin/auth'
 import { getCandidature, prop, queryCandidatures, updatePage, type StatutCandidature } from '@/lib/admin/notion'
 import { sendBrevo } from '@/lib/admin/brevo'
-import { demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
+import { confirmationInstallEmail, demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
+import { signCandidatureToken } from '@/lib/beta/token'
 import { MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
 import { fetchLatestReplyTextFrom } from '@/lib/admin/imap'
 import { extractEmailGP } from '@/lib/admin/extractEmailGP'
@@ -190,6 +191,51 @@ export async function envoyerRelances(ids: string[]): Promise<BatchReport> {
       results.push({ id, prenom, ok: true })
     } catch (e) {
       console.error('[admin] relance', id, e)
+      results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
+    }
+  }
+  revalidatePath(ADMIN_PATH)
+  return { ok: results.every((r) => r.ok), results }
+}
+
+/** Campagne « as-tu installé l'app ? » : email aux invités avec deux liens signés
+ *  (installée / problème). Réservé au statut « Invité Google Play », une fois par candidat. */
+export async function envoyerConfirmations(ids: string[]): Promise<BatchReport> {
+  await requireAdmin()
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  if (!siteUrl) {
+    return { ok: false, results: [{ id: 'env', prenom: 'Config', ok: false, error: 'NEXT_PUBLIC_SITE_URL manquant' }] }
+  }
+  const base = siteUrl.replace(/\/$/, '')
+  const results: BatchItemResult[] = []
+  for (const id of ids) {
+    let prenom = id
+    try {
+      const c = await getCandidature(id)
+      prenom = c.prenom || id
+      if (c.statut !== 'Invité Google Play') throw new Error(`statut « ${c.statut} » — réservé aux invités`)
+      if (c.confirmationDemandee) throw new Error('demande de confirmation déjà envoyée')
+      const dest = c.emailGooglePlay || c.email
+      if (!dest) throw new Error('aucun email')
+
+      const token = encodeURIComponent(signCandidatureToken(id))
+      const { subject, html } = confirmationInstallEmail(
+        { prenom: c.prenom },
+        `${base}/beta/installee?t=${token}`,
+        `${base}/beta/probleme?t=${token}`,
+      )
+      await sendBrevo({ email: dest, name: c.prenom }, subject, html)
+      try {
+        await updatePage(id, {
+          'Confirmation demandée': prop.checkbox(true),
+          'Date confirmation demandée': prop.dateToday(),
+        })
+      } catch (notionErr) {
+        throw new Error(`email envoyé MAIS mise à jour Notion échouée — corriger à la main (${notionErr instanceof Error ? notionErr.message : notionErr})`)
+      }
+      results.push({ id, prenom, ok: true })
+    } catch (e) {
+      console.error('[admin] confirmation install', id, e)
       results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
     }
   }

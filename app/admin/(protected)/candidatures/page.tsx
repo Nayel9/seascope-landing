@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { requireAdmin } from '@/lib/admin/auth'
 import { queryCandidatures, queryFeedbacks, type Candidature } from '@/lib/admin/notion'
-import { demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
+import { confirmationInstallEmail, demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
 import { MOTIFS_RECONTACT_LABELS, MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
 import CandidaturesTable from '@/components/admin/CandidaturesTable'
 
@@ -68,6 +68,7 @@ export default async function CandidaturesPage({
   const previewInvitation = invitationEmail({ prenom: '{Prénom}', emailGooglePlay: '{email Google Play}' }).html
   const previewRelance = relanceEmail({ prenom: '{Prénom}' }).html
   const previewDemande = demandeEmailGPEmail({ prenom: '{Prénom}' }).html
+  const previewConfirmation = confirmationInstallEmail({ prenom: '{Prénom}' }, '#lien-installee', '#lien-probleme').html
   const previewsRefus = Object.fromEntries(
     MOTIFS_REFUS.map((m) => [m.key, refusEmail({ prenom: '{Prénom}' }, m).html]),
   ) as Record<MotifRefusKey, string>
@@ -127,6 +128,7 @@ export default async function CandidaturesPage({
         previewInvitation={previewInvitation}
         previewRelance={previewRelance}
         previewDemande={previewDemande}
+        previewConfirmation={previewConfirmation}
         previewsRefus={previewsRefus}
       />
     </main>

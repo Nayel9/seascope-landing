@@ -32,6 +32,8 @@ export interface Candidature {
   dateRelance: string       // ISO ou ''
   emailGPDemande: boolean
   dateDemandeGP: string     // ISO ou ''
+  confirmationDemandee: boolean
+  dateConfirmationDemandee: string  // ISO ou ''
   retoursCount: number
 }
 
@@ -118,6 +120,8 @@ function mapCandidature(page: any): Candidature {
     dateRelance: date(p, 'Date relance'),
     emailGPDemande: check(p, 'Email GP demandé'),
     dateDemandeGP: date(p, 'Date demande email GP'),
+    confirmationDemandee: check(p, 'Confirmation demandée'),
+    dateConfirmationDemandee: date(p, 'Date confirmation demandée'),
     retoursCount: relCount(p, 'Retours beta'),
   }
 }
@@ -179,6 +183,25 @@ export async function updatePage(pageId: string, properties: Record<string, unkn
   await notionFetch(`/pages/${pageId}`, {
     method: 'PATCH',
     body: JSON.stringify({ properties }),
+  })
+}
+
+/** Crée un ticket « Problème installation » dans la base feedbacks.
+ *  Notion crée automatiquement l'option de select si elle n'existe pas encore. */
+export async function createFeedbackInstallation(email: string, description: string): Promise<void> {
+  const { feedbackDb } = notionEnv()
+  await notionFetch('/pages', {
+    method: 'POST',
+    body: JSON.stringify({
+      parent: { database_id: feedbackDb },
+      properties: {
+        'Email': { title: [{ text: { content: email || 'inconnu' } }] },
+        'Type de retour': { select: { name: 'Problème installation' } },
+        "Ce qui s'est passé": { rich_text: [{ text: { content: description } }] },
+        'Statut': { select: { name: 'Nouveau' } },
+        'Date': { date: { start: new Date().toISOString() } },
+      },
+    }),
   })
 }
 

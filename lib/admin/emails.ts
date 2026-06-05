@@ -144,3 +144,39 @@ ${paras}
 <tr><td style="padding:16px 40px 36px;">${signature}</td></tr>`
   return { subject: motif.subject, html: shell(motif.subject, inner) }
 }
+
+export function confirmationInstallEmail(c: { prenom: string }, lienInstallee: string, lienProbleme: string): EmailContent {
+  const prenom = esc(c.prenom)
+  const inner = `${header('Tout roule avec la b&ecirc;ta&nbsp;?')}
+<tr><td style="padding:0 40px;">
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Bonjour ${prenom},</p>
+<p style="margin:0 0 24px;color:#c2d3dd;font-size:15px;line-height:1.6;">Vous avez re&ccedil;u votre invitation &agrave; la b&ecirc;ta SeaScope il y a quelques jours. Dites-nous <strong style="color:#f4f7f9;">en un clic</strong> o&ugrave; vous en &ecirc;tes&nbsp;:</p>
+</td></tr>
+<tr><td style="padding:0 40px 8px;" align="center">
+<a href="${esc(lienInstallee)}" style="display:inline-block;background-color:#1ec8a5;color:#06151f;text-decoration:none;font-size:16px;font-weight:600;padding:14px 36px;border-radius:8px;">&#10003; J&#39;ai install&eacute; l&#39;app</a>
+</td></tr>
+<tr><td style="padding:16px 40px 8px;" align="center">
+<a href="${esc(lienProbleme)}" style="display:inline-block;background-color:#0b1f2e;color:#7fd1c8;border:1px solid #1ec8a5;text-decoration:none;font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;">&#9888; J&#39;ai rencontr&eacute; un probl&egrave;me</a>
+</td></tr>
+<tr><td style="padding:24px 40px 36px;">
+<p style="margin:0 0 16px;color:#7a93a3;font-size:13px;line-height:1.6;">Votre r&eacute;ponse nous aide &agrave; ne laisser personne bloqu&eacute;.</p>
+${signature}
+</td></tr>`
+  return { subject: 'Tout roule avec la bêta SeaScope ?', html: shell('Tout roule avec la bêta SeaScope ?', inner) }
+}
+
+/** Notification à l'admin quand un testeur signale un problème d'installation. */
+export function problemeInstallationOwnerEmail(p: {
+  prenom: string; email: string; etape: string; description: string; telephone?: string
+}): EmailContent {
+  const inner = `${header('Probl&egrave;me d&#39;installation signal&eacute;')}
+<tr><td style="padding:0 40px 36px;">
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;"><strong style="color:#f4f7f9;">${esc(p.prenom)}</strong> (${esc(p.email)}) bloque &agrave; l&#39;&eacute;tape&nbsp;: <strong style="color:#f4f7f9;">${esc(p.etape)}</strong>${p.telephone ? ` &mdash; t&eacute;l&eacute;phone&nbsp;: ${esc(p.telephone)}` : ''}</p>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0b1f2e;border-radius:8px;">
+<tr><td style="padding:20px 24px;">
+<p style="margin:0;color:#c2d3dd;font-size:14px;line-height:1.7;white-space:pre-wrap;">${esc(p.description)}</p>
+</td></tr></table>
+<p style="margin:16px 0 0;color:#7a93a3;font-size:13px;">Ticket cr&eacute;&eacute; dans l&#39;onglet &#127384; Installation du dashboard.</p>
+</td></tr>`
+  return { subject: `🆘 Problème installation — ${p.prenom}`, html: shell('Problème installation signalé', inner) }
+}

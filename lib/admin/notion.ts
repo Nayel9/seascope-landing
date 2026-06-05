@@ -186,6 +186,25 @@ export async function updatePage(pageId: string, properties: Record<string, unkn
   })
 }
 
+/** Crée un ticket « Problème installation » dans la base feedbacks.
+ *  Notion crée automatiquement l'option de select si elle n'existe pas encore. */
+export async function createFeedbackInstallation(email: string, description: string): Promise<void> {
+  const { feedbackDb } = notionEnv()
+  await notionFetch('/pages', {
+    method: 'POST',
+    body: JSON.stringify({
+      parent: { database_id: feedbackDb },
+      properties: {
+        'Email': { title: [{ text: { content: email || 'inconnu' } }] },
+        'Type de retour': { select: { name: 'Problème installation' } },
+        "Ce qui s'est passé": { rich_text: [{ text: { content: description } }] },
+        'Statut': { select: { name: 'Nouveau' } },
+        'Date': { date: { start: new Date().toISOString() } },
+      },
+    }),
+  })
+}
+
 // ── Prédicats partagés ────────────────────────────────────────────────────────
 
 /** À exporter vers la liste de testeurs Google Play Console : email renseigné,

@@ -22,3 +22,6 @@ next-env.d.ts
 # Brainstorming visual companion
 .superpowers/
 .playwright-mcp/
+
+# exports locaux de testeurs (donnees personnelles)
+seascope-testeurs-*.csv

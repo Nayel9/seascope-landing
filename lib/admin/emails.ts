@@ -1,3 +1,5 @@
+import type { MotifRefus } from './refus'
+
 function esc(s: string): string {
   return s
     .replace(/&/g, '&amp;')
@@ -122,4 +124,18 @@ export function relanceEmail(c: { prenom: string }): EmailContent {
 ${signature}
 </td></tr>`
   return { subject: 'Premier retour SeaScope ?', html: shell('Premier retour SeaScope ?', inner) }
+}
+
+export function refusEmail(c: { prenom: string }, motif: MotifRefus): EmailContent {
+  const prenom = esc(c.prenom)
+  const paras = motif.paragraphs
+    .map((p) => `<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">${p}</p>`)
+    .join('\n')
+  const inner = `${header(motif.h1)}
+<tr><td style="padding:0 40px;">
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Bonjour ${prenom},</p>
+${paras}
+</td></tr>
+<tr><td style="padding:16px 40px 36px;">${signature}</td></tr>`
+  return { subject: motif.subject, html: shell(motif.subject, inner) }
 }

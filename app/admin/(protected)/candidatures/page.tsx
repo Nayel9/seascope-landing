@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { requireAdmin } from '@/lib/admin/auth'
 import { queryCandidatures, queryFeedbacks, type Candidature } from '@/lib/admin/notion'
-import { demandeEmailGPEmail, invitationEmail, relanceEmail } from '@/lib/admin/emails'
+import { demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
+import { MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
 import CandidaturesTable from '@/components/admin/CandidaturesTable'
 
 export const dynamic = 'force-dynamic'
@@ -63,6 +64,9 @@ export default async function CandidaturesPage({
   const previewInvitation = invitationEmail({ prenom: '{Prénom}', emailGooglePlay: '{email Google Play}' }).html
   const previewRelance = relanceEmail({ prenom: '{Prénom}' }).html
   const previewDemande = demandeEmailGPEmail({ prenom: '{Prénom}' }).html
+  const previewsRefus = Object.fromEntries(
+    MOTIFS_REFUS.map((m) => [m.key, refusEmail({ prenom: '{Prénom}' }, m).html]),
+  ) as Record<MotifRefusKey, string>
 
   const kpis: Array<{ tab: TabKey; label: string; alert?: boolean }> = [
     { tab: 'traiter', label: '📋 À traiter' },
@@ -118,6 +122,7 @@ export default async function CandidaturesPage({
         previewInvitation={previewInvitation}
         previewRelance={previewRelance}
         previewDemande={previewDemande}
+        previewsRefus={previewsRefus}
       />
     </main>
   )

@@ -4,26 +4,31 @@ import { useState, useTransition } from 'react'
 import StatutChip from '@/components/admin/StatutChip'
 import EmailModal, { type ModalState } from '@/components/admin/EmailModal'
 import {
-  envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot,
+  envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot, refuser,
   setCanal, setEmailGooglePlay, setPriorite, type BatchReport,
 } from '@/lib/admin/actions'
 import type { Row, TabKey } from '@/app/admin/(protected)/candidatures/page'
+import RefusDialog from '@/components/admin/RefusDialog'
+import type { MotifRefusKey } from '@/lib/admin/refus'
 
 const CANAUX = ['', 'LinkedIn', 'Facebook', 'Hisse Et Oh', 'Bouche-à-oreille', 'Autre']
 const PRIORITES = ['', 'Haute', 'Moyenne', 'Basse']
 
 export default function CandidaturesTable({
-  rows, tab, previewInvitation, previewRelance, previewDemande,
+  rows, tab, previewInvitation, previewRelance, previewDemande, previewsRefus,
 }: {
   rows: Row[]
   tab: TabKey
   previewInvitation: string
   previewRelance: string
   previewDemande: string
+  previewsRefus: Record<MotifRefusKey, string>
 }) {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [modal, setModal] = useState<ModalState | null>(null)
   const [report, setReport] = useState<BatchReport | null>(null)
+  const [refusTargets, setRefusTargets] = useState<Row[] | null>(null)
+  const [refusReport, setRefusReport] = useState<BatchReport | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
@@ -71,6 +76,15 @@ export default function CandidaturesTable({
       const ids = modal.recipients.map((r) => r.id)
       const rep = await batchActions[modal.mode](ids)
       setReport(rep)
+      setSelected(new Set())
+    })
+  }
+
+  const confirmRefus = (motif: MotifRefusKey, envoyerEmail: boolean) => {
+    if (!refusTargets) return
+    startTransition(async () => {
+      const rep = await refuser(refusTargets.map((r) => r.id), motif, envoyerEmail)
+      setRefusReport(rep)
       setSelected(new Set())
     })
   }
@@ -156,12 +170,13 @@ export default function CandidaturesTable({
                 )}
                 <td className="px-3 py-3">
                   <StatutChip statut={r.statut} />
+                  {r.statut === 'Refusé' && r.motifRefus && <><br /><span className="text-[11px] text-ss-deconseille/80">motif : {r.motifRefus}</span></>}
                   {r.emailGPDemande && !r.emailGooglePlay && r.dateDemandeGP && <><br /><span className="text-[11px] text-ss-teal/80">email GP demandé le {r.dateDemandeGP}</span></>}
                   {r.dateInvitation && <><br /><span className="text-[11px] text-ss-fg/50">invité le {r.dateInvitation}</span></>}
                   {r.relanceEnvoyee && r.dateRelance && <><br /><span className="text-[11px] text-ss-variable/80">relancé le {r.dateRelance}</span></>}
                 </td>
                 <td className="px-3 py-3">
-                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} onDemande={() => openModal('demande', [r])} />
+                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} onDemande={() => openModal('demande', [r])} onRefuser={() => { setRefusReport(null); setRefusTargets([r]) }} />
                 </td>
               </tr>
             ))}
@@ -175,7 +190,7 @@ export default function CandidaturesTable({
           {tab === 'traiter' && (
             <>
               <BulkBtn kind="ok" label="✓ Accepter la sélection" disabled={pending} onClick={() => run(() => qualifierEnLot([...selected], 'Accepté'))} />
-              <BulkBtn kind="ko" label="✕ Refuser" disabled={pending} onClick={() => run(() => qualifierEnLot([...selected], 'Refusé'))} />
+              <BulkBtn kind="ko" label="✕ Refuser" disabled={pending} onClick={() => { setRefusReport(null); setRefusTargets(selRows) }} />
               <BulkBtn kind="neutral" label="⏸ En attente" disabled={pending} onClick={() => run(() => qualifierEnLot([...selected], 'En attente'))} />
             </>
           )}
@@ -219,6 +234,16 @@ export default function CandidaturesTable({
           onClose={() => { setModal(null); setReport(null) }}
         />
       )}
+      {refusTargets && (
+        <RefusDialog
+          recipients={refusTargets.map((r) => ({ id: r.id, prenom: r.prenom, email: r.email }))}
+          previews={previewsRefus}
+          sending={pending}
+          report={refusReport}
+          onConfirm={confirmRefus}
+          onClose={() => { setRefusTargets(null); setRefusReport(null) }}
+        />
+      )}
     </div>
   )
 }
@@ -239,21 +264,22 @@ function BulkBtn({ kind, label, disabled, onClick }: { kind: keyof typeof btnSty
   )
 }
 
-function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, onDemande }: {
+function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, onDemande, onRefuser }: {
   row: Row
   disabled: boolean
-  onQualifier: (s: 'Accepté' | 'Refusé' | 'En attente') => void
+  onQualifier: (s: 'Accepté' | 'En attente') => void
   onInvite: () => void
   onRelance: () => void
   onActif: () => void
   onDemande: () => void
+  onRefuser: () => void
 }) {
   // Boutons explicites avec libellés (maquette v1 validée).
   if (['Nouveau', 'En cours', 'En attente'].includes(row.statut)) {
     return (
       <span className="flex flex-wrap gap-1.5">
         <BulkBtn kind="ok" label="✓ Accepter" disabled={disabled} onClick={() => onQualifier('Accepté')} />
-        <BulkBtn kind="ko" label="✕ Refuser" disabled={disabled} onClick={() => onQualifier('Refusé')} />
+        <BulkBtn kind="ko" label="✕ Refuser" disabled={disabled} onClick={onRefuser} />
         {row.statut !== 'En attente' && <BulkBtn kind="neutral" label="⏸ Attente" disabled={disabled} onClick={() => onQualifier('En attente')} />}
       </span>
     )

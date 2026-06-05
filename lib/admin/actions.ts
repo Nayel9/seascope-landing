@@ -4,7 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/admin/auth'
 import { getCandidature, prop, updatePage, type StatutCandidature } from '@/lib/admin/notion'
 import { sendBrevo } from '@/lib/admin/brevo'
-import { demandeEmailGPEmail, invitationEmail, relanceEmail } from '@/lib/admin/emails'
+import { demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
+import { MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
 
 export type ActionResult = { ok: true } | { ok: false; error: string }
 
@@ -13,6 +14,7 @@ export interface BatchItemResult {
   prenom: string
   ok: boolean
   error?: string
+  info?: string
 }
 
 export interface BatchReport {
@@ -186,6 +188,57 @@ export async function envoyerRelances(ids: string[]): Promise<BatchReport> {
       results.push({ id, prenom, ok: true })
     } catch (e) {
       console.error('[admin] relance', id, e)
+      results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
+    }
+  }
+  revalidatePath(ADMIN_PATH)
+  return { ok: results.every((r) => r.ok), results }
+}
+
+// ── Refus avec motif ──────────────────────────────────────────────────────────
+
+/** Refus en lot avec motif : Notion d'abord (statut + motif), mail ensuite.
+ *  Ordre inverse des invitations : un refusé sans mail se rattrape à la main,
+ *  alors qu'un mail de refus parti pour un candidat resté « Nouveau » ne se
+ *  rattrape pas. */
+export async function refuser(
+  ids: string[],
+  motifKey: MotifRefusKey,
+  envoyerEmail: boolean,
+): Promise<BatchReport> {
+  await requireAdmin()
+  const motif = MOTIFS_REFUS.find((m) => m.key === motifKey)
+  if (!motif) {
+    return { ok: false, results: ids.map((id) => ({ id, prenom: id, ok: false, error: `motif inconnu : ${motifKey}` })) }
+  }
+  const results: BatchItemResult[] = []
+  for (const id of ids) {
+    let prenom = id
+    try {
+      const c = await getCandidature(id)
+      prenom = c.prenom || id
+      await updatePage(id, {
+        'Statut': prop.select('Refusé'),
+        'Motif refus': prop.select(motif.label),
+      })
+      if (!envoyerEmail) {
+        results.push({ id, prenom, ok: true, info: 'refusé sans mail (choix admin)' })
+        continue
+      }
+      if (!c.email) {
+        results.push({ id, prenom, ok: true, info: 'refusé — aucun email de candidature, mail non envoyé' })
+        continue
+      }
+      try {
+        const { subject, html } = refusEmail({ prenom: c.prenom }, motif)
+        await sendBrevo({ email: c.email, name: c.prenom }, subject, html)
+      } catch (brevoErr) {
+        // Notion déjà à jour : signaler explicitement que seul le mail a échoué.
+        throw new Error(`statut mis à jour MAIS mail de refus non envoyé (${brevoErr instanceof Error ? brevoErr.message : brevoErr})`)
+      }
+      results.push({ id, prenom, ok: true })
+    } catch (e) {
+      console.error('[admin] refus', id, e)
       results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
     }
   }

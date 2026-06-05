@@ -18,6 +18,7 @@ export interface Candidature {
   pratique: string
   typeNav: string
   statut: StatutCandidature | ''
+  motifRefus: string
   canal: string
   canalAutre: string
   priorite: string
@@ -103,6 +104,7 @@ function mapCandidature(page: any): Candidature {
     pratique: sel(p, 'Pratique'),
     typeNav: sel(p, 'Type de navigation'),
     statut: sel(p, 'Statut') as Candidature['statut'],
+    motifRefus: sel(p, 'Motif refus'),
     canal: sel(p, 'Canal de recrutement'),
     canalAutre: text(p, 'Canal (précision)'),
     priorite: sel(p, 'Priorité bêta'),

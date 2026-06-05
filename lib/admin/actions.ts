@@ -2,10 +2,12 @@
 
 import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/admin/auth'
-import { getCandidature, prop, updatePage, type StatutCandidature } from '@/lib/admin/notion'
+import { getCandidature, prop, queryCandidatures, updatePage, type StatutCandidature } from '@/lib/admin/notion'
 import { sendBrevo } from '@/lib/admin/brevo'
 import { demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
 import { MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
+import { fetchLatestReplyTextFrom } from '@/lib/admin/imap'
+import { extractEmailGP } from '@/lib/admin/extractEmailGP'
 
 export type ActionResult = { ok: true } | { ok: false; error: string }
 
@@ -241,6 +243,60 @@ export async function refuser(
       console.error('[admin] refus', id, e)
       results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
     }
+  }
+  revalidatePath(ADMIN_PATH)
+  return { ok: results.every((r) => r.ok), results }
+}
+
+// ── Relève des réponses email Google Play ─────────────────────────────────────
+
+/** Lit la boîte IMAP et remplit « Email Google Play » pour les candidats
+ *  Acceptés dont la demande est partie et le champ encore vide. Jamais
+ *  d'écrasement ; l'envoi de l'invitation reste un geste manuel. */
+export async function releverReponsesGP(): Promise<BatchReport> {
+  await requireAdmin()
+  const results: BatchItemResult[] = []
+  try {
+    const candidats = (await queryCandidatures()).filter(
+      (c) => c.statut === 'Accepté' && c.emailGPDemande && !c.emailGooglePlay && c.email,
+    )
+    if (candidats.length === 0) return { ok: true, results: [] }
+
+    const replies = await fetchLatestReplyTextFrom(
+      candidats.map((c) => ({
+        email: c.email,
+        since: c.dateDemandeGP ? new Date(c.dateDemandeGP) : c.dateCandidature ? new Date(c.dateCandidature) : undefined,
+      })),
+    )
+
+    for (const c of candidats) {
+      const prenom = c.prenom || c.id
+      try {
+        const body = replies.get(c.email.toLowerCase())
+        if (body === undefined) {
+          results.push({ id: c.id, prenom, ok: true, info: 'pas encore de réponse' })
+          continue
+        }
+        const extrait = extractEmailGP(body, c.email)
+        if (!extrait) {
+          results.push({ id: c.id, prenom, ok: true, info: 'réponse reçue mais aucune adresse détectée — à saisir manuellement' })
+          continue
+        }
+        if ('ambigu' in extrait) {
+          results.push({ id: c.id, prenom, ok: true, info: `à vérifier manuellement — ${extrait.ambigu}` })
+          continue
+        }
+        await updatePage(c.id, { 'Email Google Play': prop.email(extrait.email) })
+        results.push({ id: c.id, prenom, ok: true, info: `rempli : ${extrait.email}` })
+      } catch (e) {
+        console.error('[admin] relève GP', c.id, e)
+        results.push({ id: c.id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
+      }
+    }
+  } catch (e) {
+    // Connexion IMAP ou lecture Notion KO : rien n'a été modifié, le signaler tel quel.
+    console.error('[admin] relève GP', e)
+    return { ok: false, results: [{ id: 'imap', prenom: 'Connexion', ok: false, error: e instanceof Error ? e.message : 'Erreur interne' }] }
   }
   revalidatePath(ADMIN_PATH)
   return { ok: results.every((r) => r.ok), results }

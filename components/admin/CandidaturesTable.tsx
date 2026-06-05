@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import StatutChip from '@/components/admin/StatutChip'
 import EmailModal, { type ModalState } from '@/components/admin/EmailModal'
 import {
-  envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot, refuser,
+  envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot, refuser, releverReponsesGP,
   setCanal, setEmailGooglePlay, setPriorite, type BatchReport,
 } from '@/lib/admin/actions'
 import type { Row, TabKey } from '@/app/admin/(protected)/candidatures/page'
@@ -29,6 +29,7 @@ export default function CandidaturesTable({
   const [report, setReport] = useState<BatchReport | null>(null)
   const [refusTargets, setRefusTargets] = useState<Row[] | null>(null)
   const [refusReport, setRefusReport] = useState<BatchReport | null>(null)
+  const [releveReport, setReleveReport] = useState<BatchReport | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
@@ -89,6 +90,13 @@ export default function CandidaturesTable({
     })
   }
 
+  const relever = () =>
+    startTransition(async () => {
+      setError(null)
+      setReleveReport(null)
+      setReleveReport(await releverReponsesGP())
+    })
+
   const selRows = rows.filter((r) => selected.has(r.id))
 
   return (
@@ -97,6 +105,27 @@ export default function CandidaturesTable({
         <p className="mx-4 mt-3 rounded-md border border-ss-deconseille/40 bg-ss-deconseille/10 px-4 py-2 text-sm text-ss-deconseille">
           {error}
         </p>
+      )}
+      {tab === 'emailgp' && (
+        <div className="mx-4 mt-3">
+          <div className="flex items-center gap-3">
+            <BulkBtn kind="primary" label={pending ? '↻ Relève en cours…' : '↻ Relever les réponses'} disabled={pending} onClick={relever} />
+            <span className="text-[11px] text-ss-fg/50">Lit la boîte contact@ et remplit les emails Google Play trouvés dans les réponses.</span>
+          </div>
+          {releveReport && (
+            <div className="mt-2 space-y-1 rounded-ss bg-ss-surface-2 px-4 py-3 text-[13px]">
+              <p className="mb-1 font-semibold">
+                {releveReport.results.length === 0 ? 'Aucun candidat en attente de réponse.' : releveReport.ok ? 'Relève terminée' : '⚠️ Relève terminée avec erreurs'}
+              </p>
+              {releveReport.results.map((r) => (
+                <p key={r.id} className={!r.ok ? 'text-ss-deconseille' : r.info?.startsWith('rempli') ? 'text-ss-bon' : 'text-ss-fg/70'}>
+                  {!r.ok ? '✕' : r.info?.startsWith('rempli') ? '✓' : '·'} {r.prenom}{r.error ? ` — ${r.error}` : ''}{r.info ? ` — ${r.info}` : ''}
+                </p>
+              ))}
+              <button onClick={() => setReleveReport(null)} className="mt-1 text-xs text-ss-fg/50 underline">Fermer</button>
+            </div>
+          )}
+        </div>
       )}
       <div className="overflow-x-auto">
         <table className="w-full text-[13px]">

@@ -48,6 +48,7 @@ const signature = `<p style="margin:0;color:#7a93a3;font-size:14px;line-height:1
 
 export function invitationEmail(c: { prenom: string; emailGooglePlay: string }): EmailContent {
   const { playUrl, formUrl } = emailEnv()
+  const { whatsappUrl } = whatsappEnv()
   const prenom = esc(c.prenom)
   const gp = esc(c.emailGooglePlay)
   const inner = `${header('Votre acc&egrave;s &agrave; la b&ecirc;ta est ouvert')}
@@ -66,6 +67,10 @@ export function invitationEmail(c: { prenom: string; emailGooglePlay: string }):
 <p style="margin:0 0 8px;color:#f4f7f9;font-size:14px;font-weight:600;">Comment installer</p>
 <p style="margin:0;color:#c2d3dd;font-size:14px;line-height:1.7;">1. Acceptez l'invitation au programme de test.<br>2. Installez SeaScope depuis Google Play.<br>3. Ouvrez l'app avant vos vraies sorties, naviguez comme d'habitude.</p>
 </td></tr></table>
+</td></tr>
+<tr><td style="padding:24px 40px 8px;" align="center">
+<a href="${esc(whatsappUrl)}" style="display:inline-block;background-color:#0b1f2e;color:#7fd1c8;border:1px solid #1ec8a5;text-decoration:none;font-size:14px;font-weight:600;padding:12px 28px;border-radius:8px;">Rejoindre le groupe WhatsApp des testeurs</a>
+<p style="margin:12px 0 0;color:#7a93a3;font-size:12px;line-height:1.5;">Entraide, annonces de versions et retours rapides entre testeurs.</p>
 </td></tr>
 <tr><td style="padding:24px 40px 0;">
 <p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Apr&egrave;s quelques sorties, racontez-nous ce qui s'est r&eacute;ellement pass&eacute; &mdash; 5 minutes&nbsp;:</p>

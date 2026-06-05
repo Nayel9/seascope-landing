@@ -22,5 +22,5 @@ try {
   }
 } finally {
   lock.release()
+  await client.logout().catch(() => client.close())
 }
-await client.logout()

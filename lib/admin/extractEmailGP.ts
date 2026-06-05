@@ -25,7 +25,7 @@ export function extractEmailGP(body: string, fromAddress: string): ExtractResult
   const gmail = found.find(isGmail)
   if (gmail) return { email: gmail }
   if (found.length === 1) return { email: found[0] }              // compte Google Workspace possible
-  if (found.length === 0 && isGmail(from)) return { email: from } // « c'est cette adresse »
+  if (found.length === 0 && isGmail(from) && VALID_EMAIL_RE.test(from)) return { email: from } // « c'est cette adresse »
   if (found.length > 1) return { ambigu: `plusieurs adresses trouvées : ${found.join(', ')}` }
   return null
 }

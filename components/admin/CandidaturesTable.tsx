@@ -93,6 +93,7 @@ export default function CandidaturesTable({
   const relever = () =>
     startTransition(async () => {
       setError(null)
+      setReleveReport(null)
       setReleveReport(await releverReponsesGP())
     })
 

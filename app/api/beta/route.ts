@@ -51,7 +51,8 @@ function validate(data: unknown): BetaPayload {
   const d = data as Record<string, unknown>
   const errors: string[] = []
   if (!d.firstname || typeof d.firstname !== 'string' || d.firstname.trim().length < 2) errors.push('Prénom requis')
-  if (!d.email || typeof d.email !== 'string' || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(d.email)) errors.push('Email invalide')
+  // Beta Android via Google Play : l'accès est lié au compte Google, on impose une adresse Gmail.
+  if (!d.email || typeof d.email !== 'string' || !/^[a-zA-Z0-9._%+\-]+@(gmail|googlemail)\.com$/i.test(d.email.trim())) errors.push('Adresse Gmail requise (compte Google nécessaire pour la beta Android)')
   if (!d.region || typeof d.region !== 'string' || d.region.trim().length < 2) errors.push('Région requise')
   if (!d.navType) errors.push('Type de navigation requis')
   if (!d.freq) errors.push('Fréquence requise')

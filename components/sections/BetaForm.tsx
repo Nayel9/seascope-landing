@@ -14,8 +14,10 @@ const EMPTY: BetaFormValues = {
   boat: '', platform: '', practice: '', blocker: '', canal: '', canalAutre: '', consent: false,
 }
 
+// La beta Android passe par Google Play : l'accès est lié au compte Google
+// du testeur, on impose donc une adresse Gmail (gmail.com / googlemail.com).
 function isValidEmail(v: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+  return /^[^\s@]+@(gmail|googlemail)\.com$/i.test(v.trim())
 }
 
 function isValid(d: BetaFormValues) {
@@ -131,16 +133,27 @@ export function BetaForm() {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="b-email" className={labelBase}>Email</label>
+                <label htmlFor="b-email" className={labelBase}>Email (compte Google)</label>
                 <input
                   id="b-email"
                   type="email"
                   className={clsx(inputBase, t && !isValidEmail(data.email) && 'border-ss-deconseille')}
                   value={data.email}
                   onChange={upd('email')}
-                  placeholder="camille@exemple.fr"
+                  placeholder="camille@gmail.com"
                   autoComplete="email"
+                  aria-describedby="b-email-hint"
                 />
+                <span id="b-email-hint" className="text-[12px] text-ss-fg/50 leading-relaxed">
+                  La beta n&apos;est dispo que sur Android et passe par Google&nbsp;Play : indiquez
+                  l&apos;adresse <strong className="text-ss-fg/72 font-medium">Gmail de votre compte Google</strong>,
+                  c&apos;est elle qui ouvre l&apos;accès à l&apos;application.
+                </span>
+                {t && data.email.trim().length > 0 && !isValidEmail(data.email) && (
+                  <span className="font-mono text-[12px] text-ss-deconseille">
+                    Adresse Gmail requise (ex. : vous@gmail.com)
+                  </span>
+                )}
               </div>
             </div>
 

@@ -1,9 +1,9 @@
-'use client'
+﻿'use client'
 
 import type { BatchReport } from '@/lib/admin/actions'
 
 export interface ModalState {
-  mode: 'invitation' | 'relance' | 'demande' | 'confirmation'
+  mode: 'invitation' | 'relance' | 'demande' | 'relanceGP' | 'confirmation'
   recipients: Array<{ id: string; prenom: string; email: string }>
 }
 
@@ -11,6 +11,7 @@ const modeLabels: Record<ModalState['mode'], string> = {
   invitation: 'invitation',
   relance: 'relance',
   demande: 'demande email GP',
+  relanceGP: 'relance demande email GP',
   confirmation: 'demande de confirmation',
 }
 
@@ -18,6 +19,7 @@ const modeEffects: Record<ModalState['mode'], string> = {
   invitation: 'Après envoi (par destinataire) : ☑ Invitation envoyée · ☑ Lien envoyé · 📅 Date du jour · Statut → Invité Google Play',
   relance: 'Après envoi (par destinataire) : ☑ Relance envoyée · 📅 Date relance = aujourd’hui',
   demande: 'Après envoi (par destinataire) : ☑ Email GP demandé · 📅 Date demande = aujourd’hui',
+  relanceGP: 'Après envoi (par destinataire) : Date demande GP = aujourd’hui (relance, pas de nouveau flag)',
   confirmation: 'Après envoi (par destinataire) : ☑ Confirmation demandée · 📅 Date du jour — liens personnalisés par candidat',
 }
 

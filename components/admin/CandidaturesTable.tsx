@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import StatutChip from '@/components/admin/StatutChip'
 import EmailModal, { type ModalState } from '@/components/admin/EmailModal'
 import {
-  envoyerConfirmations, envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot, refuser, releverReponsesGP,
+  envoyerConfirmations, envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot, refuser, relancerDemandesEmailGP, releverReponsesGP,
   setCanal, setEmailGooglePlay, setPriorite, type BatchReport,
 } from '@/lib/admin/actions'
 import type { Row, TabKey } from '@/app/admin/(protected)/candidatures/page'
@@ -15,13 +15,14 @@ const CANAUX = ['', 'LinkedIn', 'Facebook', 'Hisse Et Oh', 'Bouche-à-oreille', 
 const PRIORITES = ['', 'Haute', 'Moyenne', 'Basse']
 
 export default function CandidaturesTable({
-  rows, tab, previewInvitation, previewRelance, previewDemande, previewConfirmation, previewsRefus,
+  rows, tab, previewInvitation, previewRelance, previewDemande, previewRelanceGP, previewConfirmation, previewsRefus,
 }: {
   rows: Row[]
   tab: TabKey
   previewInvitation: string
   previewRelance: string
   previewDemande: string
+  previewRelanceGP: string
   previewConfirmation: string
   previewsRefus: Record<MotifRefusKey, string>
 }) {
@@ -57,11 +58,11 @@ export default function CandidaturesTable({
     setReport(null)
     setModal({
       mode,
-      // La demande d'email GP part sur l'email de candidature ; le reste sur l'email Google Play.
+      // Les demandes GP (première et relance) partent sur l'email de candidature ; le reste sur l'email Google Play.
       recipients: targets.map((r) => ({
         id: r.id,
         prenom: r.prenom,
-        email: mode === 'demande' ? r.email : r.emailGooglePlay || r.email,
+        email: (mode === 'demande' || mode === 'relanceGP') ? r.email : r.emailGooglePlay || r.email,
       })),
     })
   }
@@ -70,6 +71,7 @@ export default function CandidaturesTable({
     invitation: envoyerInvitations,
     relance: envoyerRelances,
     demande: envoyerDemandesEmailGP,
+    relanceGP: relancerDemandesEmailGP,
     confirmation: envoyerConfirmations,
   }
 
@@ -208,7 +210,7 @@ export default function CandidaturesTable({
                   {r.confirmationDemandee && r.dateConfirmationDemandee && <><br /><span className="text-[11px] text-ss-fg/50">confirmation demandée le {r.dateConfirmationDemandee}</span></>}
                 </td>
                 <td className="px-3 py-3">
-                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} onDemande={() => openModal('demande', [r])} onRefuser={() => { setRefusReport(null); setRefusTargets([r]) }} onConfirmation={() => openModal('confirmation', [r])} />
+                  <RowActions row={r} disabled={pending} onQualifier={(s) => run(() => qualifier(r.id, s))} onInvite={() => openModal('invitation', [r])} onRelance={() => openModal('relance', [r])} onActif={() => run(() => marquerActifs([r.id]))} onDemande={() => openModal('demande', [r])} onRelanceGP={() => openModal('relanceGP', [r])} onRefuser={() => { setRefusReport(null); setRefusTargets([r]) }} onConfirmation={() => openModal('confirmation', [r])} />
                 </td>
               </tr>
             ))}
@@ -227,11 +229,18 @@ export default function CandidaturesTable({
             </>
           )}
           {tab === 'emailgp' && (
-            <BulkBtn kind="warn" label="📮 Demander email GP" disabled={pending} onClick={() => {
-              const targets = selRows.filter((r) => !r.emailGPDemande)
-              if (targets.length === 0) { setError('Demande déjà envoyée à toute la sélection — attendez leurs réponses'); return }
-              openModal('demande', targets)
-            }} />
+            <>
+              <BulkBtn kind="warn" label="📮 Demander email GP" disabled={pending} onClick={() => {
+                const targets = selRows.filter((r) => !r.emailGPDemande)
+                if (targets.length === 0) { setError('Demande déjà envoyée à toute la sélection — utilisez le bouton Relancer'); return }
+                openModal('demande', targets)
+              }} />
+              <BulkBtn kind="neutral" label="🔁 Relancer demande GP" disabled={pending} onClick={() => {
+                const targets = selRows.filter((r) => r.emailGPDemande && !r.emailGooglePlay)
+                if (targets.length === 0) { setError('Aucun sélectionné n\'a déjà reçu la demande initiale'); return }
+                openModal('relanceGP', targets)
+              }} />
+            </>
           )}
           {tab === 'inviter' && (
             <BulkBtn kind="primary" label="✉️ Envoyer les invitations" disabled={pending} onClick={() => {
@@ -266,7 +275,7 @@ export default function CandidaturesTable({
       {modal && (
         <EmailModal
           state={modal}
-          previewHtml={modal.mode === 'invitation' ? previewInvitation : modal.mode === 'relance' ? previewRelance : modal.mode === 'confirmation' ? previewConfirmation : previewDemande}
+          previewHtml={modal.mode === 'invitation' ? previewInvitation : modal.mode === 'relance' ? previewRelance : modal.mode === 'confirmation' ? previewConfirmation : modal.mode === 'relanceGP' ? previewRelanceGP : previewDemande}
           sending={pending}
           report={report}
           onConfirm={confirmModal}
@@ -303,7 +312,7 @@ function BulkBtn({ kind, label, disabled, onClick }: { kind: keyof typeof btnSty
   )
 }
 
-function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, onDemande, onRefuser, onConfirmation }: {
+function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, onDemande, onRelanceGP, onRefuser, onConfirmation }: {
   row: Row
   disabled: boolean
   onQualifier: (s: 'Accepté' | 'En attente') => void
@@ -311,6 +320,7 @@ function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, 
   onRelance: () => void
   onActif: () => void
   onDemande: () => void
+  onRelanceGP: () => void
   onRefuser: () => void
   onConfirmation: () => void
 }) {
@@ -330,7 +340,7 @@ function RowActions({ row, disabled, onQualifier, onInvite, onRelance, onActif, 
       <span className="flex flex-wrap gap-1.5">
         {!row.emailGooglePlay && (
           row.emailGPDemande
-            ? <BulkBtn kind="warn" label="📮 Demandé ✓" disabled onClick={() => {}} />
+            ? <BulkBtn kind="neutral" label="🔁 Relancer" disabled={disabled} onClick={onRelanceGP} />
             : <BulkBtn kind="warn" label="📮 Demander email GP" disabled={disabled} onClick={onDemande} />
         )}
         <BulkBtn kind="primary" label="✉️ Envoyer invitation" disabled={disabled || !row.emailGooglePlay} onClick={onInvite} />

@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/admin/auth'
 import { getCandidature, prop, queryCandidatures, updatePage, type StatutCandidature } from '@/lib/admin/notion'
 import { sendBrevo } from '@/lib/admin/brevo'
-import { confirmationInstallEmail, demandeEmailGPEmail, invitationEmail, refusEmail, relanceEmail } from '@/lib/admin/emails'
+import { confirmationInstallEmail, demandeEmailGPEmail, invitationEmail, refusEmail, relanceDemandeEmailGPEmail, relanceEmail } from '@/lib/admin/emails'
 import { signCandidatureToken } from '@/lib/beta/token'
 import { MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
 import { fetchLatestReplyTextFrom } from '@/lib/admin/imap'
@@ -157,6 +157,39 @@ export async function envoyerDemandesEmailGP(ids: string[]): Promise<BatchReport
       results.push({ id, prenom, ok: true })
     } catch (e) {
       console.error('[admin] demande email GP', id, e)
+      results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
+    }
+  }
+  revalidatePath(ADMIN_PATH)
+  return { ok: results.every((r) => r.ok), results }
+}
+
+export async function relancerDemandesEmailGP(ids: string[]): Promise<BatchReport> {
+  await requireAdmin()
+  const results: BatchItemResult[] = []
+  for (const id of ids) {
+    let prenom = id
+    try {
+      const c = await getCandidature(id)
+      prenom = c.prenom || id
+      if (c.statut !== 'Accepté') throw new Error(`statut « ${c.statut} » — réservé aux Acceptés`)
+      if (!c.emailGPDemande) throw new Error('première demande pas encore envoyée — utilisez "Demander email GP"')
+      if (c.emailGooglePlay) throw new Error("email Google Play déjà renseigné — passez à l'invitation")
+      if (!c.email) throw new Error('aucun email de candidature')
+
+      const { subject, html } = relanceDemandeEmailGPEmail({ prenom: c.prenom })
+      await sendBrevo({ email: c.email, name: c.prenom }, subject, html)
+
+      try {
+        await updatePage(id, {
+          'Date demande email GP': prop.dateToday(),
+        })
+      } catch (notionErr) {
+        throw new Error(`email envoyé MAIS mise à jour Notion échouée — corriger à la main (${notionErr instanceof Error ? notionErr.message : notionErr})`)
+      }
+      results.push({ id, prenom, ok: true })
+    } catch (e) {
+      console.error('[admin] relance demande email GP', id, e)
       results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
     }
   }

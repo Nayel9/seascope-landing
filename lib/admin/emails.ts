@@ -108,6 +108,27 @@ ${signature}
   return { subject: 'Candidature acceptée — une dernière étape pour accéder à la bêta SeaScope', html: shell('Candidature acceptée — bêta SeaScope', inner) }
 }
 
+export function relanceDemandeEmailGPEmail(c: { prenom: string }): EmailContent {
+  const prenom = esc(c.prenom)
+  const inner = `${header('On attend encore votre adresse&nbsp;Google')}
+<tr><td style="padding:0 40px;">
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Bonjour ${prenom},</p>
+<p style="margin:0 0 24px;color:#c2d3dd;font-size:15px;line-height:1.6;">Votre candidature est toujours <strong style="color:#f4f7f9;">accept&eacute;e</strong>, mais on n'a pas encore re&ccedil;u votre adresse Google Play &mdash; on ne peut pas vous envoyer l'invitation sans elle.</p>
+</td></tr>
+<tr><td style="padding:0 40px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0b1f2e;border-radius:8px;">
+<tr><td style="padding:20px 24px;">
+<p style="margin:0 0 8px;color:#f4f7f9;font-size:14px;font-weight:600;">Comment faire</p>
+<p style="margin:0;color:#c2d3dd;font-size:14px;line-height:1.7;"><strong style="color:#1ec8a5;">R&eacute;pondez simplement &agrave; cet email</strong> avec l'adresse du compte Google connect&eacute; au Play Store sur votre Android (souvent une adresse @gmail.com).</p>
+</td></tr></table>
+</td></tr>
+<tr><td style="padding:24px 40px 36px;">
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Un probl&egrave;me ou une question&nbsp;? R&eacute;pondez &agrave; cet email directement.</p>
+${signature}
+</td></tr>`
+  return { subject: 'Rappel — votre adresse Google Play pour la bêta SeaScope', html: shell('Rappel — bêta SeaScope', inner) }
+}
+
 export function relanceEmail(c: { prenom: string }): EmailContent {
   const { formUrl } = emailEnv()
   const prenom = esc(c.prenom)

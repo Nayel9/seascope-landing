@@ -51,10 +51,6 @@ export function Story() {
                 chiffres de plus, une décision : vous pouvez sortir, ou pas,
                 et si oui, à quelle heure.
               </p>
-              <p className="text-ss-fg/50 text-[13px]">
-                Utilisé par plusieurs milliers de plaisanciers sur les côtes
-                françaises, de la Bretagne à la Méditerranée.
-              </p>
             </div>
           </Reveal>
         </div>

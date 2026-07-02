@@ -76,8 +76,8 @@ export function Security() {
               />
               <DeviceFrame large>
                 <Image
-                  src="/screens/dashboard-decision.webp"
-                  alt="Tableau de bord SeaScope — bandeau Mouillage autorisé Guardian"
+                  src="/screens/guardian.webp"
+                  alt="Écran Guardian SeaScope — surveillance d'ancre, rayon de sécurité, bateau dans la zone"
                   fill
                   sizes="(max-width: 640px) 220px, (max-width: 1024px) 300px, 380px"
                   className="object-cover"
@@ -87,7 +87,7 @@ export function Security() {
               <Callout
                 num="v"
                 label="Guardian"
-                text="Mouillage autorisé"
+                text="Surveillance active"
                 style={{ top: '30%', right: '-80px' }}
               />
             </div>

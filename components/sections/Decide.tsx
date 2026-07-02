@@ -119,15 +119,15 @@ export function Decide() {
                 }}
               />
               <PhoneMock
-                src="/screens/screen-bon.png"
-                alt="Écran SeaScope — verdict BON affiché clairement avec score"
+                src="/screens/dashboard-decision.webp"
+                alt="Écran SeaScope — verdict BON, conditions idéales et fenêtre optimale"
                 large
               />
             </div>
 
             {/* Caption below */}
-            <p className="text-[12px] text-ss-fg/35 text-center max-w-[38ch]">
-              Verdict « Bon » — score 87/100, fenêtre optimale identifiée
+            <p className="text-[12px] text-ss-fg/35 text-center max-w-[40ch]">
+              Verdict « Bon » — conditions idéales, fenêtre de 12h dès 06:00
             </p>
           </div>
         </Reveal>

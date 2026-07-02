@@ -257,11 +257,6 @@ export default function CandidaturesTable({
                 openModal('relance', targets)
               }} />
               <BulkBtn kind="ok" label="🟢 Marquer actifs" disabled={pending} onClick={() => run(() => marquerActifs([...selected]))} />
-              <BulkBtn kind="primary" label="🎁 Offrir Premium+" disabled={pending} onClick={() => {
-                const targets = selRows.filter((r) => !r.premiumPlusOffert)
-                if (targets.length === 0) { setError('Premium+ déjà offert à toute la sélection'); return }
-                run(() => offrirPremiumPlus(targets.map((r) => r.id)))
-              }} />
               {tab === 'invites' && (
                 <BulkBtn kind="warn" label="📣 Demander confirmation" disabled={pending} onClick={() => {
                   const targets = selRows.filter((r) => r.statut === 'Invité Google Play' && !r.confirmationDemandee)
@@ -271,6 +266,11 @@ export default function CandidaturesTable({
               )}
             </>
           )}
+          <BulkBtn kind="primary" label="🎁 Offrir Premium+" disabled={pending} onClick={() => {
+            const targets = selRows.filter((r) => !r.premiumPlusOffert)
+            if (targets.length === 0) { setError('Premium+ déjà offert à toute la sélection'); return }
+            run(() => offrirPremiumPlus(targets.map((r) => r.id)))
+          }} />
           <button onClick={() => setSelected(new Set())} className="ml-auto text-xs text-ss-fg/50 underline">
             Tout désélectionner
           </button>

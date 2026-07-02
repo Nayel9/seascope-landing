@@ -2,13 +2,16 @@ import { Nav } from '@/components/layout/Nav'
 import { Footer } from '@/components/layout/Footer'
 import { Hero } from '@/components/sections/Hero'
 import { Problem } from '@/components/sections/Problem'
-import { HowItWorks } from '@/components/sections/HowItWorks'
-import { Personalization } from '@/components/sections/Personalization'
-import { Trust } from '@/components/sections/Trust'
+import { Decide } from '@/components/sections/Decide'
+import { Prepare } from '@/components/sections/Prepare'
+import { Explore } from '@/components/sections/Explore'
+import { Navigate } from '@/components/sections/Navigate'
+import { Security } from '@/components/sections/Security'
+import { Comparison } from '@/components/sections/Comparison'
+import { Pricing } from '@/components/sections/Pricing'
+import { Story } from '@/components/sections/Story'
 import { FAQ } from '@/components/sections/FAQ'
-import { BetaForm } from '@/components/sections/BetaForm'
-import { FeedbackLoop } from '@/components/sections/FeedbackLoop'
-import { FeedbackForm } from '@/components/sections/FeedbackForm'
+import { FinalCta } from '@/components/sections/FinalCta'
 
 export default function Page() {
   return (
@@ -17,13 +20,16 @@ export default function Page() {
       <main>
         <Hero />
         <Problem />
-        <HowItWorks />
-        <Personalization />
-        <Trust />
+        <Decide />
+        <Prepare />
+        <Explore />
+        <Navigate />
+        <Security />
+        <Comparison />
+        <Pricing />
+        <Story />
         <FAQ />
-        <BetaForm />
-        <FeedbackLoop />
-        <FeedbackForm />
+        <FinalCta />
       </main>
       <Footer />
     </>

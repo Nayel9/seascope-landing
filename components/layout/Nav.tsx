@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/Button'
 import { Logo } from '@/components/ui/Logo'
+import { StoreButton } from '@/components/ui/StoreButton'
 
 export function Nav() {
   return (
@@ -12,12 +12,10 @@ export function Nav() {
 
         <nav className="hidden md:flex items-center gap-7">
           {[
-            { href: '#problem',  label: 'Problème' },
-            { href: '#how',      label: 'Fonctionnement' },
-            { href: '#perso',    label: 'Personnalisation' },
-            { href: '#trust',    label: 'Confiance' },
-            { href: '#faq',      label: 'FAQ' },
-            { href: '#beta',     label: 'Beta' },
+            { href: '#decide',  label: 'Décider' },
+            { href: '#explore', label: 'Explorer' },
+            { href: '#pricing', label: 'Tarifs' },
+            { href: '#faq',     label: 'FAQ' },
           ].map(({ href, label }) => (
             <Link
               key={href}
@@ -30,10 +28,12 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <span className="hidden sm:inline-block font-mono text-[10px] tracking-[0.16em] uppercase text-ss-fg/50 border border-white/7 rounded-full px-2.5 py-[5px]">
-            Beta · 2026
-          </span>
-          <Button href="#beta" size="sm">Rejoindre la beta</Button>
+          <div className="hidden sm:block transform scale-[0.82] origin-right">
+            <StoreButton
+              store="googlePlay"
+              href="https://play.google.com/store/apps/details?id=fr.pennarstudio.seascope"
+            />
+          </div>
         </div>
       </div>
     </header>

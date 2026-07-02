@@ -186,6 +186,31 @@ ${signature}
   return { subject: 'Tout roule avec la bêta SeaScope ?', html: shell('Tout roule avec la bêta SeaScope ?', inner) }
 }
 
+export function premiumPlusEmail(c: { prenom: string }, lienActivation: string): EmailContent {
+  const prenom = esc(c.prenom)
+  const inner = `${header('Votre Premium+ &mdash; offert 1 an')}
+<tr><td style="padding:0 40px;">
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Bonjour ${prenom},</p>
+<p style="margin:0 0 16px;color:#c2d3dd;font-size:15px;line-height:1.6;">Merci d'avoir fait vivre la b&ecirc;ta SeaScope. Pour vous remercier, on vous offre <strong style="color:#f4f7f9;">Premium+ pendant 12 mois</strong>.</p>
+<p style="margin:0 0 24px;color:#c2d3dd;font-size:15px;line-height:1.6;">Ouvrez le lien ci-dessous <strong style="color:#f4f7f9;">depuis votre t&eacute;l&eacute;phone</strong>&nbsp;: l'app s'ouvre, vous vous connectez (ou cr&eacute;ez votre compte), et Premium+ s'active.</p>
+</td></tr>
+<tr><td style="padding:0 40px 8px;" align="center">
+<a href="${esc(lienActivation)}" style="display:inline-block;background-color:#1ec8a5;color:#06151f;text-decoration:none;font-size:16px;font-weight:600;padding:14px 36px;border-radius:8px;">Activer mon Premium+</a>
+</td></tr>
+<tr><td style="padding:24px 40px 0;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0b1f2e;border-radius:8px;">
+<tr><td style="padding:20px 24px;">
+<p style="margin:0 0 8px;color:#f4f7f9;font-size:14px;font-weight:600;">Bon &agrave; savoir</p>
+<p style="margin:0;color:#c2d3dd;font-size:14px;line-height:1.7;">Pour retrouver vos donn&eacute;es de b&ecirc;ta, connectez-vous avec <strong style="color:#f4f7f9;">le m&ecirc;me email</strong> que celui de vos sorties. Le lien reste valable 30&nbsp;jours&nbsp;; si l'app n'est pas encore install&eacute;e, installez-la puis rouvrez ce lien.</p>
+</td></tr></table>
+</td></tr>
+<tr><td style="padding:24px 40px 36px;">
+<p style="margin:0 0 16px;color:#7a93a3;font-size:13px;line-height:1.6;">Un souci pour activer&nbsp;? R&eacute;pondez &agrave; cet email, on r&egrave;gle &ccedil;a.</p>
+${signature}
+</td></tr>`
+  return { subject: 'Votre Premium+ SeaScope — offert 1 an', html: shell('Votre Premium+ SeaScope — offert 1 an', inner) }
+}
+
 /** Notification à l'admin quand un testeur signale un problème d'installation. */
 export function problemeInstallationOwnerEmail(p: {
   prenom: string; email: string; etape: string; description: string; telephone?: string

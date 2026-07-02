@@ -1,7 +1,7 @@
 // Rendu local des templates emails admin pour aperçu (node --experimental-strip-types).
 // Usage: node scripts/render-emails.ts (env GOOGLE_PLAY_URL etc. requis)
 import { writeFileSync, mkdirSync } from 'node:fs'
-import { demandeEmailGPEmail, invitationEmail, relanceEmail, refusEmail, confirmationInstallEmail, problemeInstallationOwnerEmail } from '../lib/admin/emails.ts'
+import { demandeEmailGPEmail, invitationEmail, relanceEmail, refusEmail, confirmationInstallEmail, problemeInstallationOwnerEmail, premiumPlusEmail } from '../lib/admin/emails.ts'
 import { MOTIFS_REFUS } from '../lib/admin/refus.ts'
 
 mkdirSync('.playwright-mcp', { recursive: true })
@@ -31,3 +31,7 @@ console.log('confirmation:', conf.subject)
 const ticket = problemeInstallationOwnerEmail({ prenom: 'Camille', email: 'camille@exemple.test', etape: 'Installation Play Store', description: 'Le bouton Installer reste grisé.', telephone: 'Pixel 7' })
 writeFileSync('.playwright-mcp/email-ticket-owner.html', ticket.html)
 console.log('ticket owner:', ticket.subject)
+
+const premiumPlus = premiumPlusEmail({ prenom: 'Camille' }, 'https://seascope.app/redeem?t=demo')
+writeFileSync('.playwright-mcp/email-premium-plus.html', premiumPlus.html)
+console.log('premium plus:', premiumPlus.subject)

@@ -9,7 +9,7 @@ const SEO_TITLE = "SeaScope — l’assistant de décision des plaisanciers"
 const SEO_DESCRIPTION =
   'Météo marine, prévisions de marée et de courants, sécurité et mouillage : SeaScope analyse toutes les données pour vous aider à planifier vos sorties en toute sérénité.'
 const SEO_URL = 'https://seascope-web.pennarstudio.fr'
-const SEO_OG_IMAGE = '/screens/dashboard-decision.webp'
+const SEO_OG_IMAGE = '/og.png'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SEO_URL),
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     images: [
       {
         url: SEO_OG_IMAGE,
-        width: 687,
-        height: 1464,
-        alt: 'Tableau de bord SeaScope',
+        width: 1200,
+        height: 630,
+        alt: 'SeaScope — l’assistant de décision des plaisanciers',
       },
     ],
   },

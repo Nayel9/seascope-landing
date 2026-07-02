@@ -4,7 +4,7 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.nayel9.seascope",
-      "sha256_cert_fingerprints": ["<ANDROID_SHA256_CERT_FINGERPRINT>"]
+      "sha256_cert_fingerprints": ["1C:CA:C7:53:70:B1:B6:CC:5F:BE:C2:64:41:0D:D3:F2:5E:DE:2C:8D:A4:FB:76:3C:D1:7B:B3:D4:6B:75:36:F4"]
     }
   }
 ]

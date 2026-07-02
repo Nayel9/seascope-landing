@@ -5,7 +5,7 @@ export function FinalCta() {
   return (
     <section
       id="final-cta"
-      className="py-20 md:py-[140px] overflow-hidden"
+      className="relative py-20 md:py-[140px] overflow-hidden"
     >
       {/* Background accent */}
       <div

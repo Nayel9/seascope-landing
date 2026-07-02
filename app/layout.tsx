@@ -7,7 +7,7 @@ import './globals.css'
 
 const SEO_TITLE = "SeaScope — l’assistant de décision des plaisanciers"
 const SEO_DESCRIPTION =
-  'Météo marine, prévisions tide et courants, sécurité et mouillage : SeaScope analyse toutes les données pour vous aider à planifier vos sorties en toute sérénité.'
+  'Météo marine, prévisions de marée et de courants, sécurité et mouillage : SeaScope analyse toutes les données pour vous aider à planifier vos sorties en toute sérénité.'
 const SEO_URL = 'https://seascope-web.pennarstudio.fr'
 const SEO_OG_IMAGE = '/screens/dashboard-decision.webp'
 

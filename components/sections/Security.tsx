@@ -38,7 +38,7 @@ export function Security() {
   return (
     <section
       id="security"
-      className="py-16 md:py-[120px] overflow-hidden"
+      className="relative py-16 md:py-[120px] overflow-hidden"
     >
       {/* Ambient glow — warmth/urgency hint */}
       <div

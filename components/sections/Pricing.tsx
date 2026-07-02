@@ -8,7 +8,7 @@ export function Pricing() {
   return (
     <section
       id="pricing"
-      className="py-16 md:py-[120px] overflow-hidden"
+      className="relative py-16 md:py-[120px] overflow-hidden"
     >
       {/* Ambient glow */}
       <div

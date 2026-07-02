@@ -15,7 +15,7 @@ import { FinalCta } from '@/components/sections/FinalCta'
 import { FAQ_ITEMS } from '@/lib/faq'
 
 const SEO_DESCRIPTION =
-  'Météo marine, prévisions tide et courants, sécurité et mouillage : SeaScope analyse toutes les données pour vous aider à planifier vos sorties en toute sérénité.'
+  'Météo marine, prévisions de marée et de courants, sécurité et mouillage : SeaScope analyse toutes les données pour vous aider à planifier vos sorties en toute sérénité.'
 
 const jsonLd = {
   '@context': 'https://schema.org',

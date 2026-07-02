@@ -17,7 +17,7 @@ export function Explore() {
   return (
     <section
       id="explore"
-      className="py-16 md:py-[120px] overflow-hidden"
+      className="relative py-16 md:py-[120px] overflow-hidden"
     >
       {/* Subtle ambient glow */}
       <div

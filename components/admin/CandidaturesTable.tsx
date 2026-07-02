@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import StatutChip from '@/components/admin/StatutChip'
 import EmailModal, { type ModalState } from '@/components/admin/EmailModal'
 import {
-  envoyerConfirmations, envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, qualifier, qualifierEnLot, refuser, relancerDemandesEmailGP, releverReponsesGP,
+  envoyerConfirmations, envoyerDemandesEmailGP, envoyerInvitations, envoyerRelances, marquerActifs, offrirPremiumPlus, qualifier, qualifierEnLot, refuser, relancerDemandesEmailGP, releverReponsesGP,
   setCanal, setEmailGooglePlay, setPriorite, type BatchReport,
 } from '@/lib/admin/actions'
 import type { Row, TabKey } from '@/app/admin/(protected)/candidatures/page'
@@ -257,6 +257,11 @@ export default function CandidaturesTable({
                 openModal('relance', targets)
               }} />
               <BulkBtn kind="ok" label="🟢 Marquer actifs" disabled={pending} onClick={() => run(() => marquerActifs([...selected]))} />
+              <BulkBtn kind="primary" label="🎁 Offrir Premium+" disabled={pending} onClick={() => {
+                const targets = selRows.filter((r) => !r.premiumPlusOffert)
+                if (targets.length === 0) { setError('Premium+ déjà offert à toute la sélection'); return }
+                run(() => offrirPremiumPlus(targets.map((r) => r.id)))
+              }} />
               {tab === 'invites' && (
                 <BulkBtn kind="warn" label="📣 Demander confirmation" disabled={pending} onClick={() => {
                   const targets = selRows.filter((r) => r.statut === 'Invité Google Play' && !r.confirmationDemandee)

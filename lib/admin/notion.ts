@@ -34,6 +34,8 @@ export interface Candidature {
   dateDemandeGP: string     // ISO ou ''
   confirmationDemandee: boolean
   dateConfirmationDemandee: string  // ISO ou ''
+  premiumPlusOffert: boolean
+  datePremiumPlusOffert: string  // ISO ou ''
   retoursCount: number
 }
 
@@ -122,6 +124,8 @@ function mapCandidature(page: any): Candidature {
     dateDemandeGP: date(p, 'Date demande email GP'),
     confirmationDemandee: check(p, 'Confirmation demandée'),
     dateConfirmationDemandee: date(p, 'Date confirmation demandée'),
+    premiumPlusOffert: check(p, 'Premium+ offert'),
+    datePremiumPlusOffert: date(p, 'Date Premium+ offert'),
     retoursCount: relCount(p, 'Retours beta'),
   }
 }

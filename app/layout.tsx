@@ -5,10 +5,38 @@ import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 
+const SEO_TITLE = "SeaScope — l’assistant de décision des plaisanciers"
+const SEO_DESCRIPTION =
+  'Météo marine, prévisions tide et courants, sécurité et mouillage : SeaScope analyse toutes les données pour vous aider à planifier vos sorties en toute sérénité.'
+const SEO_URL = 'https://seascope-web.pennarstudio.fr'
+const SEO_OG_IMAGE = '/screens/dashboard-decision.webp'
+
 export const metadata: Metadata = {
-  title: 'SeaScope — Décidez quand sortir, sachez quand rentrer.',
-  description:
-    'SeaScope est un copilote décisionnel pour navigation côtière. Fenêtres météo, heure de retour, recommandations adaptées à votre façon de naviguer. Beta fermée — Été 2026.',
+  metadataBase: new URL(SEO_URL),
+  title: SEO_TITLE,
+  description: SEO_DESCRIPTION,
+  openGraph: {
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+    url: SEO_URL,
+    siteName: 'SeaScope',
+    locale: 'fr_FR',
+    type: 'website',
+    images: [
+      {
+        url: SEO_OG_IMAGE,
+        width: 687,
+        height: 1464,
+        alt: 'Tableau de bord SeaScope',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SEO_TITLE,
+    description: SEO_DESCRIPTION,
+    images: [SEO_OG_IMAGE],
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

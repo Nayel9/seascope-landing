@@ -1,16 +1,18 @@
 import Image from 'next/image'
+import { MapPin, CircleDot, Wind, CloudRain, Waves, Ruler, Star } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { DeviceFrame } from '@/components/ui/DeviceFrame'
 
-const layers = [
-  { label: 'Spots', icon: '📍' },
-  { label: 'Balises', icon: '🔴' },
-  { label: 'Vent', icon: '💨' },
-  { label: 'Pluie', icon: '🌧️' },
-  { label: 'Courants', icon: '🌊' },
-  { label: 'Bathymétrie', icon: '📏' },
-  { label: 'POI', icon: '⭐' },
+const layers: { label: string; Icon: LucideIcon }[] = [
+  { label: 'Spots',       Icon: MapPin    },
+  { label: 'Balises',     Icon: CircleDot },
+  { label: 'Vent',        Icon: Wind      },
+  { label: 'Pluie',       Icon: CloudRain },
+  { label: 'Courants',    Icon: Waves     },
+  { label: 'Bathymétrie', Icon: Ruler     },
+  { label: 'POI',         Icon: Star      },
 ]
 
 export function Explore() {
@@ -99,7 +101,7 @@ export function Explore() {
                     key={layer.label}
                     className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full border border-ss-teal/25 bg-ss-teal/8 text-ss-teal text-[13px] font-medium"
                   >
-                    <span aria-hidden="true">{layer.icon}</span>
+                    <layer.Icon className="w-[14px] h-[14px]" strokeWidth={1.5} aria-hidden="true" />
                     {layer.label}
                   </span>
                 ))}

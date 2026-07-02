@@ -1,37 +1,32 @@
 import Image from 'next/image'
+import { Eye, Anchor, Bell, ShieldCheck } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { Callout } from '@/components/ui/Callout'
-import { FeatureRow } from '@/components/ui/FeatureRow'
 import { DeviceFrame } from '@/components/ui/DeviceFrame'
 
-const guardianFeatures = [
+const guardianFeatures: { Icon: LucideIcon; title: string; desc: string }[] = [
   {
-    icon: '👁️',
+    Icon: Eye,
     title: 'Guardian Watch',
-    desc: 'Surveillance continue de vos conditions de mouillage — vent, vague, affourchage — même en arrière-plan.',
+    desc: "Surveillance continue de vos conditions de mouillage — vent, vague, affourchage — même en arrière-plan.",
   },
   {
-    icon: '⚓',
+    Icon: Anchor,
     title: 'Verdict mouillage',
-    desc: 'SeaScope évalue si votre zone de mouillage est sûre : profondeur, protection, risque de dragage.',
+    desc: "SeaScope évalue si votre zone de mouillage est sûre : profondeur, protection, risque de dragage.",
   },
   {
-    icon: '🔔',
+    Icon: Bell,
     title: 'Alertes intelligentes',
-    desc: 'Notification immédiate si une variable dépasse votre seuil de sécurité personnalisé : vent, houle, marée.',
+    desc: "Notification immédiate si une variable dépasse votre seuil de sécurité personnalisé : vent, houle, marée.",
   },
   {
-    icon: '🛡️',
-    title: 'Surveillance d\'ancre',
-    desc: 'Trace un périmètre autour de votre position. Alerte dès que le bateau sort du rayon défini.',
+    Icon: ShieldCheck,
+    title: "Surveillance d'ancre",
+    desc: "Trace un périmètre autour de votre position. Alerte dès que le bateau sort du rayon défini.",
   },
-]
-
-const dataSources = [
-  { label: 'Météo-France AROME' },
-  { label: 'Open-Meteo' },
-  { label: 'SHOM' },
 ]
 
 export function Security() {
@@ -40,7 +35,7 @@ export function Security() {
       id="security"
       className="relative py-16 md:py-[120px] overflow-hidden"
     >
-      {/* Ambient glow — warmth/urgency hint */}
+      {/* Ambient glow */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 overflow-hidden"
@@ -71,7 +66,6 @@ export function Security() {
 
             {/* Phone + callout badge */}
             <div className="relative flex-none flex justify-center">
-              {/* Halo */}
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 -z-10 scale-[1.4]"
@@ -90,9 +84,8 @@ export function Security() {
                   loading="lazy"
                 />
               </DeviceFrame>
-              {/* Callout badge */}
               <Callout
-                num="✓"
+                num="v"
                 label="Guardian"
                 text="Mouillage autorisé"
                 style={{ top: '30%', right: '-80px' }}
@@ -128,12 +121,11 @@ export function Security() {
                 key={feature.title}
                 className="bg-ss-bg p-6 md:p-8 flex flex-col gap-3"
               >
-                <span
-                  className="text-2xl leading-none select-none"
+                <feature.Icon
+                  className="w-[18px] h-[18px] text-ss-teal"
+                  strokeWidth={1.5}
                   aria-hidden="true"
-                >
-                  {feature.icon}
-                </span>
+                />
                 <h3 className="text-[17px] md:text-[19px] font-medium text-ss-fg tracking-[-0.01em] leading-snug">
                   {feature.title}
                 </h3>
@@ -142,68 +134,6 @@ export function Security() {
                 </p>
               </div>
             ))}
-          </div>
-        </Reveal>
-
-        {/* Second visual: settings-sources */}
-        <Reveal delay={120}>
-          <div className="mt-14 md:mt-20">
-            <FeatureRow
-              title="Configurez vos sources de données"
-              image={{
-                src: '/screens/settings-sources.webp',
-                alt: 'Écran paramètres sources SeaScope — Météo-France AROME, Open-Meteo, SHOM',
-              }}
-              reverse
-            >
-              <p>
-                Choisissez les sources météo que Guardian utilise pour vous
-                alerter. Météo-France AROME pour la haute résolution côtière,
-                Open-Meteo pour la couverture globale, SHOM pour les données
-                de marée officielles.
-              </p>
-              <p>
-                Guardian combine ces sources et vous présente le scénario le
-                plus prudent — parce qu&apos;en mer, mieux vaut une alerte de trop
-                qu&apos;une de trop peu.
-              </p>
-            </FeatureRow>
-          </div>
-        </Reveal>
-
-        {/* Trust banner — data sources */}
-        <Reveal delay={160}>
-          <div
-            className="mt-14 md:mt-20 rounded-ss-lg border border-ss-teal/20 px-6 py-5 md:px-10 md:py-7"
-            style={{ background: 'rgba(94,234,212,0.04)' }}
-          >
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 md:gap-6">
-              <div className="flex items-center gap-3">
-                <span
-                  className="w-2 h-2 rounded-full bg-ss-teal flex-none shadow-[0_0_0_4px_rgba(94,234,212,0.15)]"
-                  aria-hidden="true"
-                />
-                <span className="font-mono text-[10px] tracking-[0.18em] uppercase text-ss-teal">
-                  Sources de données certifiées
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-                {dataSources.map((src, i) => (
-                  <span
-                    key={src.label}
-                    className="flex items-center gap-4 text-[13px] text-ss-fg/72"
-                  >
-                    {src.label}
-                    {i < dataSources.length - 1 && (
-                      <span
-                        aria-hidden="true"
-                        className="w-px h-3 bg-white/14 inline-block"
-                      />
-                    )}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
         </Reveal>
       </div>

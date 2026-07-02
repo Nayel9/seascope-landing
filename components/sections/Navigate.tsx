@@ -1,27 +1,29 @@
+import { Map, BookOpen, Ship, MapPin } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { FeatureRow } from '@/components/ui/FeatureRow'
 
-const navigateFeatures = [
+const navigateFeatures: { Icon: LucideIcon; title: string; desc: string }[] = [
   {
-    icon: '🗺️',
+    Icon: Map,
     title: 'Cartographie IGN',
-    desc: 'Cartes marines officielles IGN avec fond bathymétrique intégré. Téléchargement hors-ligne pour naviguer sans réseau.',
+    desc: "Cartes marines officielles IGN avec fond bathymétrique intégré. Téléchargement hors-ligne pour naviguer sans réseau.",
   },
   {
-    icon: '⚓',
+    Icon: BookOpen,
     title: 'Journal de bord',
-    desc: 'Enregistrez vos sorties automatiquement — traces GPS, conditions rencontrées, points d\'intérêt.',
+    desc: "Enregistrez vos sorties automatiquement — traces GPS, conditions rencontrées, points d'intérêt.",
   },
   {
-    icon: '🚢',
+    Icon: Ship,
     title: 'Trafic AIS',
-    desc: 'Visualisez le trafic maritime AIS autour de vous : cargos, ferries, vedettes — en temps réel.',
+    desc: "Visualisez le trafic maritime AIS autour de vous : cargos, ferries, vedettes — en temps réel.",
   },
   {
-    icon: '🌙',
+    Icon: MapPin,
     title: 'Zones de mouillage',
-    desc: 'Trouvez les mouillages réglementaires, évaluez leur protection selon les conditions du moment.',
+    desc: "Trouvez les mouillages réglementaires, évaluez leur protection selon les conditions du moment.",
   },
 ]
 
@@ -57,7 +59,7 @@ export function Navigate() {
             reverse
           >
             <p>
-              Tracez votre route, suivez votre position et gardez un œil sur
+              Tracez votre route, suivez votre position et gardez un oeil sur
               le trafic maritime — tout en consultant les prévisions de vent
               et de courant sur votre chemin.
             </p>
@@ -76,12 +78,11 @@ export function Navigate() {
                 key={feature.title}
                 className="bg-ss-bg p-6 md:p-8 flex flex-col gap-3"
               >
-                <span
-                  className="text-2xl leading-none select-none"
+                <feature.Icon
+                  className="w-[18px] h-[18px] text-ss-teal"
+                  strokeWidth={1.5}
                   aria-hidden="true"
-                >
-                  {feature.icon}
-                </span>
+                />
                 <h3 className="text-[17px] md:text-[19px] font-medium text-ss-fg tracking-[-0.01em] leading-snug">
                   {feature.title}
                 </h3>

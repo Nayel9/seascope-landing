@@ -4,8 +4,9 @@ import { revalidatePath } from 'next/cache'
 import { requireAdmin } from '@/lib/admin/auth'
 import { getCandidature, prop, queryCandidatures, updatePage, type StatutCandidature } from '@/lib/admin/notion'
 import { sendBrevo } from '@/lib/admin/brevo'
-import { confirmationInstallEmail, demandeEmailGPEmail, invitationEmail, refusEmail, relanceDemandeEmailGPEmail, relanceEmail } from '@/lib/admin/emails'
+import { confirmationInstallEmail, demandeEmailGPEmail, invitationEmail, premiumPlusEmail, refusEmail, relanceDemandeEmailGPEmail, relanceEmail } from '@/lib/admin/emails'
 import { signCandidatureToken } from '@/lib/beta/token'
+import { buildRedeemUrl, signPremiumToken } from '@/lib/campaign/premiumToken'
 import { MOTIFS_REFUS, type MotifRefusKey } from '@/lib/admin/refus'
 import { fetchLatestReplyTextFrom } from '@/lib/admin/imap'
 import { extractEmailGP } from '@/lib/admin/extractEmailGP'
@@ -269,6 +270,47 @@ export async function envoyerConfirmations(ids: string[]): Promise<BatchReport> 
       results.push({ id, prenom, ok: true })
     } catch (e) {
       console.error('[admin] confirmation install', id, e)
+      results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
+    }
+  }
+  revalidatePath(ADMIN_PATH)
+  return { ok: results.every((r) => r.ok), results }
+}
+
+/** Campagne « Premium+ offert » : email aux candidats avec un lien universel signé
+ *  (activation Premium+ 12 mois). Idempotent : refuse si déjà offert. requireAdmin. */
+export async function offrirPremiumPlus(ids: string[]): Promise<BatchReport> {
+  await requireAdmin()
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  if (!siteUrl) {
+    return { ok: false, results: [{ id: 'env', prenom: 'Config', ok: false, error: 'NEXT_PUBLIC_SITE_URL manquant' }] }
+  }
+  const base = siteUrl.replace(/\/$/, '')
+  const results: BatchItemResult[] = []
+  for (const id of ids) {
+    let prenom = id
+    try {
+      const c = await getCandidature(id)
+      prenom = c.prenom || id
+      if (c.premiumPlusOffert) throw new Error('Premium+ déjà offert')
+      const dest = c.emailGooglePlay || c.email
+      if (!dest) throw new Error('aucun email')
+
+      const token = signPremiumToken({ email: dest })
+      const { subject, html } = premiumPlusEmail({ prenom: c.prenom }, buildRedeemUrl(base, token))
+      await sendBrevo({ email: dest, name: c.prenom }, subject, html)
+
+      try {
+        await updatePage(id, {
+          'Premium+ offert': prop.checkbox(true),
+          'Date Premium+ offert': prop.dateToday(),
+        })
+      } catch (notionErr) {
+        throw new Error(`email envoyé MAIS mise à jour Notion échouée — corriger à la main (${notionErr instanceof Error ? notionErr.message : notionErr})`)
+      }
+      results.push({ id, prenom, ok: true })
+    } catch (e) {
+      console.error('[admin] premium+ offert', id, e)
       results.push({ id, prenom, ok: false, error: e instanceof Error ? e.message : 'Erreur interne' })
     }
   }

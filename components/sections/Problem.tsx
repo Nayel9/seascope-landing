@@ -1,92 +1,121 @@
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeader } from '@/components/ui/SectionHeader'
-import clsx from 'clsx'
 
-const problems = [
+const apps = [
   {
-    idx: '01 — Météo dispersée',
-    title: 'Trois applis, trois modèles, trois verdicts différents.',
-    desc: 'Vent ici, houle là-bas, rafales nulle part. Les sources se contredisent.',
-    path: 'M0 30 C 12 18, 22 38, 34 28 S 56 12, 68 24 S 86 38, 100 22',
-    color: '#2DD4BF',
-    wide: false,
+    icon: '🌬️',
+    label: 'Appli météo',
+    value: 'Vent 18 nœuds, rafales 26',
+    note: 'Mais quelle houle ?',
   },
   {
-    idx: '02 — Surcharge cognitive',
-    title: 'Lire la météo devient un travail à temps plein.',
-    desc: "Vagues, vent, rafales, coefficient, période… on cumule sans savoir quoi en faire.",
-    path: 'M0 18 L10 32 L20 22 L30 40 L40 24 L50 36 L60 20 L70 30 L80 16 L90 38 L100 26',
-    color: '#FBBF24',
-    wide: false,
+    icon: '🗺️',
+    label: 'Appli cartes',
+    value: 'Carte marine navvable',
+    note: 'Pas de météo ni de marée',
   },
   {
-    idx: '03 — Décision sous stress',
-    title: "Sortir ou pas ? On tranche dans l'incertitude.",
-    desc: "On choisit par intuition, en croisant les doigts pour que la mer suive.",
-    path: 'M0 22 C 18 30, 28 14, 42 26 S 64 38, 78 22 S 92 40, 100 28',
-    color: '#FF6B6B',
-    wide: false,
+    icon: '🌊',
+    label: 'Site des marées',
+    value: 'Coefficient 82, PM 10h14',
+    note: 'Courants non précisés',
   },
   {
-    idx: '04 — Peur de rater la fenêtre',
-    title: '"Et si j\'avais pu sortir ce matin ?"',
-    desc: "Les meilleures fenêtres sont courtes. Sans signal clair, elles passent à côté.",
-    path: 'M0 36 L18 30 L34 14 L48 12 L62 20 L78 34 L100 40',
-    color: '#6EE7B7',
-    wide: true,
+    icon: '📡',
+    label: 'Modèle houle',
+    value: 'Hm0 1,2 m · Tp 7 s',
+    note: 'Source différente, verdict différent',
   },
   {
-    idx: '05 — Peur de mal sortir',
-    title: '"Et si les conditions tournent une fois au large ?"',
-    desc: "La vraie peur, ce n'est pas la mauvaise météo : c'est ne pas l'avoir vue venir.",
-    path: 'M0 32 L14 30 L28 26 L42 22 L56 24 L72 18 L86 10 L100 6',
-    color: '#EF4444',
-    wide: true,
+    icon: '🧭',
+    label: 'Météo au port',
+    value: 'VHF : Bonne brise',
+    note: 'Trop vague pour décider',
   },
 ]
 
 export function Problem() {
   return (
-    <section id="problem" className="py-16 md:py-[120px] bg-ss-bg-2 border-y border-white/7">
+    <section
+      id="problem"
+      className="py-16 md:py-[120px] bg-ss-bg-2 border-y border-white/7"
+    >
       <div className="container-landing">
         <Reveal>
           <SectionHeader
             kicker="Le problème"
-            heading={<>Trop de données.<br />Pas assez de décision.</>}
-            lead="Avant chaque sortie, on jongle entre trois applis météo, des modèles qui ne s'accordent pas, et l'intuition. La décision finale repose sur la fatigue d'un dimanche matin."
+            heading={
+              <>
+                Fini de jongler
+                <br />
+                entre 5&nbsp;applis.
+              </>
+            }
+            lead="Météo, cartes, marées, courants, sécurité — chaque source parle une langue différente. SeaScope centralise tout et tranche."
           />
         </Reveal>
 
+        {/* Apps grid */}
         <Reveal>
-          <div
-            className="rounded-ss-lg overflow-hidden border border-white/7 grid grid-cols-1 md:grid-cols-6"
-            style={{ gap: '1px', background: 'rgba(255,255,255,0.07)' }}
-          >
-            {problems.map((p) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-px bg-white/7 rounded-ss-lg overflow-hidden mb-8 md:mb-14">
+            {apps.map((app) => (
               <div
-                key={p.idx}
-                className={clsx(
-                  'bg-ss-bg flex flex-col gap-3 p-5 md:p-7 md:min-h-[220px]',
-                  p.wide ? 'md:col-span-3' : 'md:col-span-2'
-                )}
+                key={app.label}
+                className="bg-ss-bg flex flex-col gap-2.5 p-5 md:p-6"
               >
-                <div className="font-mono text-[11px] tracking-[0.16em] text-ss-fg/50">{p.idx}</div>
-                <div className="text-[17px] md:text-[20px] leading-[1.25] font-medium tracking-[-0.01em]">{p.title}</div>
-                <div
-                  className="h-12 md:h-14 rounded-[8px] overflow-hidden"
-                  style={{
-                    background:
-                      'repeating-linear-gradient(90deg, transparent 0, transparent 11px, rgba(255,255,255,0.07) 11px, rgba(255,255,255,0.07) 12px), linear-gradient(180deg, rgba(94,234,212,0.04), transparent)',
-                  }}
-                >
-                  <svg viewBox="0 0 100 56" preserveAspectRatio="none" className="w-full h-full block">
-                    <path d={p.path} fill="none" stroke={p.color} strokeWidth="1.2" strokeLinecap="round" />
-                    <path d={`${p.path} L 100 56 L 0 56 Z`} fill={p.color} opacity="0.08" />
-                  </svg>
+                <span className="text-2xl leading-none select-none" aria-hidden="true">
+                  {app.icon}
+                </span>
+                <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-ss-fg/40">
+                  {app.label}
                 </div>
-                <div className="text-[13px] md:text-[14px] text-ss-fg/50 leading-[1.5] mt-auto">{p.desc}</div>
+                <div className="text-[15px] font-medium text-ss-fg leading-snug">
+                  {app.value}
+                </div>
+                <div className="text-[12px] text-ss-fg/40 leading-snug mt-auto">
+                  {app.note}
+                </div>
               </div>
             ))}
+          </div>
+        </Reveal>
+
+        {/* Resolution card */}
+        <Reveal delay={100}>
+          <div
+            className="rounded-ss-lg border border-ss-teal/20 px-6 py-7 md:px-10 md:py-9 flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-10"
+            style={{
+              background:
+                'linear-gradient(135deg, rgba(94,234,212,0.06) 0%, rgba(94,234,212,0.02) 100%)',
+            }}
+          >
+            {/* Teal badge */}
+            <div className="flex-none w-12 h-12 rounded-ss bg-ss-teal/12 border border-ss-teal/24 flex items-center justify-center">
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="w-6 h-6 text-ss-teal"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.75}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 12l2 2 4-4" />
+                <circle cx="12" cy="12" r="9" />
+              </svg>
+            </div>
+
+            <div>
+              <div className="text-[18px] md:text-[22px] font-medium text-ss-fg tracking-[-0.01em] leading-snug">
+                SeaScope centralise toutes les sources et vous donne{' '}
+                <span className="text-ss-teal">un seul verdict</span>.
+              </div>
+              <p className="mt-2 text-[14px] text-ss-fg/55 leading-relaxed max-w-[60ch]">
+                Météo-France AROME, SHOM, Open-Meteo, données courants — une
+                seule app, une seule réponse adaptée à votre profil.
+              </p>
+            </div>
           </div>
         </Reveal>
       </div>

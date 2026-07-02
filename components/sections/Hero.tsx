@@ -1,117 +1,92 @@
-import Image from 'next/image'
-import { Kicker } from '@/components/ui/Kicker'
 import { Reveal } from '@/components/ui/Reveal'
-import { Button } from '@/components/ui/Button'
-import { DeviceFrame } from '@/components/ui/DeviceFrame'
-import { Callout } from '@/components/ui/Callout'
-import { ArrowRight } from '@/components/ui/icons'
+import { Kicker } from '@/components/ui/Kicker'
+import { PhoneMock } from '@/components/ui/PhoneMock'
+import { StoreButton } from '@/components/ui/StoreButton'
 
 export function Hero() {
   return (
-    <section className="pt-8 pb-12 md:pt-20 md:pb-24 relative overflow-hidden">
-      <div className="container-landing">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 lg:gap-20 items-center lg:items-start lg:pt-6">
+    <section
+      id="hero"
+      className="relative pt-16 pb-20 md:pt-28 md:pb-32 overflow-hidden"
+    >
+      {/* Ambient glow */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse 60% 50% at 60% 20%, rgba(94,234,212,0.08) 0%, transparent 70%)',
+        }}
+      />
 
-          {/* Copy */}
-          <div className="relative z-10">
+      <div className="container-landing">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 lg:gap-20 items-center">
+
+          {/* ── Copy column ── */}
+          <div className="relative z-10 max-w-[580px]">
             <Reveal>
-              <div className="flex items-center gap-3 mb-5">
-                <Kicker>Beta fermée · Été 2026</Kicker>
-              </div>
+              <Kicker>Assistant de décision plaisance</Kicker>
             </Reveal>
 
             <Reveal delay={80}>
-              <h1 className="text-[clamp(34px,3.6vw,48px)] leading-[1.08] tracking-[-0.022em] font-medium m-0 text-balance">
-                Décidez quand sortir.
-                <br />
-                Sachez quand rentrer.
-                <br />
-                <span className="text-ss-teal">Sans interpréter la météo.</span>
+              <h1 className="mt-5 text-[clamp(36px,4.2vw,64px)] leading-[1.05] tracking-[-0.025em] font-medium text-balance">
+                Puis-je sortir{' '}
+                <span className="text-ss-teal">aujourd&apos;hui&nbsp;?</span>
               </h1>
             </Reveal>
 
             <Reveal delay={160}>
-              <p className="mt-4 md:mt-[22px] text-[clamp(15px,1.25vw,19px)] leading-[1.6] text-ss-fg/72 max-w-[60ch] text-pretty">
-                SeaScope transforme les conditions marines en recommandations
-                concrètes, adaptées à votre façon de naviguer : la meilleure
-                fenêtre, l&apos;heure de retour, et le niveau de confiance.
+              <p className="mt-5 text-[clamp(15px,1.25vw,19px)] leading-relaxed text-ss-fg/72 text-pretty max-w-[52ch]">
+                SeaScope analyse météo, vent, vagues, marées, courants et
+                sécurité pour vous donner un verdict clair — en quelques secondes.
               </p>
             </Reveal>
 
             <Reveal delay={240}>
-              <div className="flex gap-3 mt-7 md:mt-9 flex-wrap">
-                <Button href="#beta" size="lg">
-                  Rejoindre la beta
-                  <ArrowRight className="group-hover:translate-x-0.5 transition-transform duration-200" />
-                </Button>
-                <Button href="#how" variant="ghost" size="lg">
-                  Voir comment ça marche
-                </Button>
+              <div className="mt-8 md:mt-10">
+                <StoreButton
+                  store="googlePlay"
+                  href="https://play.google.com/store/apps/details?id=fr.pennarstudio.seascope"
+                />
               </div>
             </Reveal>
 
             <Reveal delay={320}>
-              <div className="mt-7 md:mt-9 flex flex-wrap gap-3 sm:gap-6 items-center text-[13px] text-ss-fg/50">
+              <ul className="mt-8 flex flex-col sm:flex-row flex-wrap gap-y-2 gap-x-6 text-[13px] text-ss-fg/50 list-none m-0 p-0">
                 {[
-                  'Une réponse, pas un tableau de chiffres',
-                  'Recommandations explicables',
-                  'Vos données restent sur votre appareil',
+                  'Un verdict, pas un tableau de chiffres',
+                  'Créneaux idéaux calculés automatiquement',
+                  'Gratuit pour toujours',
                 ].map((item) => (
-                  <span key={item} className="inline-flex items-center gap-2">
+                  <li key={item} className="inline-flex items-center gap-2">
                     <span className="w-[5px] h-[5px] rounded-full bg-ss-teal flex-none" />
                     {item}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </Reveal>
           </div>
 
-          {/* Device stage — clip decorative bleed on mobile; let callouts overflow from lg up */}
-          <div className="relative flex justify-center items-center min-h-0 lg:min-h-[720px] mt-4 lg:mt-0 overflow-hidden lg:overflow-visible">
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                inset: '-10% -20%',
-                background: 'radial-gradient(closest-side, rgba(94,234,212,0.10), transparent 70%)',
-              }}
-            />
-            <div
-              className="absolute left-1/2 -translate-x-1/2 bottom-0 h-px w-[130%]"
-              style={{ background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.14), transparent)' }}
-            />
-
-            <Reveal delay={120}>
-              <DeviceFrame large>
-                <Image
-                  src="/assets/screen-bon.png"
-                  alt="Tableau de bord SeaScope — conditions BON"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 220px, (max-width: 1024px) 300px, 380px"
-                  priority
-                />
-              </DeviceFrame>
-            </Reveal>
-
-            <Callout
-              num="1"
-              label="Statut décisionnel"
-              text="BON · conditions idéales pour une sortie familiale"
-              style={{ left: -24, top: 60 }}
-            />
-            <Callout
-              num="2"
-              label="Fenêtre optimale"
-              text="Départ entre 08:00 et 11:00, retour avant 10:15."
-              style={{ right: -32, top: '32%' }}
-            />
-            <Callout
-              num="3"
-              label="Pourquoi"
-              text="Mer maniable, vent stable — rien ne dépasse vos limites."
-              style={{ left: -40, bottom: 120 }}
-            />
-          </div>
+          {/* ── Phone column ── */}
+          <Reveal delay={120} className="flex justify-center lg:justify-end">
+            <div className="relative">
+              {/* Soft halo behind the phone */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 -z-10 scale-125"
+                style={{
+                  background:
+                    'radial-gradient(closest-side, rgba(94,234,212,0.13), transparent 80%)',
+                }}
+              />
+              <PhoneMock
+                src="/screens/dashboard-decision.webp"
+                alt="Tableau de bord SeaScope — verdict BON, fenêtre idéale calculée"
+                priority
+                large
+              />
+            </div>
+          </Reveal>
 
         </div>
       </div>

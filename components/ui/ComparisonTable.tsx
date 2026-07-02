@@ -11,30 +11,32 @@ interface FeatureLine {
 }
 
 const FEATURES: FeatureLine[] = [
-  // Sécurité
-  { label: 'Verdict mouillage',         tag: 'security', free: true,        premium: true,        premiumPlus: true        },
-  { label: 'Météo de base',                              free: true,        premium: true,        premiumPlus: true        },
-  { label: 'Score de décision',                          free: true,        premium: true,        premiumPlus: true        },
-  { label: 'Carte & POI',                                free: true,        premium: true,        premiumPlus: true        },
-  { label: 'Journal',                                    free: true,        premium: true,        premiumPlus: true        },
-  { label: 'Simulateur',                                 free: '3 spots',   premium: 'illimité',  premiumPlus: 'illimité'  },
-  { label: 'Prévisions étendues',                        free: false,       premium: true,        premiumPlus: true        },
-  { label: 'Planning multi-jours',                       free: false,       premium: true,        premiumPlus: true        },
-  { label: 'Spots illimités',                            free: false,       premium: true,        premiumPlus: true        },
-  { label: "Courants & hauteur d’eau",               free: false,       premium: true,        premiumPlus: true        },
-  { label: 'Simulateur avancé',                          free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Overlay courant',                            free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Alertes perso',                              free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Profils bateau',                             free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Guardian Watch',           tag: 'security',  free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Guardian Intelligent',                       free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Guardian Pro',             tag: 'soon',      free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Arrival Intelligence',                       free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Réglementation avancée',                     free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Sync cloud',                                 free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Équipage',                 tag: 'soon',      free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Communauté',              tag: 'soon',       free: false,       premium: false,       premiumPlus: true        },
-  { label: 'Partage avancé',          tag: 'soon',       free: false,       premium: false,       premiumPlus: true        },
+  // Toutes paliers
+  { label: 'Verdict mouillage',              tag: 'security', free: true,        premium: true,        premiumPlus: true        },
+  { label: 'Météo de base',                                   free: true,        premium: true,        premiumPlus: true        },
+  { label: 'Score de décision',                               free: true,        premium: true,        premiumPlus: true        },
+  { label: 'Carte & POI',                                     free: true,        premium: true,        premiumPlus: true        },
+  { label: 'Journal de bord',                                 free: true,        premium: true,        premiumPlus: true        },
+  { label: 'Simulateur (sortie du jour)',                     free: true,        premium: true,        premiumPlus: true        },
+  // Premium +
+  { label: 'Prévisions étendues',                             free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Planning multi-jours',                            free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Spots enregistrés',                               free: '3 spots',   premium: 'illimité',  premiumPlus: 'illimité'  },
+  { label: "Courants & hauteur d'eau",                        free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Simulateur avancé',                               free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Overlay courant (carte)',                         free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Alertes personnalisées',                          free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Profils bateau multiples',                        free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Guardian Watch',           tag: 'security',       free: true,        premium: true,        premiumPlus: true        },
+  { label: 'Guardian Intelligent',                            free: false,       premium: true,        premiumPlus: true        },
+  // Premium+ exclusif
+  { label: 'Guardian Pro',             tag: 'soon',           free: false,       premium: false,       premiumPlus: true        },
+  { label: 'Arrival Intelligence avancée',                    free: false,       premium: false,       premiumPlus: true        },
+  { label: 'Réglementation avancée',                         free: false,       premium: false,       premiumPlus: true        },
+  { label: 'Synchronisation cloud',                           free: false,       premium: false,       premiumPlus: true        },
+  { label: 'Équipage',                 tag: 'soon',           free: false,       premium: false,       premiumPlus: true        },
+  { label: 'Communauté',               tag: 'soon',           free: false,       premium: false,       premiumPlus: true        },
+  { label: 'Partage avancé',           tag: 'soon',           free: false,       premium: false,       premiumPlus: true        },
 ]
 
 function CheckIcon() {

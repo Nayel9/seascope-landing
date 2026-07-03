@@ -6,12 +6,12 @@ import { Kicker } from '@/components/ui/Kicker'
 export const metadata: Metadata = {
   title: 'Politique de confidentialité — SeaScope',
   description:
-    'Comment SeaScope collecte, utilise et protège vos données. Stockage local par défaut, aucune revente, conformité RGPD.',
+    'Comment SeaScope collecte, utilise et protège vos données. Stockage local par défaut, compte et synchronisation optionnels hébergés dans l’UE, aucune revente, conformité RGPD.',
   robots: { index: true, follow: true },
 }
 
-const UPDATED = '3 juin 2026'
-const VERSION = '1.2'
+const UPDATED = '3 juillet 2026'
+const VERSION = '1.3'
 
 // ── Helpers de mise en forme (cohérents avec le design system) ──────────────────
 
@@ -71,30 +71,38 @@ export default function PrivacyPage() {
             </p>
             <UL>
               <LI>
-                SeaScope est conçu pour fonctionner avec un minimum de données. Vos spots, vos
-                préférences et votre historique de sorties restent <strong className="text-ss-fg">sur votre
-                appareil</strong>.
+                SeaScope fonctionne avec un minimum de données. Par défaut, vos spots, vos
+                préférences et votre historique de sorties restent{' '}
+                <strong className="text-ss-fg">sur votre appareil</strong>.
               </LI>
               <LI>
-                Nous ne vendons, ne louons et n&apos;échangeons <strong className="text-ss-fg">jamais</strong> vos
-                données personnelles.
+                Le <strong className="text-ss-fg">compte est facultatif</strong> (adresse e-mail ou
+                connexion Google). Il sert à sauvegarder et synchroniser vos données entre vos
+                appareils et à gérer votre abonnement. Ces données sont hébergées{' '}
+                <strong className="text-ss-fg">dans l&apos;Union européenne</strong>.
+              </LI>
+              <LI>
+                Les abonnements Premium et Premium+ sont gérés via{' '}
+                <strong className="text-ss-fg">Google Play</strong>. Nous ne voyons jamais vos
+                coordonnées bancaires (voir section&nbsp;2.4).
+              </LI>
+              <LI>
+                Nous ne vendons, ne louons et n&apos;échangeons{' '}
+                <strong className="text-ss-fg">jamais</strong> vos données personnelles.
               </LI>
               <LI>
                 Votre position sert uniquement à récupérer les conditions marines de votre zone. Elle
                 n&apos;est pas utilisée pour vous suivre ni pour constituer un profil publicitaire.
               </LI>
               <LI>
-                L&apos;application mesure son usage de façon <strong className="text-ss-fg">strictement
-                anonyme</strong> (hébergement en Union européenne) pour nous aider à l&apos;améliorer —
-                jamais votre position, jamais votre identité (voir section&nbsp;3).
-              </LI>
-              <LI>
-                Les informations que vous nous confiez via les formulaires (candidature beta, retours)
-                servent uniquement à gérer le programme de test.
+                L&apos;application mesure son usage de façon{' '}
+                <strong className="text-ss-fg">strictement anonyme</strong> (hébergement dans
+                l&apos;Union européenne), sans jamais rattacher ces mesures à votre compte ni à votre
+                position (voir section&nbsp;3).
               </LI>
               <LI>
                 Vous pouvez à tout moment demander l&apos;accès, la correction ou la suppression de vos
-                données :{' '}
+                données — ou supprimer votre compte :{' '}
                 <a href="mailto:seascope-contact@pennarstudio.fr" className="text-ss-teal">
                   seascope-contact@pennarstudio.fr
                 </a>
@@ -129,9 +137,10 @@ export default function PrivacyPage() {
 
             <H3>2.1 Données stockées sur votre appareil (stockage local)</H3>
             <P>
-              Par défaut, les données suivantes sont enregistrées <strong className="text-ss-fg">localement</strong>{' '}
-              sur votre téléphone et ne sont pas transmises à un serveur central ni associées à un
-              compte :
+              Par défaut, les données suivantes sont enregistrées{' '}
+              <strong className="text-ss-fg">localement</strong> sur votre téléphone. Tant que vous
+              n&apos;avez pas créé de compte et activé la synchronisation (voir §2.3), elles ne sont
+              transmises à aucun serveur central :
             </P>
             <UL>
               <LI>Vos spots enregistrés (noms et coordonnées des lieux que vous suivez).</LI>
@@ -141,12 +150,79 @@ export default function PrivacyPage() {
               </LI>
               <LI>Vos préférences d&apos;application (réglages, unités, affichage).</LI>
               <LI>
-                Votre historique de recommandations et, le cas échéant, les retours que vous notez
-                après une sortie.
+                Votre journal de bord, vos points d&apos;intérêt, vos trophées et, le cas échéant, les
+                retours que vous notez après une sortie.
               </LI>
             </UL>
 
-            <H3>2.2 Données techniques nécessaires au fonctionnement</H3>
+            <H3>2.2 Compte utilisateur (facultatif)</H3>
+            <P>
+              La création d&apos;un compte est <strong className="text-ss-fg">facultative</strong>. Elle
+              vous permet de sauvegarder vos données, de les retrouver sur plusieurs appareils (voir
+              §2.3) et de gérer votre abonnement. Si vous créez un compte, nous traitons :
+            </P>
+            <UL>
+              <LI>
+                <strong className="text-ss-fg">Votre adresse e-mail</strong> (obligatoire), et, si vous
+                les renseignez, votre nom et une photo de profil.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Vos identifiants de connexion</strong> : soit un mot de
+                passe (que nous ne stockons que sous forme <em>hachée</em>, jamais en clair), soit une
+                connexion via <strong className="text-ss-fg">Google</strong> (le cas échéant), auquel
+                cas nous conservons les jetons d&apos;authentification fournis par Google.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Des données de session et de sécurité</strong> : un jeton
+                de session, sa date d&apos;expiration, ainsi que l&apos;adresse IP et le type d&apos;appareil
+                (<em>user-agent</em>) de connexion, afin de sécuriser votre compte et de détecter les
+                accès anormaux.
+              </LI>
+            </UL>
+            <P>
+              Sur votre appareil, les jetons d&apos;authentification sont conservés dans un{' '}
+              <strong className="text-ss-fg">stockage sécurisé chiffré</strong> du système, jamais en
+              clair. Ces données de compte sont hébergées dans l&apos;Union européenne (voir §6 et §7).
+            </P>
+
+            <H3>2.3 Synchronisation de vos données (avec un compte)</H3>
+            <P>
+              Si vous disposez d&apos;un compte et que la synchronisation est activée (fonctionnalité
+              incluse dans l&apos;offre Premium+), les données décrites au §2.1 peuvent être{' '}
+              <strong className="text-ss-fg">sauvegardées sur nos serveurs</strong> afin d&apos;être
+              restaurées et partagées entre vos appareils : spots, points d&apos;intérêt, journal de
+              bord, bateaux, profils, préférences, trophées et réglages de veille (Guardian).
+            </P>
+            <P>
+              Ces données sont stockées de façon structurée, rattachées à l&apos;identifiant de votre
+              compte, sur une base de données située{' '}
+              <strong className="text-ss-fg">dans l&apos;Union européenne</strong> (voir §6). Lorsque
+              vous supprimez un élément, la suppression est propagée à vos autres appareils. Sans
+              compte, aucune de ces données ne quitte votre téléphone.
+            </P>
+
+            <H3>2.4 Achats et abonnements</H3>
+            <P>
+              SeaScope propose des abonnements payants (Premium et Premium+). Les paiements sont
+              traités par <strong className="text-ss-fg">Google Play</strong> : nous ne recevons ni ne
+              stockons vos coordonnées bancaires.
+            </P>
+            <UL>
+              <LI>
+                Nous utilisons <strong className="text-ss-fg">RevenueCat</strong> pour valider vos
+                achats et suivre l&apos;état de votre abonnement. RevenueCat reçoit uniquement{' '}
+                <strong className="text-ss-fg">l&apos;identifiant de votre compte SeaScope</strong> et le
+                produit acheté — jamais votre e-mail, votre nom ni vos coordonnées bancaires.
+              </LI>
+              <LI>
+                Notre serveur conserve l&apos;<strong className="text-ss-fg">état de votre abonnement</strong>{' '}
+                (offre en cours, produit acheté, date d&apos;expiration) afin de débloquer les
+                fonctionnalités correspondantes. Ces informations sont hébergées dans l&apos;Union
+                européenne (voir §6).
+              </LI>
+            </UL>
+
+            <H3>2.5 Données techniques nécessaires au fonctionnement</H3>
             <P>
               Pour vous fournir une recommandation, l&apos;application doit interroger des services de
               prévision marine. Les données suivantes transitent par le réseau :
@@ -155,8 +231,7 @@ export default function PrivacyPage() {
               <LI>
                 <strong className="text-ss-fg">Coordonnées géographiques du spot consulté.</strong> Elles
                 sont envoyées à nos services de prévision afin de récupérer les conditions marines
-                correspondantes. Elles ne sont pas associées à votre identité ni conservées pour vous
-                profiler.
+                correspondantes. Elles ne sont pas utilisées pour vous profiler.
               </LI>
               <LI>
                 <strong className="text-ss-fg">Données techniques minimales</strong> : type d&apos;appareil,
@@ -165,7 +240,7 @@ export default function PrivacyPage() {
               </LI>
             </UL>
 
-            <H3>2.3 Géolocalisation</H3>
+            <H3>2.6 Géolocalisation</H3>
             <P>
               Si vous l&apos;autorisez, SeaScope peut utiliser la position de votre appareil pour vous
               proposer les conditions de la zone où vous vous trouvez, ou pour faciliter
@@ -175,18 +250,16 @@ export default function PrivacyPage() {
               en arrière-plan à des fins commerciales.
             </P>
 
-            <H3>2.4 Notifications</H3>
+            <H3>2.7 Notifications</H3>
             <P>
               Si vous activez les alertes, SeaScope vous prévient lorsqu&apos;une fenêtre favorable
-              s&apos;ouvre ou que les conditions se dégradent sur un spot suivi. En version bêta, ces
-              notifications sont <strong className="text-ss-fg">uniquement locales</strong> : elles sont
-              générées sur votre appareil. SeaScope <strong className="text-ss-fg">n&apos;utilise aucun
-              service de notification push distant</strong>, ne collecte aucun jeton Firebase Cloud
-              Messaging (FCM) et ne transmet aucune donnée utilisateur pour les notifications. Vous
-              pouvez les désactiver à tout moment.
+              s&apos;ouvre ou que les conditions se dégradent sur un spot suivi. Ces notifications sont{' '}
+              <strong className="text-ss-fg">générées localement</strong> sur votre appareil : SeaScope
+              n&apos;utilise pas de service de notification push distant et ne collecte aucun jeton
+              Firebase Cloud Messaging (FCM) à cette fin. Vous pouvez les désactiver à tout moment.
             </P>
 
-            <H3>2.5 Mesure d&apos;audience et statistiques</H3>
+            <H3>2.8 Mesure d&apos;audience et statistiques</H3>
             <P>
               <strong className="text-ss-fg">Dans l&apos;application</strong> : SeaScope mesure l&apos;usage de
               ses fonctionnalités de façon strictement anonyme, sans publicité ni profilage. Le détail
@@ -201,10 +274,10 @@ export default function PrivacyPage() {
               revente.
             </P>
 
-            <H3>2.6 Formulaires (programme beta et retours)</H3>
+            <H3>2.9 Formulaires (programme beta et retours)</H3>
             <P>
-              Lorsque vous candidatez à la beta fermée ou que vous envoyez un retour depuis notre site,
-              nous collectons les informations que vous saisissez :
+              Lorsque vous candidatez à la beta ou que vous envoyez un retour depuis notre site, nous
+              collectons les informations que vous saisissez :
             </P>
             <UL>
               <LI>
@@ -258,9 +331,9 @@ export default function PrivacyPage() {
                   <strong className="text-ss-fg">Les noms de spots ou de ports</strong> que vous saisissez.
                 </LI>
                 <LI>
-                  <strong className="text-ss-fg">Votre nom, votre e-mail, vos contacts</strong> ou toute
-                  donnée d&apos;identité — l&apos;application n&apos;a pas de compte utilisateur, aucune donnée
-                  nominative n&apos;existe.
+                  <strong className="text-ss-fg">Le rattachement à votre compte ou à votre identité</strong>{' '}
+                  : ces statistiques ne contiennent aucune donnée nominative (nom, e-mail) et
+                  l&apos;identifiant analytique, aléatoire, n&apos;est pas relié à votre compte SeaScope.
                 </LI>
               </UL>
             </div>
@@ -309,6 +382,19 @@ export default function PrivacyPage() {
                 heure de retour) — base légale : exécution du service que vous demandez.
               </LI>
               <LI>
+                <strong className="text-ss-fg">Créer et sécuriser votre compte</strong>, vous authentifier
+                et gérer vos sessions — base légale : exécution du contrat (nos conditions
+                d&apos;utilisation) et notre intérêt légitime à sécuriser le service.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Synchroniser vos données</strong> entre vos appareils —
+                base légale : exécution du service que vous activez.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Gérer vos achats et abonnements</strong> et débloquer les
+                fonctionnalités correspondantes — base légale : exécution du contrat.
+              </LI>
+              <LI>
                 <strong className="text-ss-fg">Géolocalisation et notifications</strong> — base légale :
                 votre consentement, que vous pouvez retirer à tout moment.
               </LI>
@@ -332,8 +418,8 @@ export default function PrivacyPage() {
             <UL>
               <LI>Nous ne vendons pas vos données.</LI>
               <LI>Nous ne les louons pas et ne les cédons pas à des courtiers en données.</LI>
-              <LI>Nous ne créons aucun compte utilisateur.</LI>
-              <LI>Nous n&apos;utilisons aucun outil de suivi publicitaire — la mesure d&apos;usage de l&apos;application est strictement anonyme (voir section&nbsp;3) et celle du site se limite à des statistiques agrégées (voir §2.5).</LI>
+              <LI>Nous ne créons pas de compte à votre insu : la création de compte est facultative et à votre initiative.</LI>
+              <LI>Nous n&apos;utilisons aucun outil de suivi publicitaire — la mesure d&apos;usage de l&apos;application est strictement anonyme (voir section&nbsp;3) et celle du site se limite à des statistiques agrégées (voir §2.8).</LI>
               <LI>Nous n&apos;utilisons aucun identifiant publicitaire.</LI>
               <LI>Nous ne construisons aucun profil marketing ni publicitaire à partir de votre navigation en mer.</LI>
               <LI>Nous n&apos;affichons pas de publicité dans l&apos;application.</LI>
@@ -346,8 +432,33 @@ export default function PrivacyPage() {
             </P>
             <UL>
               <LI>
+                <strong className="text-ss-fg">Notre backend SeaScope</strong> — hébergé sur Fly.io
+                (région Paris, Union européenne) : relaie les coordonnées d&apos;un spot vers les services
+                de prévision, et gère l&apos;authentification, la synchronisation et l&apos;état
+                d&apos;abonnement des comptes.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Neon</strong> (Neon Inc.) — hébergement de la base de
+                données (compte, données synchronisées, état d&apos;abonnement), sur une infrastructure
+                située <strong className="text-ss-fg">dans l&apos;Union européenne</strong> (Francfort)&nbsp;;
+                ces données ne quittent pas l&apos;UE.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Google</strong> (Google Ireland / Google LLC) —{' '}
+                <strong className="text-ss-fg">Google Play</strong> traite le paiement de vos abonnements
+                (nous ne recevons aucune donnée bancaire)&nbsp;; si vous choisissez la connexion Google,
+                l&apos;authentification associée.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">RevenueCat</strong> (RevenueCat Inc., États-Unis) — gestion
+                technique des abonnements (validation des achats, statut d&apos;abonnement). Reçoit votre
+                identifiant de compte SeaScope et le produit acheté, jamais votre e-mail, votre nom ni vos
+                coordonnées bancaires.
+              </LI>
+              <LI>
                 <strong className="text-ss-fg">Brevo</strong> (Sendinblue, France/UE) — envoi des e-mails
-                transactionnels liés au programme beta et aux retours.
+                transactionnels : vérification d&apos;adresse et réinitialisation de mot de passe, rappels
+                liés à votre abonnement, et échanges liés au programme beta et aux retours.
               </LI>
               <LI>
                 <strong className="text-ss-fg">Notion</strong> (Notion Labs, États-Unis) — enregistrement et
@@ -372,19 +483,18 @@ export default function PrivacyPage() {
                 données de ports&nbsp;; les coordonnées de la zone affichée sont transmises pour charger
                 la carte.
               </LI>
-              <LI>
-                <strong className="text-ss-fg">Notre backend SeaScope</strong> — proxy qui relaie les
-                coordonnées d&apos;un spot vers les services de prévision&nbsp;; il ne reçoit aucun
-                identifiant de compte (l&apos;application n&apos;en crée pas).
-              </LI>
             </UL>
 
             <H2 id="transferts">7. Transferts hors Union européenne</H2>
             <P>
-              Certains prestataires (notamment Notion et Vercel) sont situés aux États-Unis. Lorsque
-              des données y sont transférées, ce transfert est encadré par les mécanismes prévus par le
-              RGPD (clauses contractuelles types et/ou adhésion au <em>Data Privacy Framework</em>).
-              Nous limitons ces transferts au strict nécessaire.
+              Vos données de compte, de synchronisation et d&apos;abonnement sont hébergées{' '}
+              <strong className="text-ss-fg">dans l&apos;Union européenne</strong> (base de données à
+              Francfort, backend à Paris). Certains prestataires sont toutefois situés aux États-Unis :
+              RevenueCat (gestion des abonnements), Google (paiement Google Play et connexion Google le
+              cas échéant), Notion (gestion du programme beta) et Vercel (site). Lorsque des données y
+              sont transférées, ce transfert est encadré par les mécanismes prévus par le RGPD (clauses
+              contractuelles types et/ou adhésion au <em>Data Privacy Framework</em>). Nous limitons ces
+              transferts au strict nécessaire.
             </P>
 
             <H2 id="conservation">8. Durée de conservation</H2>
@@ -392,6 +502,20 @@ export default function PrivacyPage() {
               <LI>
                 <strong className="text-ss-fg">Données locales</strong> : conservées sur votre appareil
                 jusqu&apos;à leur suppression par vos soins ou la désinstallation de l&apos;application.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Compte et données synchronisées</strong> : conservés tant
+                que votre compte existe&nbsp;; supprimés sur demande ou lors de la suppression de votre
+                compte.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">État d&apos;abonnement</strong> : conservé pendant la durée
+                de la relation d&apos;abonnement, puis le temps requis par nos obligations comptables et
+                légales.
+              </LI>
+              <LI>
+                <strong className="text-ss-fg">Sessions</strong> (jeton, adresse IP, type d&apos;appareil) :
+                jusqu&apos;à leur expiration ou votre déconnexion.
               </LI>
               <LI>
                 <strong className="text-ss-fg">Candidatures et retours beta</strong> : conservés
@@ -411,8 +535,9 @@ export default function PrivacyPage() {
             <P>
               Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification, d&apos;effacement,
               de limitation et d&apos;opposition, ainsi que du droit à la portabilité de vos données et du
-              droit de retirer votre consentement à tout moment. Pour exercer ces droits, écrivez-nous
-              à{' '}
+              droit de retirer votre consentement à tout moment. Si vous avez un compte, vous pouvez en
+              demander la suppression, ce qui entraîne l&apos;effacement des données associées. Pour exercer
+              ces droits, écrivez-nous à{' '}
               <a href="mailto:seascope-contact@pennarstudio.fr" className="text-ss-teal">
                 seascope-contact@pennarstudio.fr
               </a>
@@ -426,10 +551,12 @@ export default function PrivacyPage() {
             <H2 id="securite">10. Sécurité</H2>
             <P>
               Nous mettons en œuvre des mesures techniques et organisationnelles raisonnables pour
-              protéger vos données : connexions chiffrées (HTTPS), accès restreint aux outils de
-              gestion, et principe de minimisation des données. Aucun système n&apos;étant infaillible,
-              nous ne pouvons garantir une sécurité absolue, mais nous nous engageons à vous informer en
-              cas d&apos;incident affectant vos données.
+              protéger vos données : connexions chiffrées (HTTPS), mots de passe stockés uniquement sous
+              forme hachée (jamais en clair), jetons d&apos;authentification conservés dans un stockage
+              sécurisé chiffré sur votre appareil, hébergement dans l&apos;Union européenne, accès restreint
+              aux outils de gestion et principe de minimisation des données. Aucun système n&apos;étant
+              infaillible, nous ne pouvons garantir une sécurité absolue, mais nous nous engageons à vous
+              informer en cas d&apos;incident affectant vos données.
             </P>
 
             <H2 id="mineurs">11. Mineurs</H2>
@@ -441,9 +568,9 @@ export default function PrivacyPage() {
 
             <H2 id="modifications">12. Modifications de cette politique</H2>
             <P>
-              Cette politique peut évoluer, notamment au passage de la beta à la version publique. En
-              cas de changement important, nous mettrons à jour la date en haut de page et, si
-              nécessaire, vous en informerons par e-mail ou dans l&apos;application.
+              Cette politique peut évoluer, notamment au fil des nouvelles fonctionnalités. En cas de
+              changement important, nous mettrons à jour la date en haut de page et, si nécessaire, vous
+              en informerons par e-mail ou dans l&apos;application.
             </P>
 
             <H2 id="contact">13. Contact</H2>

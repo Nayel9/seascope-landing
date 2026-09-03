@@ -124,8 +124,8 @@ export default function SuppressionComptePage() {
               </LI>
               <LI>Vos sessions de connexion, sur tous vos appareils.</LI>
               <LI>
-                Les données enregistrées sur l&apos;appareil depuis lequel vous effectuez la
-                suppression.
+                Vos spots, points d&apos;intérêt, sorties et trophées enregistrés sur l&apos;appareil
+                depuis lequel vous effectuez la suppression.
               </LI>
             </UL>
             <P>

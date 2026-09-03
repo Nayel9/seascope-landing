@@ -53,6 +53,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/suppression-compte" className="text-[14px] text-ss-fg/72 hover:text-ss-fg transition-colors">
+                  Suppression de compte
+                </Link>
+              </li>
+              <li>
                 <a
                   href="mailto:seascope-contact@pennarstudio.fr"
                   className="text-[14px] text-ss-fg/72 hover:text-ss-fg transition-colors"

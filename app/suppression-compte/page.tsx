@@ -69,8 +69,8 @@ export default function SuppressionComptePage() {
               <LI>
                 Deux chemins possibles : depuis{' '}
                 <strong className="text-ss-fg">l&apos;application</strong>, en quelques secondes, ou{' '}
-                <strong className="text-ss-fg">par e-mail</strong> si vous n&apos;avez plus accès à
-                l&apos;application.
+                <strong className="text-ss-fg">par e-mail</strong>{' '}
+                si vous n&apos;avez plus accès à l&apos;application.
               </LI>
               <LI>
                 SeaScope reste <strong className="text-ss-fg">entièrement utilisable sans compte</strong>.
@@ -141,14 +141,16 @@ export default function SuppressionComptePage() {
             <H2 id="ce-qui-nest-pas-supprime">4. Ce qui n&apos;est pas supprimé</H2>
             <UL>
               <LI>
-                <strong className="text-ss-fg">Un abonnement Google Play actif.</strong> Il est géré
-                par Google, pas par nous : supprimer votre compte SeaScope ne le résilie pas. Pour
+                <strong className="text-ss-fg">Un abonnement Google Play actif.</strong>{' '}
+                Il est géré par Google, pas par nous : supprimer votre compte SeaScope ne le
+                résilie pas. Pour
                 l&apos;arrêter, passez par le Play Store — Abonnements — SeaScope — Résilier.
               </LI>
               <LI>
                 Les données que vous avez enregistrées sur{' '}
-                <strong className="text-ss-fg">d&apos;autres appareils</strong> et qui n&apos;étaient
-                pas synchronisées. Elles disparaîtront à la désinstallation de l&apos;application sur
+                <strong className="text-ss-fg">d&apos;autres appareils</strong>{' '}
+                et qui n&apos;étaient pas synchronisées. Elles disparaîtront à la désinstallation de
+                l&apos;application sur
                 ces appareils.
               </LI>
             </UL>

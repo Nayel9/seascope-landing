@@ -109,7 +109,7 @@ export default function SuppressionComptePage() {
                 seascope-contact@pennarstudio.fr
               </a>{' '}
               depuis l&apos;adresse e-mail de votre compte, en demandant sa suppression. Nous
-              traitons la demande sous 30 jours, conformément au RGPD, et vous confirmons
+              traitons la demande sous un mois, conformément au RGPD, et vous confirmons
               l&apos;effacement par retour d&apos;e-mail.
             </P>
 

@@ -10,8 +10,12 @@ interface FeatureLine {
   premiumPlus: CellValue
 }
 
+// Miroir du `FEATURE_CATALOG` de l'app (`lib/paywall/subscriptionFeatures.ts`) et de ses
+// `TIER_LIMITS`. Les valeurs chiffrees ne sont affichees QUE si la limite est reellement
+// appliquee dans le code de l'app — sinon on ne l'annonce pas.
 const FEATURES: FeatureLine[] = [
   // Toutes paliers
+  { label: 'Alertes sécurité & vigilance', tag: 'security', free: true,        premium: true,        premiumPlus: true        },
   { label: 'Verdict mouillage',              tag: 'security', free: true,        premium: true,        premiumPlus: true        },
   { label: 'Météo de base',                                   free: true,        premium: true,        premiumPlus: true        },
   { label: 'Score de décision',                               free: true,        premium: true,        premiumPlus: true        },
@@ -19,18 +23,18 @@ const FEATURES: FeatureLine[] = [
   { label: 'Journal de bord',                                 free: true,        premium: true,        premiumPlus: true        },
   { label: 'Simulateur (sortie du jour)',                     free: true,        premium: true,        premiumPlus: true        },
   // Premium +
-  { label: 'Prévisions étendues',                             free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Prévisions',                                      free: '5 j',       premium: '7 j HD',    premiumPlus: '7 j HD'     },
   { label: 'Planning multi-jours',                            free: false,       premium: true,        premiumPlus: true        },
-  { label: 'Spots enregistrés',                               free: '3 spots',   premium: 'illimité',  premiumPlus: 'illimité'  },
+  { label: 'Spots enregistrés',                               free: '3',         premium: 'illimité',  premiumPlus: 'illimité'  },
+  { label: 'Sorties planifiées',                              free: '2',         premium: 'illimité',  premiumPlus: 'illimité'  },
   { label: "Courants & hauteur d'eau",                        free: false,       premium: true,        premiumPlus: true        },
   { label: 'Simulateur avancé',                               free: false,       premium: true,        premiumPlus: true        },
   { label: 'Overlay courant (carte)',                         free: false,       premium: true,        premiumPlus: true        },
-  { label: 'Alertes personnalisées',                          free: false,       premium: true,        premiumPlus: true        },
-  { label: 'Profils bateau multiples',                        free: false,       premium: true,        premiumPlus: true        },
+  { label: 'Profils bateau',                                  free: '1',         premium: '3',         premiumPlus: 'illimité'  },
   { label: 'Guardian Watch',           tag: 'security',       free: true,        premium: true,        premiumPlus: true        },
   { label: 'Guardian Intelligent',                            free: false,       premium: true,        premiumPlus: true        },
   // Premium+ exclusif
-  { label: 'Guardian Pro',             tag: 'soon',           free: false,       premium: false,       premiumPlus: true        },
+  { label: 'Guardian Pro',                                    free: false,       premium: false,       premiumPlus: true        },
   { label: 'Arrival Intelligence avancée',                    free: false,       premium: false,       premiumPlus: true        },
   { label: 'Réglementation avancée',                         free: false,       premium: false,       premiumPlus: true        },
   { label: 'Synchronisation cloud',                           free: false,       premium: false,       premiumPlus: true        },

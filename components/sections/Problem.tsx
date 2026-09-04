@@ -1,33 +1,35 @@
+import { Wind, Map, Waves, Radio, Compass } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 
-const apps = [
+const apps: { Icon: LucideIcon; label: string; value: string; note: string }[] = [
   {
-    icon: '🌬️',
+    Icon: Wind,
     label: 'Appli météo',
-    value: 'Vent 18 nœuds, rafales 26',
+    value: 'Vent 18 noeuds, rafales 26',
     note: 'Mais quelle houle ?',
   },
   {
-    icon: '🗺️',
+    Icon: Map,
     label: 'Appli cartes',
-    value: 'Carte marine navvable',
+    value: 'Carte marine naviguable',
     note: 'Pas de météo ni de marée',
   },
   {
-    icon: '🌊',
+    Icon: Waves,
     label: 'Site des marées',
     value: 'Coefficient 82, PM 10h14',
     note: 'Courants non précisés',
   },
   {
-    icon: '📡',
+    Icon: Radio,
     label: 'Modèle houle',
     value: 'Hm0 1,2 m · Tp 7 s',
     note: 'Source différente, verdict différent',
   },
   {
-    icon: '🧭',
+    Icon: Compass,
     label: 'Météo au port',
     value: 'VHF : Bonne brise',
     note: 'Trop vague pour décider',
@@ -63,9 +65,11 @@ export function Problem() {
                 key={app.label}
                 className="bg-ss-bg flex flex-col gap-2.5 p-5 md:p-6"
               >
-                <span className="text-2xl leading-none select-none" aria-hidden="true">
-                  {app.icon}
-                </span>
+                <app.Icon
+                  className="w-[18px] h-[18px] text-ss-teal"
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
                 <div className="font-mono text-[11px] tracking-[0.14em] uppercase text-ss-fg/40">
                   {app.label}
                 </div>
